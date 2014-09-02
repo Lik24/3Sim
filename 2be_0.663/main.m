@@ -1,6 +1,6 @@
 clear all
-addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','GeoMeh_Lib','DATA','mex_bld','Crack_gen');
-
+addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','GeoMeh_Lib',...
+    'DATA','Well_lib','Crack_gen','Problems');
 PR=Gl_PRM;
 
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XYc]=Sintetic_Real(PR.Ns,PR.Nl);

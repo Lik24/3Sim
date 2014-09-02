@@ -1,7 +1,8 @@
 function [SD,Ql,Qo,Qz,c,sQo]=main_paer_C3
 
 clear all
-addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','GeoMeh_Lib','DATA');
+addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','GeoMeh_Lib',...
+    'DATA','Well_lib','Crack_gen','Problems');
 
 PR=Gl_PRM;
 
