@@ -35,7 +35,7 @@ nt(:)={[]};
 gt(:)={[]};
 [G,A2G,dVg,pg,DATA.WonG]=Gorizont(DATA.XY,GS,gt,WXY);%Conek(DATA.XY,nt2,PR.Nl,CrDATA,DATA.Won,PR.dh,PR.Kc,WData.r0);%
 %save('derevoNT2.mat','nt1','nt2','PXY1','PXY2')
-parfor i=1:8
+parfor i=1:4
    SD(i)=Par_Sim_MKT1(PR,C,A2C,G,A2G,dVc,dVg,DATA,WData,GYData,i,PXY,PXY,Z,WXY);
 end;
 
