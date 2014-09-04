@@ -1,4 +1,4 @@
-function [nt,PXY]=gls_crk(nt,gXY,kol,dlin,wfl,ii)
+function [nt,PXY]=elka(nt,gXY,kol,dlin,wfl,ii)
 
 PXY=cell(2,size(nt,1));
 
