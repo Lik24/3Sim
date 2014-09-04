@@ -1,4 +1,4 @@
-function [bAl,bAw,bl,bw]=Potok_GY(T,Pgy,Pin,rc1,rc2,kfw,kfo,v1,mu,na)
+function [bAl,bAw,bl,bw]=Potok_GY(T,Pgy,Pin,rc2,kfw,kfo,v1,mu,na)
 v2=Pgy>=Pin(rc2(:,2));
 
 kfw_gy=kfw(rc2(:,1))/mu(1);

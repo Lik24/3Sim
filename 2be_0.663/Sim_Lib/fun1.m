@@ -16,9 +16,11 @@ r1=CR_rc.r1;     c1=CR_rc.c1;
 r2=CR_rc.r2;     c2=CR_rc.c2;
 %sd=CR_rc.sd;
 rc_gy=CR_rc.rc_gy;
-rc_in=CR_rc.rc_in;
+%rc_in=CR_rc.rc_in;
+rc_in_h=CR_rc.rc_in_h;
 T_gy=CR_rc.T_gy;
-T_in=CR_rc.T_in;
+%T_in=CR_rc.T_in;
+T_in_h=CR_rc.T_in_h;
 
 won=CR_rc.won;    wf=CR_rc.wf;  wn1=CR_rc.wn1;   wn=CR_rc.wn;
 
@@ -59,8 +61,9 @@ Qm=zeros(size(won,1),5);
  Na=sum(v1);
  dVa(v1~=1)=[];
 
- vPa1(:,1)=Pa(rc_in(:,2))>=Pa(rc_in(:,1));
+ vPa1(:,1)=Pa(rc_in_h(:,2))>=Pa(rc_in_h(:,1));
  vPa1(:,2)=vPa1(:,1)==0;
+ 
  Pgy=Pa(rc_gy(:,1));
  
 Swa=SCw(va);
@@ -95,7 +98,8 @@ i=i+1;
      Kfw(v1==1)=kfw(1:Na);
      Kfo(v1==1)=kfo(1:Na);
      
-     [TL2,TW2]=Potok_MKT_2(T_in,vPa1,SCp(va),mu,rc_in,na,Kfw,Kfo);
+     %[TL2,TW2]=Potok_MKT_2(T_in,vPa1,SCp(va),mu,rc_in,na,Kfw,Kfo);
+     [TL2,TW2]=Potok_MKT_2(T_in_h,vPa1,SCp(va),mu,rc_in_h,na,Kfw,Kfo);
      [CL,CW]=Potok_Tube_2(TC,Pc,vPc1,vPc2,kfw(vca),kfo(vca),SCp(vc),PR,RC.Cr,RC.Cc);
    %  [CL,CW]=Potok_Tube_2_mex(TC,full(Pc),full(vPc1),full(vPc2),kfw(vca),kfo(vca),SCp(vc),PR,RC.Cr,RC.Cc);
      [GL,GW]=Potok_Tube_2(TG,Pg,vPg1,vPg2,kfw(vga),kfo(vga),SCp(vg),PR,RC.Gr,RC.Gc);
@@ -132,7 +136,7 @@ i=i+1;
      C2=CW1-sparse(1:nc,1:nc,sum(CW1,1)+sum(A2CW,1),nc,nc)-sparse(WonC(:,1),WonC(:,1),W6C,nc,nc);
      G2=GW1-sparse(1:ng,1:ng,sum(GW1,1)+sum(A2GW,1),ng,ng)-sparse(WonG(:,1),WonG(:,1),W6G,ng,ng);
 
-    [bAl,bAw,bl,bw]=Potok_GY(T_gy,Pgy,Pa,rc_in,rc_gy,Kfw,Kfo,v1,mu,na);
+    [bAl,bAw,bl,bw]=Potok_GY(T_gy,Pgy,Pa,rc_gy,Kfw,Kfo,v1,mu,na);
     
      TL2=TL2(:,v1==1);
      TL2=TL2(v1==1,:);
@@ -220,7 +224,7 @@ Pa(v1==1)=Pj(1:Na);
 Pi=[Pa;Pc;Pg];
 [vPc1,vPc2,vPg1,vPg2]=pre_potok_2(Pi,RC);
 
-vPa1(:,1)=Pa(rc_in(:,2))>=Pa(rc_in(:,1));
+vPa1(:,1)=Pa(rc_in_h(:,2))>=Pa(rc_in_h(:,1));
 vPa1(:,2)=vPa1(:,1)==0;
 
 Qm(:,:)=Qm+QBild(W1,W6,W7,Pj(1:Na),Uf(wn),won,dt/ndt,Pw(wn));
