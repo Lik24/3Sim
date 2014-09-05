@@ -1,5 +1,6 @@
 function [CL,CW,CP,CG]=Potok_Tube_2(TC,P,vP1,vP2,Kfw,Kfo,Cp,PR,r,c)
 
+if isempty(TC)==0
 mu=PR.mu;
 bet=PR.bet;
 Ro=PR.Ro;
@@ -16,6 +17,7 @@ Cpl=Cp(c);
 
 %Swe=Swc.*vP+Swl.*(vP==0);
 %sum([Cpc,Cpl].*[vP1,vP2]);
+
 Cpe=Cpc.*vP1+Cpl.*vP2;
 Kf=Kwc.*vP1+Kwl.*vP2;
 Kfo=Koc.*vP1+Kol.*vP2;
@@ -36,6 +38,12 @@ end;
 % Tw=reshape(Tw1,n,n);
 % CW=Tw-sparse(1:n,1:n,sum(Tw),n,n);
 CG=1;
+else
+  CL=[];
+  CW=[];
+  CP=[];
+  CG=[];
+end;
 end
 
 function T=Iter_Fort(T,dP,mu,Ro,bet,C,Kf,dt)

@@ -20,7 +20,7 @@ load('elka_tst.mat','nt1','PXY')
 
 [gt,GS]=Tresh_Gor(1,DATA.XY,PR.Nl);
 %nt(:)={[]};
-[C,A2C,dVc,pc,DATA.WonV]=Conek(DATA.XY,nt1,PR.Nl,CrDATA,DATA.Won,PR.dh,PR.Kc,WData.r0);
+[C,A2C,dVc,pc,DATA.WonV]=Conek(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,PR.dh,PR.Kc,WData.r0);
 
 %[nt2,PXY2]=derevo(nt,DATA.XY,23);
 gt(:)={[]};
@@ -29,9 +29,20 @@ gt(:)={[]};
 
 
 %[XY,K,Z,Pi,Sw,Cp,p,Q]=Sim_MKT(Prop,C,A2C,G,A2G,dVc,dVg,DATA,WData);
-[XY,KX,Z,Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,dQ,dSS]=SimT_MKT(PR,C,A2C,G,A2G,dVc,dVg,DATA,WData,GYData,1);
+[XY,KX,Z,Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,dQ,dSS,dt1]=SimT_MKT(PR,C,A2C,G,A2G,dVc,dVg,DATA,WData,GYData,1);
 
 VZL(XY,KX,WXY,Z,Pi,Sw,Ti,MCp,PR.Nl,p,Q,PXY,gt);
 
-Qo=sum(Q(:,3,:));
-sum(Qo)/(250*250*10*0.2)
+
+  Qo(:,1)=sum(Q(:,3,:));
+  Ql(:,1)=sum(Q(:,2,:));
+  Qz(:,1)=sum(Q(:,1,:));
+
+
+for i=1:size(Qo,1)
+ sQo(i,:)=sum(Qo(1:i,:),1);
+ sQl(i,:)=sum(Ql(1:i,:),1);
+end;
+
+c=1-Qo./Ql;
+sQo(end)/(250*250*10*0.2)

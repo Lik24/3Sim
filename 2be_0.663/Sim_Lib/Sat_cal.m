@@ -12,8 +12,8 @@ function Z=Sat_cal(x2,B,C,a_s,aw)
 % else
 %     Sor=SorCUB;
 % end;
-Swr=0.35;
-Sor=0.1625;
+Swr=0.35*0;
+Sor=0.1625*0;
 
 %   a_s=[2,2];
 %  % aw=0.52;

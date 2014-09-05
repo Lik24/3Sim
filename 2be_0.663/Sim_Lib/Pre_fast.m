@@ -18,14 +18,31 @@ H1m=H1(r+(c-1)*na);
 
 TM=Ke.*Bm.*H1m./Lm;
 RC.Arc=[r,c];
+RC1=sparse(r,c,1);
+U=triu(RC1);
+[rh,ch]=find(U);
+RC.Acr2=[rh,ch];
 
-TC=C(r2+(c2-1)*nc);
+%TC=C(r2+(c2-1)*nc);
 RC.Cr=r2;
 RC.Cc=c2;
 
-TG=G(r5+(c5-1)*ng);
+RC2=sparse(r2,c2,1);
+U=triu(RC2);
+[r2_h,c2_h]=find(U);
+RC.Cr2=r2_h;
+RC.Cc2=c2_h;
+TC=C(r2_h+(c2_h-1)*nc);
+
+%TG=G(r5+(c5-1)*ng);
 RC.Gr=r5;
 RC.Gc=c5;
+RC5=sparse(r5,c5,1);
+U=triu(RC5);
+[r5_h,c5_h]=find(U);
+RC.Gr2=r5_h;
+RC.Gc2=c5_h;
+TG=C(r5_h+(c5_h-1)*ng);
 
 TA2C=A2C(r3+(c3-1)*na).*K(r3);
 RC.ACr=r3;

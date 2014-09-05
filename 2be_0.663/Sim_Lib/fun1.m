@@ -1,4 +1,4 @@
-function [Bc,Bcl,Bg,Swc,Swg,i,Q1,Q2,Qm,dSS]=fun1(RC,Pi,SCw,SCp,PR,TC,TG,vPc1,vPc2,vPg1,vPg2,A2C,A2G,Wf,Won,WonC,...
+function [Bc,Bg,Swc,Swg,i,Q1,Q2,Qm,dSS]=fun1(RC,Pi,SCw,SCp,PR,TC,TG,A2C,A2G,WonC,...
     WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0)
 
 as=PR.as;
@@ -6,7 +6,7 @@ aw=PR.aw;
 ts=PR.ts;
 tw=PR.tw;
 mu=PR.mu;
-dh=PR.dh;
+%dh=PR.dh;
 
 na=RC.na;
 nc=RC.nc;
@@ -27,7 +27,7 @@ won=CR_rc.won;    wf=CR_rc.wf;  wn1=CR_rc.wn1;   wn=CR_rc.wn;
 va=1:na;
 vc=na+1:na+nc;
 vg=na+nc+1:na+nc+ng;
- Pi1=Pi;
+ %Pi1=Pi;
  %Pi=Pi0;
  Pc=Pi(vc);  Pg=Pi(vg);
  dVa=dV(va);  dVc=dV(vc);  dVg=dV(vg);
@@ -49,7 +49,6 @@ C2G=sparse(nc,ng);
 C2GW=C2G;
 
 Bc=zeros(size(A2C,2),1);
-Bcl=zeros(size(A2C,2),1);
 Bg=zeros(size(A2G,2),1);
 Q1=zeros(size(WonC(:,3),1),5);
 Q2=zeros(size(WonG(:,3),1),5);
@@ -61,10 +60,8 @@ Qm=zeros(size(won,1),5);
  Na=sum(v1);
  dVa(v1~=1)=[];
 
- vPa1(:,1)=Pa(rc_in_h(:,2))>=Pa(rc_in_h(:,1));
- vPa1(:,2)=vPa1(:,1)==0;
- 
- Pgy=Pa(rc_gy(:,1));
+Pj(:,1)=[Pi(v1==1);Pc;Pg];
+Pgy=Pa(rc_gy(:,1));
  
 Swa=SCw(va);
 SCwC=[Swa(v1==1);SCw(vc);SCw(vg)];
@@ -98,11 +95,14 @@ i=i+1;
      Kfw(v1==1)=kfw(1:Na);
      Kfo(v1==1)=kfo(1:Na);
      
+     
+     [vPa1,vPc1,vPc2,vPg1,vPg2]=pre_potok_2(Pi,Pj,RC,rc_in_h,Na);
+     
      %[TL2,TW2]=Potok_MKT_2(T_in,vPa1,SCp(va),mu,rc_in,na,Kfw,Kfo);
      [TL2,TW2]=Potok_MKT_2(T_in_h,vPa1,SCp(va),mu,rc_in_h,na,Kfw,Kfo);
-     [CL,CW]=Potok_Tube_2(TC,Pc,vPc1,vPc2,kfw(vca),kfo(vca),SCp(vc),PR,RC.Cr,RC.Cc);
+     [CL,CW]=Potok_Tube_2(TC,Pc,vPc1,vPc2,kfw(vca),kfo(vca),SCp(vc),PR,RC.Cr2,RC.Cc2);
    %  [CL,CW]=Potok_Tube_2_mex(TC,full(Pc),full(vPc1),full(vPc2),kfw(vca),kfo(vca),SCp(vc),PR,RC.Cr,RC.Cc);
-     [GL,GW]=Potok_Tube_2(TG,Pg,vPg1,vPg2,kfw(vga),kfo(vga),SCp(vg),PR,RC.Gr,RC.Gc);
+     [GL,GW]=Potok_Tube_2(TG,Pg,vPg1,vPg2,kfw(vga),kfo(vga),SCp(vg),PR,RC.Gr2,RC.Gc2);
 
      Pa11=Pi(va(v1==1));
      Cp11=SCp(va(v1==1));
@@ -118,11 +118,11 @@ i=i+1;
      [W1C,W6C,W7C]=Well_MKT_2(WonC(:,2),WonC(:,1),Uf(WonC(:,3)),SCp(na+1:na+nc),mu,CpW(WonC(:,3)),kfw(vca),kfo(vca));
      [W1G,W6G,W7G]=Well_MKT_2(WonG(:,2),WonG(:,1),Uf(WonG(:,3)),SCp(na+nc+1:end),mu,CpW(WonG(:,3)),kfw(vga),kfo(vga));
 
-     CL1=sparse(RC.Cr,RC.Cc,CL,nc,nc);
-     GL1=sparse(RC.Gr,RC.Gc,GL,ng,ng);
+     CL1=sparse(RC.Cr2,RC.Cc2,CL,nc,nc);  CL1=CL1+CL1';
+     GL1=sparse(RC.Gr2,RC.Gc2,GL,ng,ng);  GL1=GL1+GL1';
      
-     CW1=sparse(RC.Cr,RC.Cc,CW,nc,nc);
-     GW1=sparse(RC.Gr,RC.Gc,GW,ng,ng);
+     CW1=sparse(RC.Cr2,RC.Cc2,CW,nc,nc);  CW1=CW1+CW1';
+     GW1=sparse(RC.Gr2,RC.Gc2,GW,ng,ng);  GW1=GW1+GW1';
 
      A2CL=sparse(r1,RC.ACc,A2CL,Na,nc);
      A2GL=sparse(r2,RC.AGc,A2GL,Na,ng);
@@ -206,10 +206,9 @@ i=i+1;
      SCw0(na+1:end)=SCwC1(Na+1:end);
      SCw(na+1:end)=SCwC(Na+1:end);
      
-      hj(:,i)=SCw(vc);
+      %hj(:,i)=SCw(vc);
 
 Bc=Bc+(A2CW*Pj(Na+1:Na+nc)-sum(A2CW,2).*Pj(1:Na))*dt/ndt;
-Bcl=Bcl+(A2CL*Pj(Na+1:Na+nc)-sum(A2CL,2).*Pj(1:Na))*dt/ndt;
 
 if isempty(c2)==0
     Bg=Bg+(A2GW*Pj(Na+nc+1:end)-sum(A2GW,2).*Pj(1:Na))*dt/ndt;
@@ -222,10 +221,6 @@ Pg=Pj(Na+nc+1:Na+nc+ng);
 
 Pa(v1==1)=Pj(1:Na);
 Pi=[Pa;Pc;Pg];
-[vPc1,vPc2,vPg1,vPg2]=pre_potok_2(Pi,RC);
-
-vPa1(:,1)=Pa(rc_in_h(:,2))>=Pa(rc_in_h(:,1));
-vPa1(:,2)=vPa1(:,1)==0;
 
 Qm(:,:)=Qm+QBild(W1,W6,W7,Pj(1:Na),Uf(wn),won,dt/ndt,Pw(wn));
 Q1(:,:)=Q1+QBild(W1C,W6C,W7C,Pj(Na+1:Na+nc,1),Uf(WonC(:,3)),WonC(:,1),dt/ndt,Pw(WonC(:,3)));
@@ -234,7 +229,6 @@ Q2(:,:)=Q2+QBild(W1G,W6G,W7G,Pj(vga,1),Uf(WonG(:,3)),WonG(:,1),dt/ndt,Pw(WonG(:,
 end;
 %Bc(r1)=Bc;
 %hj-1
-
 
 dSS=sum((SCwC(Na+1:end)-Sw0(Na+1:end)).*[dVc;dVg])+sum(Q1(:,1))+sum(Bc);
 %sum((SCwC(Na+1:end)-Sw0(Na+1:end)).*[dVc;dVg])

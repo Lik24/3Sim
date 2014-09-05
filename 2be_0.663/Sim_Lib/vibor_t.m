@@ -3,8 +3,8 @@ function [ndt,j_ndt,fl1]=vibor_t(ndt,fl,Pc,Pg,Pw,PR,RC,dt,Sw1,Sw2,CL,GL,dVc,dVg,
 Fc=PR.Fc2;
 Sc=PR.Sc2;
 
-dPc=Pc(RC.Cc)-Pc(RC.Cr);
-dPg=Pg(RC.Gc)-Pg(RC.Gr);
+dPc=Pc(RC.Cc2)-Pc(RC.Cr2);
+dPg=Pg(RC.Gc2)-Pg(RC.Gr2);
 dPwc=Pc(WoC(:,1))-Pw(WoC(:,3));
 dPwg=Pg(WoG(:,1))-Pw(WoG(:,3));
 
@@ -19,8 +19,8 @@ if  fl==0
     new_dt=dS/0.02;
     ndt=ceil(ndt*new_dt);    
   else
-    dvc=dVc(RC.Cc).*(v1==0)+dVc(RC.Cr).*v1;
-    dvg=dVg(RC.Gc).*(v2==0)+dVg(RC.Gr).*v2;
+    dvc=dVc(RC.Cc2).*(v1==0)+dVc(RC.Cr2).*v1;
+    dvg=dVg(RC.Gc2).*(v2==0)+dVg(RC.Gr2).*v2;
     
     dt1=1./max(abs([CL.*dPc./dvc;GL.*dPg./dvg]));
     ndt1=dt/dt1;    
