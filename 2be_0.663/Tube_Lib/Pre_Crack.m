@@ -26,13 +26,19 @@ c_gy(de)=[];
 
 r_in=r1(de);
 c_in=c1(de);
-%[r_in,c_in]'
+
+RC_IN=sparse(r_in,c_in,1);
+U=triu(RC_IN);
+[r_in_h,c_in_h]=find(U);
+
  T=sparse(r,c,T);
  T_gy=T(r_gy+na*(c_gy-1));
- T_in=T(r_in+na*(c_in-1));
+% T_in=T(r_in+na*(c_in-1));% Использование триуг матрицы вместо
+ T_in_h=T(r_in_h+na*(c_in_h-1));
  
  rc_gy=[r_gy,c_gy];
- rc_in=[r_in,c_in];
+% rc_in=[r_in,c_in]; % Использование триуг матрицы вместо
+ rc_in_h=[r_in_h,c_in_h];
  
 A2C11=A2C;
 %A2C11=sparse(RC.ACr,RC.ACc,A2C11,na,nc);
@@ -72,6 +78,8 @@ CR_rc.c1=c1;
 CR_rc.r2=r2;
 CR_rc.c2=c2;
 CR_rc.rc_gy=rc_gy;
-CR_rc.rc_in=rc_in;
+%CR_rc.rc_in=rc_in;
+CR_rc.rc_in_h=rc_in_h;
 CR_rc.T_gy=T_gy;
-CR_rc.T_in=T_in;
+%CR_rc.T_in=T_in;
+CR_rc.T_in_h=T_in_h;

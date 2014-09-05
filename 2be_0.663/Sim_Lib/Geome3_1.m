@@ -108,6 +108,7 @@ end
 function [ Con1] = contr( B )
 
  q=zeros(size(B,1),1);
+ 
  for i=1:size(B,1) 
      for j=i+1:size(B,1) 
          if (B(i,1)==B(j,1)).*(B(i,2)==B(j,2)).*(B(i,3)==B(j,3)) 
@@ -115,6 +116,7 @@ function [ Con1] = contr( B )
          end; 
      end;
  end;
+ 
  B1=B(:,1);
  B2=B(:,2); 
  B3=B(:,3); 

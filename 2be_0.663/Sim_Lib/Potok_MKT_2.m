@@ -21,4 +21,8 @@ TG=1;
 
 TL=sparse(sd(:,1),sd(:,2),TW+TO,na,na);
 TW=sparse(sd(:,1),sd(:,2),TW,na,na);
+
+TL=TL+TL';
+TW=TW+TW';
+
  
