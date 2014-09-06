@@ -24,7 +24,7 @@ TeW=WData.TeW;
 Qz=WData.Qz;
 
 Nl=PR.Nl;  as=PR.as; aw=PR.aw; ts=PR.ts; tw=PR.tw; mu=PR.mu;
-Ta=PR.Ta;  dt=PR.dt; ndt=PR.ndt; zc=PR.zc; Bo=PR.Bo; 
+Ta=PR.Ta;  dtt=PR.dt; ndt=PR.ndt; zc=PR.zc; Bo=PR.Bo; 
 
 
 Qm=zeros(size(Uf,1),5,size(Uf,2));
@@ -196,7 +196,7 @@ ft=floor(st);
 
  %[SCw,SCp,NDT(t)]=Sat_fast(SCw,SCp,RC,TC,TG,TA2C,TA2G,TM,Pi(:,1),PR,ndt,Won,Wf,...
  %    Uf(:,t),dt,dVCG,Pw(:,t),WonG,CpW(:,t),WonC,Nl,b2gm,GYData.GY_Pz);
- dt=vibor_t2(dt,Pi(1:na),RC,dV,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta);
+ dt=vibor_t2(dtt,Pi(1:na),RC,dV,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta);
  dt1(t+1)=dt;
  
  qm(WonM,:)=QBild(W1,W6,W7,Pi(1:na,1),Uf(:,ft+1),Won,dt,Pw(WonM,ft+1));
@@ -222,7 +222,6 @@ ft=floor(st);
     
     Qm(:,:,t+1)=QBild(W1,W6,W7,Pi(1:na,1),Uf(:,ft+1),Won,dt,Pw(WonM,ft+1));
     Qm(CR_rc.wn,:,t+1)=Qm1;
-   % Qm1
     Qc(:,:,t+1)=Q1;%QBild(W1C,W6C,W7C,Pi(na+1:na+nc,1),Uf(WonC(:,3),t+1),WonC(:,1),dt,Pw(WonC(:,3),t+1));
     Qg(:,:,t+1)=Q2;%QBild(W1G,W6G,W7G,Pi(na+nc+1:end,1),Uf(WNG,t+1),WonG(:,1),dt,Pw(WNG,t+1));
     PpW(:,t+1)=Pi(Won);
@@ -244,23 +243,12 @@ ft=floor(st);
     
     st=st+dt;
     t_flag=st~=Ta;
-end;
-
-for i=1:5
-    qcs=size(Qc(:,i,:));
-    QM(:,:)=Qm(:,i,:);
-    QC(1:qcs(1),1:qcs(3))=Qc(:,i,:);
     
-    qcs=size(Qg(:,i,:));
-    QG(1:qcs(1),1:qcs(3))=Qg(:,i,:);
-
-    Q(:,i,:)=[QM;QC;QG];
-    QC1=zeros(size(QM));
-    QG1=zeros(size(QM));
-    QC1(WonC(:,3),:)=QC;
-    QG1(WNG,:)=QG;
-    QW(:,i,:)=QM+QC1+QG1;
+  
 end;
+
+Q=Q2Sut(Qm,Qc,Qg,dt1,Ta);
+
 
 sum(NDT)-Ta
 toc
