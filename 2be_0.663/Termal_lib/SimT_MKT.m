@@ -115,6 +115,8 @@ WonG1=WonG(:,2);
 st=0;
 t=0;
 t_flag=1;
+Sw2=Sw;
+dt=dtt;
 
 while t_flag==1
 %for t=1:Ta-1
@@ -193,10 +195,10 @@ ft=floor(st);
     SCw=[Sw(:,1);Cw(:,t);Gw(:,t)];
     Sw0=SCw;
     SCp=[MCp(:,1);CCp(:,t);GCp(:,t)];
-
+    
  %[SCw,SCp,NDT(t)]=Sat_fast(SCw,SCp,RC,TC,TG,TA2C,TA2G,TM,Pi(:,1),PR,ndt,Won,Wf,...
  %    Uf(:,t),dt,dVCG,Pw(:,t),WonG,CpW(:,t),WonC,Nl,b2gm,GYData.GY_Pz);
- dt=vibor_t2(dtt,Pi(1:na),RC,dV,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta);
+ dt=vibor_t2(dtt,Pi(1:na),RC,dV,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw2,dt);
  dt1(t+1)=dt;
  
  qm(WonM,:)=QBild(W1,W6,W7,Pi(1:na,1),Uf(:,ft+1),Won,dt,Pw(WonM,ft+1));
@@ -206,6 +208,7 @@ ft=floor(st);
  Qz1=q(:,1)+q(:,2);
 
  Qf=Qz1;
+ Sw2=Sw;
  [SCw,SCp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,Wf,...
      Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TW,W6);
     

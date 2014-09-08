@@ -12,7 +12,7 @@ vg=na+nc+1:na+nc+ng;
 PwNl=repmat(Pw,Nl,1);
  
 % aw1=sum(SCw(vc).*dV(vc));
- 
+
  if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
     [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun1(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...
         A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0);
@@ -33,14 +33,14 @@ PwNl=repmat(Pw,Nl,1);
 
      b=sparse(Won,ones(1,size(Won,1)),-W6.*(Pi(Won)-PwNl),na,1);
      b(Won(CR_cr.wn))=-(Qm(:,1)+Qm(:,2)-Qm(:,3));
-%Qm
+Qm+Q1
 
  v1=zeros(na,1);
  v1([RC.ACr;RC.AGr])=1;
  r=find(v1==1);
 %sum(Bc)
 
- B=b+sparse(r,ones(sum(v1),1),Bc,na,1)+sparse(r,ones(sum(v1),1),Bg,na,1);
+ B=b+sparse(r,ones(sum(v1),1),Bc,na,1)/dt+sparse(r,ones(sum(v1),1),Bg,na,1)/dt;
 %B
  tmp=sum(B);
 % jkghkjh

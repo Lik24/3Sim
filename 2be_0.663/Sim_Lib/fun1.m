@@ -34,6 +34,7 @@ vg=na+nc+1:na+nc+ng;
  
 Pa=Pi(va);
 
+Qz=Qz/dt;
 nw=size(Qz,1);
 Qf=Qf(wn1);
 
