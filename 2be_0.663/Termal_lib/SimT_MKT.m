@@ -44,7 +44,7 @@ qg=zeros(size(Uf,1),5);
 [r,c]=find(A==1);
 
 %Wf=KWell_2(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0);
-Wf=KWell_3(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0,Con,WData.WXY);
+Wf=KWell_4(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0,XY);
 
 % Wf(1)=Wf(9);
 XY=repmat(XY,Nl,1);

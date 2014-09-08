@@ -32,8 +32,10 @@ PwNl=repmat(Pw,Nl,1);
 %  AM=TW-sparse(1:na,1:na,sum(TW,2),na,na);%-sparse(Won,Won,W6,na,na);
 
      b=sparse(Won,ones(1,size(Won,1)),-W6.*(Pi(Won)-PwNl),na,1);
-     b(Won(CR_cr.wn))=-(Qm(:,1)+Qm(:,2)-Qm(:,3));
-Qm+Q1
+     b(Won(CR_cr.wn))=-(Qm(:,1)+Qm(:,2)-Qm(:,3))/dt;
+
+% sum(Bc)
+% sum(Q1)+(Qm(:,1)+Qm(:,2)-Qm(:,3))
 
  v1=zeros(na,1);
  v1([RC.ACr;RC.AGr])=1;
