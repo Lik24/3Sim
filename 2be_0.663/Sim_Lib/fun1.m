@@ -1,12 +1,13 @@
 function [Bc,Bg,Swc,Swg,i,Q1,Q2,Qm,dSS]=fun1(RC,Pi,SCw,SCp,PR,TC,TG,A2C,A2G,WonC,...
-    WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0)
+    WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke)
 
 as=PR.as;
 aw=PR.aw;
 ts=PR.ts;
 tw=PR.tw;
 mu=PR.mu;
-%dh=PR.dh;
+kms=PR.kms;
+Ro=PR.Ro;
 
 na=RC.na;
 nc=RC.nc;
@@ -97,13 +98,12 @@ i=i+1;
      Kfo(v1==1)=kfo(1:Na);
      
      
-     [vPa1,vPc1,vPc2,vPg1,vPg2]=pre_potok_2(Pi,Pj,RC,rc_in_h,Na);
+     [vPa1,vPc1,vPc2,vPg1,vPg2,dPa,dPc,dPg]=pre_potok_2(Pi,Pj,RC,rc_in_h,Na);
      
      %[TL2,TW2]=Potok_MKT_2(T_in,vPa1,SCp(va),mu,rc_in,na,Kfw,Kfo);
-     [TL2,TW2]=Potok_MKT_2(T_in_h,vPa1,SCp(va),mu,rc_in_h,na,Kfw,Kfo);
-     [CL,CW]=Potok_Tube_2(TC,Pc,vPc1,vPc2,kfw(vca),kfo(vca),SCp(vc),PR,RC.Cr2,RC.Cc2);
-   %  [CL,CW]=Potok_Tube_2_mex(TC,full(Pc),full(vPc1),full(vPc2),kfw(vca),kfo(vca),SCp(vc),PR,RC.Cr,RC.Cc);
-     [GL,GW]=Potok_Tube_2(TG,Pg,vPg1,vPg2,kfw(vga),kfo(vga),SCp(vg),PR,RC.Gr2,RC.Gc2);
+     [TL2,TW2]=Potok_MKT_2(T_in_h,vPa1,SCp(va),mu,rc_in_h,na,Kfw,Kfo,kms(1),dPa,L,Ro,Ke);
+     [CL,CW]=Potok_Tube_2(TC,Pc,vPc1,vPc2,kfw(vca),kfo(vca),SCp(vc),PR,RC.Cr2,RC.Cc2,kms(2),dPc,Lc,nc);
+     [GL,GW]=Potok_Tube_2(TG,Pg,vPg1,vPg2,kfw(vga),kfo(vga),SCp(vg),PR,RC.Gr2,RC.Gc2,kms(3),dPg,Lg,ng);
 
      Pa11=Pi(va(v1==1));
      Cp11=SCp(va(v1==1));

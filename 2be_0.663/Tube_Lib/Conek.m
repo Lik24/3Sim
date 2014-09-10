@@ -1,4 +1,4 @@
-function [C,A2C,dVc,p,WonV]=Conek(XY,Nt,Nl,CrDATA,Won,dh,Kc,r0)
+function [C,A2C,dVc,p,WonV,L]=Conek(XY,Nt,Nl,CrDATA,Won,dh,Kc,r0)
 
 np=size(XY,1);
 Z=ones(np,1);
@@ -62,6 +62,9 @@ for i=1:Nl
     C(c1,:)=[];
     C(:,c1)=[];
     
+    L(c1,:)=[];
+    L(:,c1)=[];
+    
     C2=sum(H.*L,2);
     A2C=sparse(nt1,1:n,C2,np,n);
     A2C(:,c1)=[];
@@ -72,6 +75,7 @@ for i=1:Nl
     dVc(c1)=[];
     dVB(i)={dVc};
     CB(i)={C};
+    LB(i)={L};
     %size(C)
     A2CB(i)={A2C};
 end;
@@ -82,20 +86,24 @@ for i=1:Nl
    for j=1:Nl
     [nj,mj]=size(CB{j});
     cb(i,j)={sparse(ni,mj)};
+    lb(i,j)={sparse(ni,mj)};
     [nj,mj]=size(A2CB{j});
     a2cb(i,j)={sparse(nk,mj)};
    end;
    cb(i,i)=CB(i);
    a2cb(i,i)=A2CB(i);
-
+   lb(i,i)=LB(i);
+   
    dVc(size(dVc,2)+1:size(dVc,2)+ni)=dVB{i};
 end;
 
 C=cell2mat(cb);
+L=cell2mat(lb);
 A2C=cell2mat(a2cb);
 
     p=symrcm(C);
     C=C(p,p);
+    L=L(p,p);
     A2C=A2C(:,p);
     dVc=dVc(p)';
 

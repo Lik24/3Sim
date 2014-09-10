@@ -1,10 +1,9 @@
-function [CL,CW,CP,CG]=Potok_Tube_2(TC,P,vP1,vP2,Kfw,Kfo,Cp,PR,r,c)
+function [CL,CW,CP,CG]=Potok_Tube_2(TC,P,vP1,vP2,Kfw,Kfo,Cp,PR,r,c,kms,dP,L,n)
 
 if isempty(TC)==0
 mu=PR.mu;
-bet=PR.bet;
 Ro=PR.Ro;
-dt=PR.dt;
+Kc=PR.Kc;
 
 Kwc=Kfw(r);
 Kwl=Kfw(c);
@@ -27,17 +26,19 @@ Kfo=Koc.*vP1+Kol.*vP2;
 CO=TC.*Kfo./mu(1);
 CW=TC.*Kf.*((1-Cpe)./mu(1)+Cpe./mu(4));
 CP=TC.*Kf.*Cpe./mu(4);
-CL=CO+CW;
 
-if bet~=0
-    dP=(P(r)-P(c));
-    CW=Iter_Fort(CW,dP,mu(1),Ro(1),bet,TC,Kf,dt);
-    CP=Iter_Fort(CP,dP,mu(4),Ro(1),bet,TC,Kf,dt);
+if kms~=0
+     dPL=abs(dP./L((r+(c-1)*n)));
+    %     проверить првильность задания плотности
+    [CW] = Forh(CW,kms, Ro(1), Kf, Kc, mu(1), dPL);
+    [CO] = Forh(CO,kms, Ro(2), Kfo, Kc, mu(2), dPL);
 end;
-%CW=sparse((r+(c-1)*n),ones(size(r)),Tw,n*n,1);
-% Tw=reshape(Tw1,n,n);
-% CW=Tw-sparse(1:n,1:n,sum(Tw),n,n);
+
+CL=CO+CW;
 CG=1;
+
+
+
 else
   CL=[];
   CW=[];

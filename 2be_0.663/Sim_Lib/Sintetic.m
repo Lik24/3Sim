@@ -30,9 +30,9 @@ H=10*ones(size(KX));
 Mp=0.2*ones(size(KX));
 NTG=1*ones(size(KX));
 
-Sw=0.00*ones(size(KX));
+Sw=0*ones(size(KX));
 %Sw(:,2)=1;
-Cp=0*ones(size(KX));
+Cp=0.0*ones(size(KX));
 T=40*ones(size(KX));
 P=100*ones(size(KX));
 z=1:Nl;

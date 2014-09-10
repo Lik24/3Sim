@@ -12,6 +12,7 @@ XY=DATA.XY;
 H=DATA.gH;
 Z=DATA.gZ;
 
+
 Won=DATA.Won;
 WonG=DATA.WonG;
 WNG=DATA.WonG(:,3);
@@ -23,9 +24,8 @@ CpW=WData.CpW;
 TeW=WData.TeW;
 Qz=WData.Qz;
 
-Nl=PR.Nl;  as=PR.as; aw=PR.aw; ts=PR.ts; tw=PR.tw; mu=PR.mu;
-Ta=PR.Ta;  dtt=PR.dt; ndt=PR.ndt; zc=PR.zc; Bo=PR.Bo; 
-
+Nl=PR.Nl;  as=PR.as; aw=PR.aw; ts=PR.ts; tw=PR.tw; mu=PR.mu; mup=PR.mup;
+Ta=PR.Ta;  dtt=PR.dt; ndt=PR.ndt; zc=PR.zc; Bo=PR.Bo;  kms=PR.kms;  Ro=PR.Ro;
 
 Qm=zeros(size(Uf,1),5,size(Uf,2));
 Qc=zeros(size(WonC,1),5,size(Uf,2));
@@ -123,7 +123,8 @@ while t_flag==1
 
 t=t+1;
 ft=floor(st);
-
+% if ~isempty(find(CpW(:,t)~=0)) fp=1; else fp=0; end;
+fp=1;
     Qf=Qz(:,ft+1);
     %% ������ ��������
 
@@ -136,18 +137,18 @@ ft=floor(st);
 
     [b1gm,b1gc,b1gg,b2gm]=GY_bild(GYData,Pi(1:na,1),Sw(:,1),BZ,na,nc,ng,T_GY,as,aw,mu);
     
-    [TL,TW]=Potok_MKT(TM,Pi(1:na,1),Sw(:,1),MCp(:,1),as,aw,mu,RC.Arc);
-    [CL,CW]=Potok_Tube(C,Pi(na+1:na+nc,1),Cw(:,t),CCp(:,t),PR);
-    [GL,GW]=Potok_Tube(G,Pi(na+nc+1:na+nc+ng,1),Gw(:,t),GCp(:,t),PR);
+    [TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),Sw(:,1),MCp(:,1),as,aw,mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro);
+    [CL,CW,CP]=Potok_Tube(C,Pi(na+1:na+nc,1),Cw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc);
+    [GL,GW,GP]=Potok_Tube(G,Pi(na+nc+1:na+nc+ng,1),Gw(:,t),GCp(:,t),PR,mup,fp,kms(3),DATA.Lg);
 
-    [A2CL,A2CW]=Obmen_T2M(A2C,Pi(1:na,1),Pi(na+1:na+nc,1),Sw(:,1),Cw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
-    [A2GL,A2GW]=Obmen_T2M(A2G,Pi(1:na,1),Pi(na+nc+1:na+nc+ng,1),Sw(:,1),Gw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
+    [A2CL,A2CW,A2CP]=Obmen_T2M(A2C,Pi(1:na,1),Pi(na+1:na+nc,1),Sw(:,1),Cw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
+    [A2GL,A2GW,A2GP]=Obmen_T2M(A2G,Pi(1:na,1),Pi(na+nc+1:na+nc+ng,1),Sw(:,1),Gw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
 
  %   Wf(2)=0;
 
-    [W1,W6,W7]=Well_MKT(Wf,Won,Uf(:,ft+1),Sw(:,1),MCp(:,1),aw,as,mu,CpW(:,ft+1));
-    [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),Cw(:,t),CCp(:,t),tw,ts,mu,CpW(WonC(:,3),ft+1));
-    [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),Gw(:,t),GCp(:,t),tw,ts,mu,CpW(WNG,ft+1));
+    [W1,W6,W7]=Well_MKT(Wf,Won,Uf(:,ft+1),Sw(:,1),MCp(:,1),aw,as,mu,mup,CpW(:,ft+1));
+    [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),Cw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1));
+    [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),Gw(:,t),GCp(:,t),tw,ts,mu,mup,CpW(WNG,ft+1));
 
     [BA1,BC1,BG1]=SGim(Pi(:,1),na,nc,ng,zc);
 
@@ -210,7 +211,7 @@ ft=floor(st);
  Qf=Qz1;
  Sw2=Sw;
  [SCw,SCp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,Wf,...
-     Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TW,W6);
+     Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TW,W6,TP,W7,L,DATA.Lc,DATA.Lg,Ke);
     
     Sw(:,1)=SCw(1:na);
     Cw(:,t+1)=SCw(na+1:na+nc);

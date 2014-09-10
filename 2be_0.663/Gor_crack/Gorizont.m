@@ -1,4 +1,4 @@
-function [G,A2G,dVg,p,WonG]=Gorizont(XY,SS,gt,WXY)
+function [G,A2G,dVg,p,WonG,L]=Gorizont(XY,SS,gt,WXY)
 
 dh=0.0001;
 [ntr,Nl]=size(gt);

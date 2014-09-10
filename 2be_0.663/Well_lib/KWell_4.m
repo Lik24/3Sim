@@ -58,7 +58,7 @@ for i=1:size(Won,1);
     
     clear b1 l1 Con1
 end;
-tet
+
 Wcof=K(Won).*H(Won)./log(Rk/r0).*Perf;
 Wf=2*pi*Wcof;
 
