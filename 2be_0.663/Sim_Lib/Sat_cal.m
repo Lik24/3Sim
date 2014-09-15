@@ -26,19 +26,11 @@ Sor=0.1625*0;
           kro=aw(:,2).*(1-SW).^a_s(1,2);
           v1=x2<=(1-Sor);
           v2=x2>=Swr;
-%           Z1=kro.*v1;
-%           Z1(v2==1)=kro(v2==1).*v1(v2==1);
-%           Z1(v2==0)=aw(:,2);
           Z=kro.*v1.*v2+aw(:,2).*(v2==0);
       elseif B==1
           krw=aw(:,1).*SW.^a_s(1,1);
           v1=x2<=(1-Sor);
           v2=x2>=Swr;
-         
-%           Z1=krw.*v1;
-%           Z1(v2==1)=krw(v2==1).*v1(v2==1);
-%           Z1(v2==0)=aw(:,2);
-          
           Z=krw.*v1.*v2+aw(:,1).*(v1==0);
       else
           krg=aw(:,3)*SW.^a_s(1,1);
