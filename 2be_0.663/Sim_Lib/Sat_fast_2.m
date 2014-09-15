@@ -30,7 +30,6 @@ PwNl=repmat(Pw,Nl,1);
      ndt=1;
      Q1=zeros(size(WonC(:,3),1),5);
      Q2=zeros(size(WonG(:,3),1),5);
-     dSS=1;
      Qm=zeros(0,5);
  end;
 
