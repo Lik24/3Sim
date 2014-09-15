@@ -1,4 +1,4 @@
-function [Img2,CR_rc]=Pre_Crack(RC,na,T,A2C,A2G,Wf,Won,WonM,Wn)
+function [CR_rc]=Pre_Crack(RC,na,T,A2C,A2G,Wf,Won,WonM,Wn)
 
  v1=zeros(na,1);
  v1([RC.ACr;RC.AGr])=1;

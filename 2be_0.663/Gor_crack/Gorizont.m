@@ -1,4 +1,4 @@
-function [G,A2G,dVg,p,WonG,L]=Gorizont(XY,SS,gt,WXY)
+function [G,A2G,dVg,p,WonG,L]=Gorizont(XY,SS,gt,WXY,r0)
 
 dh=0.0001;
 [ntr,Nl]=size(gt);
@@ -41,7 +41,8 @@ for l=1:Nl
 
 
         r=find(Won(:,i));
-        WfG(r,i)=KWell(K,H1,sum(S,2),r);
+        [r1,c1]=find(A>0);
+        WfG(r,i)=KWell(K,H1,sum(S,2),L,B,Won(:,i),r1,c1,1,r0,XY);
         
         H(nt,:)=0;
         H(:,nt)=0;

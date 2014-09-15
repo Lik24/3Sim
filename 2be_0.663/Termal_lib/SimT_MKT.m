@@ -43,10 +43,7 @@ qg=zeros(size(Uf,1),5);
 
 [r,c]=find(A==1);
 
-%Wf=KWell_2(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0);
-Wf=KWell_4(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0,XY);
-
-% Wf(1)=Wf(9);
+Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0,XY);
 XY=repmat(XY,Nl,1);
 
 [A,L,S,B,H1,K,XY,Mp,Sw,H,Z,P,MCp,T,NTG,p,rz,cz,BXY,BZ,dH,NL,NamXY,GYData]=PereYpor(A,L,S,B,H1,KX,KY,KZ,Mp,Sw,XY,H,Z,P,MCp,DATA,GYData);
@@ -92,12 +89,10 @@ Ti(1:na,1)=T;
 Ti(na+1:na+nc,1)=T(RC.ACr);
 Ti(na+nc+1:na+nc+ng,1)=T(RC.AGr);
 
-%[LM,LC,LG,LA2C,LA2G]=Pre_fast(A,C,A2C,A2G,G,1,L,B,H1,ones(size(K(:,1))));
 j=0;
 PpW=zeros(size(Uf));
 
-[Img2,CR_rc]=Pre_Crack(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
-
+[CR_rc]=Pre_Crack(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
 
 C2=C;
 G2=G;
@@ -117,16 +112,16 @@ t=0;
 t_flag=1;
 Sw2=Sw;
 dt=dtt;
+vc=na+1:na+nc;
+vg=na+nc+1:na+nc+ng;
 
 while t_flag==1
 %for t=1:Ta-1
-
 t=t+1;
 ft=floor(st);
 % if ~isempty(find(CpW(:,t)~=0)) fp=1; else fp=0; end;
 fp=1;
     Qf=Qz(:,ft+1);
-    %% пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
 %     [C,G,A2C,A2G,WonC(:,2),WonG(:,2)]=temp_CG(fll,C2,G2,A2C2,A2G2,WonC1,WonG1,t);
 %     [TC,TG,TA2C,TA2G,WonC(:,2),WonG(:,2)]=temp_CG(fll,TC1,TG1,TA2C1,TA2G1,WonC1,WonG1,t);
@@ -134,17 +129,20 @@ fp=1;
 %     [C,TC]=GeoMex(C2,TC1,Pi(na+1:na+nc,1),1);
 %     [G,TG]=GeoMex(G2,TG1,Pi(na+nc+1:na+nc+ng,1),1);
 
+     kfw(1:na,1)=Sat_cal(Sw,1,1,as,aw); %water
+     kfo(1:na,1)=Sat_cal(Sw,2,1,as,aw); %oil
+     
+     kfw(na+1:na+nc+ng,1)=Sat_cal([Cw(:,t);Gw(:,t)],1,1,ts,tw); %water
+     kfo(na+1:na+nc+ng,1)=Sat_cal([Cw(:,t);Gw(:,t)],2,1,ts,tw); %oil
 
     [b1gm,b1gc,b1gg,b2gm]=GY_bild(GYData,Pi(1:na,1),Sw(:,1),BZ,na,nc,ng,T_GY,as,aw,mu);
     
-    [TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),Sw(:,1),MCp(:,1),as,aw,mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro);
-    [CL,CW,CP]=Potok_Tube(C,Pi(na+1:na+nc,1),Cw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc);
-    [GL,GW,GP]=Potok_Tube(G,Pi(na+nc+1:na+nc+ng,1),Gw(:,t),GCp(:,t),PR,mup,fp,kms(3),DATA.Lg);
+    [TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),kfw(1:na),kfo(1:na),MCp(:,1),as,aw,mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro);
+    [CL,~,~]=Potok_Tube(TC,Pi(vc,1),Cw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc);
+    [GL,~,~]=Potok_Tube(TG,Pi(vg,1),Gw(:,t),GCp(:,t),PR,mup,fp,kms(3),DATA.Lg,RC.Gr2,RC.Gc2,ng);
 
-    [A2CL,A2CW,A2CP]=Obmen_T2M(A2C,Pi(1:na,1),Pi(na+1:na+nc,1),Sw(:,1),Cw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
-    [A2GL,A2GW,A2GP]=Obmen_T2M(A2G,Pi(1:na,1),Pi(na+nc+1:na+nc+ng,1),Sw(:,1),Gw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
-
- %   Wf(2)=0;
+    [A2CL,~,~]=Obmen_T2M(A2C,Pi(1:na,1),Pi(vc,1),Sw(:,1),Cw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
+    [A2GL,~,~]=Obmen_T2M(A2G,Pi(1:na,1),Pi(vg,1),Sw(:,1),Gw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
 
     [W1,W6,W7]=Well_MKT(Wf,Won,Uf(:,ft+1),Sw(:,1),MCp(:,1),aw,as,mu,mup,CpW(:,ft+1));
     [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),Cw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1));
@@ -190,8 +188,7 @@ fp=1;
     Pi(:,1)=Pt(1:na+nc+ng);
 
     Pw(Qf~=0,ft+1)=Pt(na+nc+ng+1:end);
-%     'PW'
-% sum(Pw(:,t+1)<50)
+
     %% Водонасыщенность
     SCw=[Sw(:,1);Cw(:,t);Gw(:,t)];
     Sw0=SCw;
@@ -203,8 +200,8 @@ fp=1;
  dt1(t+1)=dt;
  
  qm(WonM,:)=QBild(W1,W6,W7,Pi(1:na,1),Uf(:,ft+1),Won,dt,Pw(WonM,ft+1));
- qc(WonC(:,3),:)=QBild(W1C,W6C,W7C,Pi(na+1:na+nc,1),Uf(WonC(:,3),ft+1),WonC(:,1),dt,Pw(WonC(:,3),ft+1));
- qg(WonG(:,3),:)=QBild(W1G,W6G,W7G,Pi(na+nc+1:end,1),Uf(WNG,ft+1),WonG(:,1),dt,Pw(WNG,ft+1));
+ qc(WonC(:,3),:)=QBild(W1C,W6C,W7C,Pi(vc,1),Uf(WonC(:,3),ft+1),WonC(:,1),dt,Pw(WonC(:,3),ft+1));
+ qg(WonG(:,3),:)=QBild(W1G,W6G,W7G,Pi(vg,1),Uf(WNG,ft+1),WonG(:,1),dt,Pw(WNG,ft+1));
  q=qm+qc+qg;
  Qz1=q(:,1)+q(:,2);
 
@@ -221,8 +218,7 @@ fp=1;
     CCp(:,t+1)=SCp(na+1:na+nc);
     GCp(:,t+1)=SCp(na+nc+1:end);
 
-    %% пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-
+    %% Дебиты
     
     Qm(:,:,t+1)=QBild(W1,W6,W7,Pi(1:na,1),Uf(:,ft+1),Won,dt,Pw(WonM,ft+1));
     Qm(CR_rc.wn,:,t+1)=Qm1;

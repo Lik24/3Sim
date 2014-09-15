@@ -1,11 +1,11 @@
-function [TL,TW,TP,TG]=Potok_MKT(T,P,Sw,Cp,as,aw,mu,rc,mup,fp,kms,L,Ke,Ro)
+function [TL,TW,TP,TG]=Potok_MKT(T,P,Kfw,Kfo,Cp,as,aw,mu,rc,mup,fp,kms,L,Ke,Ro)
 n=size(P,1);
 
 r=rc(:,1);
 c=rc(:,2);
 
-Kfw=Sat_cal(Sw,1,1,as,aw); %water
-Kfo=Sat_cal(Sw,2,1,as,aw); %oil
+% Kfw=Sat_cal(Sw,1,1,as,aw); %water
+% Kfo=Sat_cal(Sw,2,1,as,aw); %oil
 
 dP=P(c)-P(r);
 vP=dP>0;
