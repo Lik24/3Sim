@@ -61,7 +61,7 @@ for i=1:size(Won,1)
   Won(i)=find(Won(i)==p);
 end;
 
-na=size(XY,1);  nc=size(C,1);  ng=size(G,1);    nw=size(Qz,1);
+na=size(XY,1);  nc=size(C,1);  ng=size(G,1);    nw=size(Qz,1);  nd=0;
 C2G=sparse(nc,ng);
 C2GL=C2G;
 WonM=repmat(1:nw,1,Nl);
@@ -76,7 +76,8 @@ Mg=ones(ng,1);
 CCp(:,1)=zeros(nc,1);
 GCp(:,1)=zeros(ng,1);
 
-dVCG=[dV;dVC;dVG];
+dVD=[];
+dVCG=[dV;dVC;dVG;dVD];
 
 [TM,TC,TG,TA2C,TA2G,RC,T_GY]=Pre_fast(A,C,A2C,A2G,G,Ke,L,B,H1,K(:,1),Ke_gy,BZ,rz,cz);
 Cw(:,1)=Sw(RC.ACr,1);
@@ -93,6 +94,8 @@ j=0;
 PpW=zeros(size(Uf));
 
 [CR_rc]=Pre_Crack(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
+%[CR]=SS_ind(RC);
+
 
 C2=C;
 G2=G;
@@ -112,8 +115,23 @@ t=0;
 t_flag=1;
 Sw2=Sw;
 dt=dtt;
+va=1:na;
 vc=na+1:na+nc;
 vg=na+nc+1:na+nc+ng;
+vd=na+nc+ng+1:na+nc+ng+nd;
+Bwo(:,1:2)=Bo(1)*ones(na+nc+ng+nd,2);
+Bwo(:,3:4)=Bo(2)*ones(na+nc+ng+nd,2);
+
+% size(Mp)
+% size(Mc)
+% size(Mg)
+% size(ones(na,2))
+% size(ones(nc,2))
+% size(ones(ng,2))
+
+Mp=repmat([Mp.*ones(na,1);Mc.*ones(nc,1);Mg.*ones(ng,1)],1,2);
+SCw=[Sw(:,1);Cw(:,1);Gw(:,1)];
+P0=Pi;
 
 while t_flag==1
 %for t=1:Ta-1
@@ -134,25 +152,29 @@ fp=1;
      
      kfw(na+1:na+nc+ng,1)=Sat_cal([Cw(:,t);Gw(:,t)],1,1,ts,tw); %water
      kfo(na+1:na+nc+ng,1)=Sat_cal([Cw(:,t);Gw(:,t)],2,1,ts,tw); %oil
-
+t
+% if t==2
+%     jhfgjhfg
+% end;
     [b1gm,b1gc,b1gg,b2gm]=GY_bild(GYData,Pi(1:na,1),Sw(:,1),BZ,na,nc,ng,T_GY,as,aw,mu);
-    
-    [TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),kfw(1:na),kfo(1:na),MCp(:,1),as,aw,mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro);
-    [CL,~,~]=Potok_Tube(TC,Pi(vc,1),Cw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc);
-    [GL,~,~]=Potok_Tube(TG,Pi(vg,1),Gw(:,t),GCp(:,t),PR,mup,fp,kms(3),DATA.Lg,RC.Gr2,RC.Gc2,ng);
+    [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dV./Mp(:,1),SCw,dt,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd);
+
+    [TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),kfw(1:na),kfo(1:na),MCp(:,1),as,aw,mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro,A(va));
+    [CL,~,~]=Potok_Tube(TC,Pi(vc,1),Cw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc));
+    [GL,~,~]=Potok_Tube(TG,Pi(vg,1),Gw(:,t),GCp(:,t),PR,mup,fp,kms(3),DATA.Lg,RC.Gr2,RC.Gc2,ng,A(vg));
 
     [A2CL,~,~]=Obmen_T2M(A2C,Pi(1:na,1),Pi(vc,1),Sw(:,1),Cw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
     [A2GL,~,~]=Obmen_T2M(A2G,Pi(1:na,1),Pi(vg,1),Sw(:,1),Gw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
 
-    [W1,W6,W7]=Well_MKT(Wf,Won,Uf(:,ft+1),Sw(:,1),MCp(:,1),aw,as,mu,mup,CpW(:,ft+1));
-    [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),Cw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1));
-    [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),Gw(:,t),GCp(:,t),tw,ts,mu,mup,CpW(WNG,ft+1));
+    [W1,W6,W7]=Well_MKT(Wf,Won,Uf(:,ft+1),Sw(:,1),MCp(:,1),aw,as,mu,mup,CpW(:,ft+1),A(va));
+    [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),Cw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1),A(va));
+    [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),Gw(:,t),GCp(:,t),tw,ts,mu,mup,CpW(WNG,ft+1),A(va));
 
-    [BA1,BC1,BG1]=SGim(Pi(:,1),na,nc,ng,zc);
+    
 
-    A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,sum(A2CL,2)+sum(A2GL,2)+BA1+b1gm',na,na);
-    C1=CL-sparse(1:nc,1:nc,sum(A2CL,1)+BC1',nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);
-    G1=GL-sparse(1:ng,1:ng,sum(A2GL,1)+BG1',ng,ng)-sparse(WonG(:,1),WonG(:,1),W1G,ng,ng);
+    A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,sum(A2CL,2)+sum(A2GL,2)+Clp(va)+b1gm',na,na);
+    C1=CL-sparse(1:nc,1:nc,sum(A2CL,1)+Clp(vc)',nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);
+    G1=GL-sparse(1:ng,1:ng,sum(A2GL,1)+Clp(vg)',ng,ng)-sparse(WonG(:,1),WonG(:,1),W1G,ng,ng);
 
     PwNl=repmat(Pw(:,ft+1),Nl,1);
     b1wm=sparse(Won,ones(1,size(Won,1)),-W1.*PwNl,na,1);
@@ -175,7 +197,7 @@ fp=1;
     WM3=-sparse(1:nw,1:nw,W3vec,nw,nw);
 
     AM=[A1,A2CL,A2GL;A2CL',C1,C2GL;A2GL',C2GL',G1];
-    BM=[b1wm;b1wc;b1wg]'+[-b1gm.*GYData.GY_Pz',b1gc,b1gg];
+    BM=[b1wm;b1wc;b1wg]'+[-b1gm.*GYData.GY_Pz',b1gc,b1gg]-(Clp.*Pi)';
 
 
     WM1=WM1(Qf~=0,:);
@@ -183,7 +205,7 @@ fp=1;
     WM3=WM3(Qf~=0,Qf~=0);
 
     Pt=[BM,Qz(Qf~=0,ft+1)']/[AM,WM2;WM1,WM3];
-
+        
     Pi0=Pi;
     Pi(:,1)=Pt(1:na+nc+ng);
 
@@ -208,7 +230,7 @@ fp=1;
  Qf=Qz1;
  Sw2=Sw;
  [SCw,SCp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,Wf,...
-     Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TW,W6,TP,W7,L,DATA.Lc,DATA.Lg,Ke);
+     Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TW,W6,TP,W7,L,DATA.Lc,DATA.Lg,Ke,Cws,Cwp);
     
     Sw(:,1)=SCw(1:na);
     Cw(:,t+1)=SCw(na+1:na+nc);

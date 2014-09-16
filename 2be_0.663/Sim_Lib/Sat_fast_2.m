@@ -1,5 +1,5 @@
 function [SCw,SCp,ndt,Q1,Q2,Qm,tmp]=Sat_fast_2(SCw,SCp,RC,TC,TG,A2C,A2G,Pi,PR,...
-    ndt0,Won,Wf,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,Qz,Qf,Pi0,TW,W6,TP,W7,L,Lc,Lg,Ke)
+    ndt0,Won,Wf,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,Qz,Qf,Pi0,TW,W6,TP,W7,L,Lc,Lg,Ke,Cws,Cwp)
 
 na=RC.na;
 nc=RC.nc;
@@ -16,6 +16,9 @@ PwNl=repmat(Pw,Nl,1);
  if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
     [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun1(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...
         A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke);
+  %  [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun2(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...
+  %      A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke);
+    
     %временно
     Bcp=zeros(size(Bc));
     Bgp=zeros(size(Bc));
@@ -50,19 +53,17 @@ PwNl=repmat(Pw,Nl,1);
  r=find(v1==1);
 %sum(Bc)
 
- B=b+sparse(r,ones(sum(v1),1),Bc,na,1)/dt+sparse(r,ones(sum(v1),1),Bg,na,1)/dt;
- Bp=bp+sparse(r,ones(sum(v1),1),Bcp,na,1)/dt+sparse(r,ones(sum(v1),1),Bgp,na,1)/dt;
+ B=b+sparse(r,ones(sum(v1),1),Bc,na,1)/dt+sparse(r,ones(sum(v1),1),Bg,na,1)/dt-Cwp(va).*(Pi(va)-Pi0(va));
+ Bp=bp+sparse(r,ones(sum(v1),1),Bcp,na,1)/dt+sparse(r,ones(sum(v1),1),Bgp,na,1)/dt-SCp(va).*Cwp(va).*(Pi(va)-Pi0(va));
 
  tmp=sum(B);
 % jkghkjh
 
      SCw_old=SCw(va);
+     SCw(va)=SCw(va)+dt*(TW*Pi(va)+B)./Cws(va);
 
-     SCw(va)=SCw(va)+dt*(TW*Pi(va)+B)./dV(va);
-
-     SCp(va)=SCw_old.*SCp(va)+dt*(TP*Pi(va)+Bp)./dV(va);
+     SCp(va)=SCw_old.*SCp(va)+dt*(TP*Pi(va)+Bp)./Cws(va);
      v0=SCw(va)==0;
-
      SCp(va(v0==0))=SCp(va(v0==0))./SCw(va(v0==0));
 
      SCw=SCw.*(SCw>=0).*(SCw<=1)+(SCw>1);

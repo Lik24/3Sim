@@ -7,7 +7,7 @@ PR=Gl_PRM;
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XYc]=Sintetic_Real(PR.Ns,PR.Nl);
 [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z]=Sintetic(PR.Ns,PR.Nl);
 [WData]=Well_DATA(WXY,Z,PR.Ta);
-% Sw(:)=0;
+ Sw(:)=0.1;
 [nt,PXY,gXY,PR.dl,tXY]=kvad_crack_fun5(WXY,PR.Nl);
 [DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,gXY,PR.Nl,WXY);
 
@@ -20,7 +20,7 @@ GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 % [nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
 
 [gt,GS]=Tresh_Gor(1,DATA.XY,PR.Nl);
-%nt(:)={[]};
+nt(:)={[]};
 [C,A2C,dVc,pc,DATA.WonV,DATA.Lc]=Conek(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,PR.dh,PR.Kc,WData.r0);
 
 %[nt2,PXY2]=derevo(nt,DATA.XY,23);
