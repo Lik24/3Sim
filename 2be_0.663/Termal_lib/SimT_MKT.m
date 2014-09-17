@@ -94,7 +94,7 @@ j=0;
 PpW=zeros(size(Uf));
 
 [CR_rc]=Pre_Crack(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
-%[CR]=SS_ind(RC);
+[CR]=SS_ind(RC);
 
 
 C2=C;
@@ -152,12 +152,9 @@ fp=1;
      
      kfw(na+1:na+nc+ng,1)=Sat_cal([Cw(:,t);Gw(:,t)],1,1,ts,tw); %water
      kfo(na+1:na+nc+ng,1)=Sat_cal([Cw(:,t);Gw(:,t)],2,1,ts,tw); %oil
-t
-% if t==2
-%     jhfgjhfg
-% end;
+
     [b1gm,b1gc,b1gg,b2gm]=GY_bild(GYData,Pi(1:na,1),Sw(:,1),BZ,na,nc,ng,T_GY,as,aw,mu);
-    [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dV./Mp(:,1),SCw,dt,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd);
+    [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dV./Mp(:,1),SCw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd);
 
     [TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),kfw(1:na),kfo(1:na),MCp(:,1),as,aw,mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro,A(va));
     [CL,~,~]=Potok_Tube(TC,Pi(vc,1),Cw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc));
@@ -230,7 +227,7 @@ t
  Qf=Qz1;
  Sw2=Sw;
  [SCw,SCp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,Wf,...
-     Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TW,W6,TP,W7,L,DATA.Lc,DATA.Lg,Ke,Cws,Cwp);
+     Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,CR,Qz1,Qf,Pi0,TW,W6,TP,W7,L,DATA.Lc,DATA.Lg,Ke,Cws,Cwp);
     
     Sw(:,1)=SCw(1:na);
     Cw(:,t+1)=SCw(na+1:na+nc);
