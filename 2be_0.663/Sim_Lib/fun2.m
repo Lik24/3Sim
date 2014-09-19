@@ -1,5 +1,5 @@
 function [Bc,Bg,Swc,Swg,i,Q1,Q2,Qm,dSS]=fun2(RC,Pi,SCw,SCp,PR,TC,TG,A2C,A2G,WonC,...
-    WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke)
+    WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke,CR,TM)
 
 as=PR.as;
 aw=PR.aw;
@@ -23,9 +23,13 @@ T_in_h=CR_rc.T_in_h;
 
 won=CR_rc.won;    wf=CR_rc.wf;  wn1=CR_rc.wn1;   wn=CR_rc.wn;
 
-A_rc=CR_rc.A_rc;
-C_r=CR_rc.C_r;   C_c=CR_rc.C_c;
-G_r=CR_rc.G_r;   G_c=CR_rc.G_c;
+A_rc=CR.A_rc;
+C_r=CR.C_r;     C_c=CR.C_c;
+G_r=CR.G_r;     G_c=CR.G_c;
+AC_r=CR.AC_r;   AC_c=CR.AC_c;
+AG_r=CR.AG_r;   AG_c=CR.AG_c;
+CG_r=CR.CG_r;   CG_c=CR.CG_c;
+
 
 va=1:na;
 vc=na+1:na+nc;
@@ -83,6 +87,12 @@ kfo=zeros(size(SCwC));
 Kfw=Sat_cal(Swa,1,1,as,aw); %water
 Kfo=Sat_cal(Swa,2,1,as,aw); %oil
 
+dkfw=zeros(size(SCwC));
+dkfo=zeros(size(SCwC));
+
+dKfw=Sat_cal(Swa,1,2,as,aw); %water
+dKfo=Sat_cal(Swa,2,2,as,aw); %oil
+
 fl=1;
 i=0;
 j_ndt=0;
@@ -116,6 +126,14 @@ i=i+1;
      Kfw(v1==1)=kfw(1:Na);
      Kfo(v1==1)=kfo(1:Na);
      
+     dkfw(1:Na)=Sat_cal(SCwC(1:Na),1,2,as,aw); %water
+     dkfo(1:Na)=Sat_cal(SCwC(1:Na),2,2,as,aw); %oil
+     
+     dkfw(Na+1:end)=Sat_cal(SCwC(Na+1:end),1,2,ts,tw); %water
+     dkfo(Na+1:end)=Sat_cal(SCwC(Na+1:end),2,2,ts,tw); %oil
+     
+     dKfw(v1==1)=dkfw(1:Na);
+     dKfo(v1==1)=dkfo(1:Na);
      
      [vPa1,vPc1,vPc2,vPg1,vPg2,dPa,dPc,dPg]=pre_potok_2(Pi,Pj,RC,rc_in_h,Na);
      
@@ -193,12 +211,7 @@ i=i+1;
 
      Pt=[BC1,Qz(wn1(Qf~=0))']/[AMC1,WM2;WM1,WM3];
      Pj(:,1)=Pt(1:Na+nc+ng);
-
-     
-     
-     
-
-     
+    
      Pw(wn1(Qf~=0))=Pt(Na+nc+ng+1:end);
 
      TW2=TW2(:,v1==1);
@@ -242,31 +255,40 @@ Pg=Pj(Na+nc+1:Na+nc+ng);
 Pa(v1==1)=Pj(1:Na);
 Pi=[Pa;Pc;Pg];
 
+size(Pj)
+X0(1:Na+nc+ng)=Pj;
+
 ep=0;
 while ep==0;
-        
-    F1=AMC1*P0-BC1;
+    P0=X0(1:Na+nc+ng)';
+    Sw0=X0(Na+nc+ng+1:end)';
+    Sw0t=X0(Na+nc+ng+1:end)';
+    
+    F1=AMC1*P0-BC1';
     F2=(Sw0-Sw0t).*[dVa;dVc;dVg]/dt*ndt-AMC2*P0-BC2;
     
     
-    dFC1=dif_F1_dx1();
-    dFC2=dif_F1_dx2();
-    dFC3=dif_F2_dx1();
-    dFC4=dif_F2_dx2();
+    dFA1=A1;    
+    dFA3=A2;    
+    [dFA2,dFA4]=dif_F1_dx2(TM,Pa,SCp(va),dKfw,dKfo,mu,RC.Arc,wf,won,Uf(wn),CpW(wn));
+
+    dFC1=C1;    
+    dFC3=C2;    
+    [dFC2,dFC4]=dif_F2_dx2(TC,Pc,SCp(vc),kfw(vca),kfo(vca),mu,[RC.Cr,RC.Cc],WonC(:,2),WonC(:,1),Uf(WonC(:,3)),CpW(WonC(:,3)));
+        
+    dFG1=G1;    
+    dFG3=G2;    
+    [dFG2,dFG4]=dif_F2_dx2(TG,Pg,SCp(vg),kfw(vga),kfo(vga),mu,[RC.Cr,RC.Cc],WonG(:,2),WonG(:,1),Uf(WonG(:,3)),CpW(WonG(:,3)));
     
-    dFA_dX=sparse(A_rc(:,1),A_rc(:,2),[dFC1;dFC2;dFC3;dFC4],na2,na2);
+   
+    dFA_dX=sparse(A_rc(:,1),A_rc(:,2),[dFA1;dFA2;dFA3;dFA4],na2,na2);
     dFC_dX=sparse(C_r,C_c,[dFC1;dFC2;dFC3;dFC4],nc2,nc2);
     dFG_dX=sparse(G_r,G_c,[dFG1;dFG2;dFG3;dFG4],ng2,ng2);
     
-    % dFA_dX=dFA_dX+dFA_dX';
-    % dFC_dX=dFC_dX+dFC_dX';
-    % dFG_dX=dFG_dX+dFG_dX';
-    
-    dFA2C_dX
-    dFA2G_dX
-    dFC2G_dX
-    
-    
+    dFA2C_dX=sparse(AC_r,AC_c,na2,nc2);
+    dFA2G_dX=sparse(AG_r,AG_c,na2,ng2);
+    dFC2G_dX=sparse(CG_r,CG_c,nc2,ng2);
+
     dF_dX=[dFA_dX,dFA2C_dX,dFA2G_dX;dFA2C_dX',dFC_dX,dFC2G_dX,dFA2G_dX',dFC2G_dX',dFG_dX];
     F(V1)=F1;
     F(V2)=F2;

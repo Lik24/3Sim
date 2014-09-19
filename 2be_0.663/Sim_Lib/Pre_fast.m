@@ -1,4 +1,4 @@
-function [TM,TC,TG,TA2C,TA2G,RC,T_GY]=Pre_fast(A,C,A2C,A2G,G,Ke,L,B,H1,K,KeGY,bz,rz,cz)
+function [TM,TC,TG,TA2C,TA2G,RC,T_GY]=Pre_fast(A,C,A2C,A2G,C2G,G,Ke,L,B,H1,K,KeGY,bz,rz,cz)
 na=size(A,1); 
 nc=size(C,1); 
 ng=size(G,1); 
@@ -8,6 +8,7 @@ ng=size(G,1);
   [r3,c3]=find(A2C);
   [r4,c4]=find(A2G);
   [r5,c5]=find(G>0);
+  [r6,c6]=find(C2G);
      
   RC.rc(:,1)=[r;r2+na;c3+na;r3;r5+na+nc;c4+nc+na;r4];
   RC.rc(:,2)=[c;c2+na;r3;c3+na;c5+na+nc;r4;c4+nc+na];
@@ -51,6 +52,10 @@ RC.ACc=c3;
 TA2G=A2G(r4+(c4-1)*na).*K(r4);
 RC.AGr=r4;
 RC.AGc=c4;
+
+TC2G=C2G(r4+(c4-1)*na).*K(r4);
+RC.CGr=r6;
+RC.CGc=c6;
 
 RC.na=na;
 RC.nc=nc;

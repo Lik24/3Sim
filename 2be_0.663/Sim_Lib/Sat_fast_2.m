@@ -1,5 +1,5 @@
 function [SCw,SCp,ndt,Q1,Q2,Qm,tmp]=Sat_fast_2(SCw,SCp,RC,TC,TG,A2C,A2G,Pi,PR,...
-    ndt0,Won,Wf,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,Qz,Qf,Pi0,TW,W6,TP,W7,L,Lc,Lg,Ke,Cws,Cwp)
+    ndt0,Won,Wf,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,CR,Qz,Qf,Pi0,TW,W6,TP,W7,L,Lc,Lg,Ke,Cws,Cwp,TM)
 
 na=RC.na;
 nc=RC.nc;
@@ -16,8 +16,8 @@ PwNl=repmat(Pw,Nl,1);
  if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
     [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun1(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...
         A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke);
-  %  [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun2(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...
-  %      A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke);
+    [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun2(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...
+        A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke,CR,TM);
     
     %временно
     Bcp=zeros(size(Bc));

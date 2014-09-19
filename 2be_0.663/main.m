@@ -1,7 +1,7 @@
 clearvars
 
 addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','GeoMeh_Lib',...
-    'DATA','Well_lib','Crack_gen','Problems','Poly_lib');
+    'DATA','Well_lib','Crack_gen','Problems','Poly_lib','SS_lib','Diff_lib');
 PR=Gl_PRM;
 
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XYc]=Sintetic_Real(PR.Ns,PR.Nl);
@@ -20,7 +20,7 @@ GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 % [nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
 
 [gt,GS]=Tresh_Gor(1,DATA.XY,PR.Nl);
-nt(:)={[]};
+%nt(:)={[]};
 [C,A2C,dVc,pc,DATA.WonV,DATA.Lc]=Conek(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,PR.dh,PR.Kc,WData.r0);
 
 %[nt2,PXY2]=derevo(nt,DATA.XY,23);

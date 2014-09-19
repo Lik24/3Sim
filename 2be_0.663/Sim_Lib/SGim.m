@@ -22,7 +22,7 @@ Cop=[CopA;CopC;CopG;CopD];
 
 
 Cws=[CwsA;CwsC;CwsG;CwsD];
-A=[AA,AC,AG,AD];
+A=[AA;AC;AG;AD];
 Clp=A.*Cwp+Cop;
 
 Mp=[MpA;MpC;MpG;MpD];
