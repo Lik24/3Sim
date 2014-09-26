@@ -1,4 +1,4 @@
-function [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dV,SCw,Mp,zc,Bwo,P,Patm,P0,va,vc,vg,vd)
+function [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dV,SCw,Mp,zc,Bwo,P,Patm,P0,va,vc,vg,vd,dt)
 
 Bw=Bwo(:,1:2);
 Bo=Bwo(:,3:4);
@@ -24,6 +24,7 @@ Cop=[CopA;CopC;CopG;CopD];
 Cws=[CwsA;CwsC;CwsG;CwsD];
 A=[AA;AC;AG;AD];
 Clp=A.*Cwp+Cop;
+Clp=Clp/dt;
 
 Mp=[MpA;MpC;MpG;MpD];
 

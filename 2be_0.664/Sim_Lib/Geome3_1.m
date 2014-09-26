@@ -1,4 +1,4 @@
-function [L,B,S,H,Con]=Geome3_1(Ab,XY,Z,h)
+function [L,B,S,H]=Geome3_1(Ab,XY,Z,h)
 
 X=XY(:,1);  Y=XY(:,2);
 n=size(X,1);
@@ -29,7 +29,7 @@ xf=(X(r(r1))+X(c(r1)))/2;
 yf=(Y(r(r1))+Y(c(r1)))/2;
 
 Con1=[xt,yt,c1;xf,yf,c(r1)];
-Con=contr(Con1);
+%Con=contr(Con1);
 
 a(:,1)=xt-xf;
 a(:,2)=yt-yf;

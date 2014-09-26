@@ -7,8 +7,8 @@ dPw=P(Won)-Pw;
 v1=dP>0;
 TL=TL(RC.Acr2(:,1)+(RC.Acr2(:,2)-1)*na);
 
-if dt==0
 
+if dt==0
     if (min(Sw)>Sc)
         MdS=abs((Sw2-Sw));
         nf=(isnan(MdS)==0);
@@ -26,9 +26,11 @@ if dt==0
         
         dt=min([dt1,dt2])/Fc;
     end;
-      
-  if st+dt>Ta
-      dt=Ta-st;
-  end;
-  %kjhjkhj
+    
+
+    %kjhjkhj
 end;
+
+    if st+dt>Ta
+        dt=Ta-st;
+    end;
