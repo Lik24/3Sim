@@ -18,6 +18,7 @@ r2=CR_rc.r2;     c2=CR_rc.c2;
 
 rc_gy=CR_rc.rc_gy;
 rc_in_h=CR_rc.rc_in_h;
+rc_in=CR_rc.rc_in;
 T_gy=CR_rc.T_gy;
 T_in_h=CR_rc.T_in_h;
 
@@ -40,7 +41,7 @@ vg=na+nc+1:na+nc+ng;
  dVa=dV(va);  dVc=dV(vc);  dVg=dV(vg);
  
 Pa=Pi(va);
-
+WonA=[won,wf,wn];
 Qz=Qz/dt;
 nw=size(Qz,1);
 Qf=Qf(wn1);
@@ -113,6 +114,7 @@ vg2=2:2:2*ng;
 na2=2*Na;
 nc2=2*nc;
 ng2=2*ng;
+Sw=SCwC;
 
 while fl==1% & i<3000
 i=i+1;
@@ -255,6 +257,7 @@ Pg=Pj(Na+nc+1:Na+nc+ng);
 Pa(v1==1)=Pj(1:Na);
 Pi=[Pa;Pc;Pg];
 
+<<<<<<< HEAD
 size(Pj)
 X0(1:Na+nc+ng)=Pj;
 
@@ -264,9 +267,33 @@ while ep==0;
     Sw0=X0(Na+nc+ng+1:end)';
     Sw0t=X0(Na+nc+ng+1:end)';
     
+=======
+
+X0=[Pj;Sw];
+Sw0=Sw;
+Sw0t=Sw;
+ep=0;
+while ep==0;
+    P0=X0(1:Na+nc+ng);
+    Sw0=X0(Na+nc+ng+1:end);
+
+>>>>>>> 9f305d1150a0c637bbd26fb3181b4d0d636817af
     F1=AMC1*P0-BC1';
     F2=(Sw0-Sw0t).*[dVa;dVc;dVg]/dt*ndt-AMC2*P0-BC2;
+        
+    dFA1=A1;    
+    dFA3=A2;    
+    [dFA2,dFA4]=dif_F_dx2(TM,Pa,SCp(va),dKfw,dKfo,mu,rc_in,Uf,CpW,Pw,WonA,dVa/dt*ndt);
+
+    dFC1=C1;    
+    dFC3=C2;    
+    [dFC2,dFC4]=dif_F_dx2(TC,Pc,SCp(vc),dkfw(vca),dkfo(vca),mu,[RC.Cr,RC.Cc],Uf,CpW,Pw,WonC,dVc/dt*ndt);
+        
+    dFG1=G1;    
+    dFG3=G2;    
+    [dFG2,dFG4]=dif_F_dx2(TG,Pg,SCp(vg),dkfw(vga),dkfo(vga),mu,[RC.Cr,RC.Cc],Uf,CpW,Pw,WonG,dVg/dt*ndt);
     
+<<<<<<< HEAD
     
     dFA1=A1;    
     dFA3=A2;    
@@ -280,6 +307,8 @@ while ep==0;
     dFG3=G2;    
     [dFG2,dFG4]=dif_F2_dx2(TG,Pg,SCp(vg),kfw(vga),kfo(vga),mu,[RC.Cr,RC.Cc],WonG(:,2),WonG(:,1),Uf(WonG(:,3)),CpW(WonG(:,3)));
     
+=======
+>>>>>>> 9f305d1150a0c637bbd26fb3181b4d0d636817af
    
     dFA_dX=sparse(A_rc(:,1),A_rc(:,2),[dFA1;dFA2;dFA3;dFA4],na2,na2);
     dFC_dX=sparse(C_r,C_c,[dFC1;dFC2;dFC3;dFC4],nc2,nc2);
