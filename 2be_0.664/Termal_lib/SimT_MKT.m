@@ -178,7 +178,6 @@ fp=1;
         [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),Cw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1),A(vc));
         [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),Gw(:,t),GCp(:,t),tw,ts,mu,mup,CpW(WNG,ft+1),A(vg));
         
-                
         A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,sum(A2CL,2)+sum(A2GL,2)+Clp(va)+b1gm',na,na);
         C1=CL-sparse(1:nc,1:nc,sum(A2CL,1)+Clp(vc)',nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);
         G1=GL-sparse(1:ng,1:ng,sum(A2GL,1)+Clp(vg)',ng,ng)-sparse(WonG(:,1),WonG(:,1),W1G,ng,ng);
@@ -205,12 +204,12 @@ fp=1;
         
         AM=[A1,A2CL,A2GL;A2CL',C1,C2GL;A2GL',C2GL',G1];
         BM=[b1wm;b1wc;b1wg]'+[-b1gm.*GYData.GY_Pz',b1gc,b1gg]-(Clp.*Pi)';
-        
+        BLGY_GIM=-b1gm.*GYData.GY_Pz'-(Clp(va).*Pi(va))';
         
         WM1=WM1(Qf~=0,:);
         WM2=WM2(:,Qf~=0);
         WM3=WM3(Qf~=0,Qf~=0);
-        
+
         Pt=[BM,Qz(Qf~=0,ft+1)']/[AM,WM2;WM1,WM3];
 
         flag_gim=sum(abs(Pt(1:na+nc+ng+nd)-Pt0(1:na+nc+ng+nd))./Pt(1:na+nc+ng+nd)>=1e-6)~=0;
@@ -237,11 +236,14 @@ fp=1;
  q=qm+qc+qg;
  Qz1=q(:,1)+q(:,2);
 
+ Qzm1=qm(:,1)+qm(:,2);
+ 
  Qf=Qz1;
  Sw2=Sw;
 
  [SCw,SCp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,Wf,...
-     Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,CR,Qz1,Qf,Pi0,TW,W6,TP,W7,L,DATA.Lc,DATA.Lg,Ke,Cws,Cwp,TM,A2CL,A2GL,qm);
+     Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,CR,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
+     W7,L,DATA.Lc,DATA.Lg,Ke,Cws,Cwp,TM,A2CL,A2GL,qm,BLGY_GIM,Qz(:,ft+1),WonM,nw);
     
     Sw(:,1)=SCw(1:na);
     Cw(:,t+1)=SCw(na+1:na+nc);
