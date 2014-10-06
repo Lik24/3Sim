@@ -13,7 +13,7 @@ Sw(:)=0;
 
 GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
-%[nt1,PXY]=elka(nt,DATA.XY,10,10,0,25);  % кол-во трещин, длинна, флаг к скважине
+%[nt1,PXY]=elka(nt,DATA.XY,1,20,0,25);  % кол-во трещин, длинна, флаг к скважине
 %load('elka_tst.mat','nt1','PXY')
 [CrDATA]=CrackProp(DATA,PR.dl);
 
