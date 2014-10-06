@@ -6,7 +6,7 @@ n1=size(Z);
 %load('DATA_WXY','a0','a1','a2')
 
 %a=rand(n(1),1);
-  Uf=-ones(4,1);
+  Uf=-ones(5,1);
   Uf(1)=1;
   Uf(2:3)=0;
  % Uf=a0;

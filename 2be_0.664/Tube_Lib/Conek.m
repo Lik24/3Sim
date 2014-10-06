@@ -13,7 +13,7 @@ nc1=0;
 for i=1:Nl
     nt1=Nt{i}-np*(i-1);
     nt=1:np;
-        
+
     nt(nt1)=[];
 %     XY(nt1,:)'
     [A]=MR_Prop(XY,1);
@@ -32,6 +32,7 @@ for i=1:Nl
     
     A2=A(nt1,:);
     A3=A2(:,nt1);
+
 
     L2=L(nt1,:);
     L3=L2(:,nt1);
@@ -52,6 +53,7 @@ for i=1:Nl
 % [r,c]'
     C=H(r+(c-1)*n)*dh./L(r+(c-1)*n)*Kc*8.34;
     C=sparse(r,c,C,n,n);
+
     C=C-sparse(1:n,1:n,sum(C,2),n,n);
 
     bn=size(C,1);
@@ -61,7 +63,7 @@ for i=1:Nl
 %     jhj
     C(c1,:)=[];
     C(:,c1)=[];
-    
+
     L(c1,:)=[];
     L(:,c1)=[];
     

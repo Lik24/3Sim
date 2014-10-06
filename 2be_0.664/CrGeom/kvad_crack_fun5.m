@@ -25,7 +25,6 @@ g_cr{2,1}=[210,210;
 
 if isempty(g_cr{1,1})==0; 
     [p,GR] = Mesh4(WXY,drob);
-
     for i=1:size(g_cr,1)
         for j=1:size(g_cr,2)
             A=g_cr{i,j};
@@ -39,7 +38,7 @@ if isempty(g_cr{1,1})==0;
     end;
 
         [crk2] = Fracture(gcr,dl);
-        [pm2] = Purgatory( p,crk2,dl2,WXY,rad);
+        [pm2] = Purgatory(p,crk2,dl2,WXY,rad);
 
     cr=[];    
     for i=r'

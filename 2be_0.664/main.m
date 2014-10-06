@@ -8,21 +8,22 @@ PR=Gl_PRM;
 [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z]=Sintetic(PR.Ns,PR.Nl);
 [WData]=Well_DATA(WXY,Z,PR.Ta);
 Sw(:)=0;
-[nt,PXY,gXY,PR.dl,tXY]=kvad_crack_fun5(WXY,PR.Nl);
+[nt,PXY,gXY,PR.dl,tXY]=kvad_crack_fun(WXY,PR.Nl);
 [DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,gXY,PR.Nl,WXY);
 
 GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
 %[nt1,PXY]=elka(nt,DATA.XY,1,20,0,25);  % кол-во трещин, длинна, флаг к скважине
 %load('elka_tst.mat','nt1','PXY')
-[CrDATA]=CrackProp(DATA,PR.dl);
+[CrDATA]=CrackProp(DATA,PR,nt);
 
 % [nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
 
 [gt,GS]=Tresh_Gor(1,DATA.XY,PR.Nl);
 %nt(:)={[]};
-[C,A2C,dVc,pc,DATA.WonV,DATA.Lc]=Conek(DATA.XY,nt1,PR.Nl,CrDATA,DATA.Won,PR.dh,PR.Kc,WData.r0);
-
+[C,A2C,dVc,pc,DATA.WonV,DATA.Lc]=Conek2(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,WData.r0);
+spy(C)
+dfdf
 %[nt2,PXY2]=derevo(nt,DATA.XY,23);
 gt(:)={[]};
 %nt2(:)={[]};
