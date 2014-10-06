@@ -64,6 +64,31 @@ hold off
 
 figure(98),subplot(2,4,2);
 plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность') % 
+hold on
+
+if Nl==1
+    for i1=1:size(PXY,2)
+        pX=PXY{1,i1};
+        pY=PXY{2,i1};
+        
+        for i=1:size(pX,1)
+            plot(pX(i,:),pY(i,:),'Color',[0 0 i1/size(PXY,2)])
+            hold on
+        end;
+    end;    
+else
+    for i2=1:Nl
+      pX=PXY{1,i2};
+      pY=PXY{2,i2};
+      pZ=mean(z(:,i2))*ones(size(pY));
+     if isempty(pX)==0   
+      plot3(pX',pY',pZ','Color',[0 0 i2/size(PXY,2)])
+     end;
+      hold on
+    end;
+end;
+hold off
+
 
 figure(98),subplot(2,4,4);
 plot_fild(x,y,z,cp,Nl,X,Y,WXY,'Концентрация') % 
