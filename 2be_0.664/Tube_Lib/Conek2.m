@@ -59,12 +59,12 @@ for l=1:Nl
         
         a2c=sum(H2.*L2,2);
         A2C=sparse(nt,1:n,a2c,np,n);
-        
         dVc=sum(H2.*L2.*dh,2);
         dVB(i)={dVc};
         CB(i)={C};
         LB(i)={L};
         A2CB(i)={A2C};
+        %sum(A2C(:)~=0)
         sntl=sntl+size(nt,2);
     end;
     nc1=nc1+sntl;

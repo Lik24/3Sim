@@ -7,14 +7,15 @@ PR=Gl_PRM;
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XYc]=Sintetic_Real(PR.Ns,PR.Nl);
 [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z]=Sintetic(PR.Ns,PR.Nl);
 [WData]=Well_DATA(WXY,Z,PR.Ta);
-Sw(:)=0;
+%Sw(:)=0;
 [nt,PXY,gXY,PR.dl,tXY]=kvad_crack_fun(WXY,PR.Nl);
 [DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,gXY,PR.Nl,WXY);
 
 GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
-%[nt1,PXY]=elka(nt,DATA.XY,1,20,0,25);  % кол-во трещин, длинна, флаг к скважине
-%load('elka_tst.mat','nt1','PXY')
+[nt,PXY]=elka(PR.Nl,DATA.XY,8,20,0,25);  % кол-во трещин, длинна, флаг к скважине
+
+%load('elka_tst1.mat','nt','PXY')
 [CrDATA]=CrackProp(DATA,PR,nt);
 
 % [nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
