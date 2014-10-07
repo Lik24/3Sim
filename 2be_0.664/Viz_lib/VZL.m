@@ -40,24 +40,31 @@ plot_fild(x,y,z,p,Nl,X,Y,WXY,'Пластовое давление') %
 hold on
 
 if Nl==1
-    for i1=1:size(PXY,2)
-        pX=PXY{1,i1};
-        pY=PXY{2,i1};
+    pxy=PXY{1};
+    for i1=1:size(pxy,2)
+        pX=pxy{1,i1};
+        pY=pxy{2,i1};
         
         for i=1:size(pX,1)
-            plot(pX(i,:),pY(i,:),'Color',[0 0 i1/size(PXY,2)])
+            plot(pX(i,:),pY(i,:),'Color',[0 0 i1/size(pxy,2)])
             hold on
         end;
-    end;    
+    end;
 else
     for i2=1:Nl
-      pX=PXY{1,i2};
-      pY=PXY{2,i2};
-      pZ=mean(z(:,i2))*ones(size(pY));
-     if isempty(pX)==0   
-      plot3(pX',pY',pZ','Color',[0 0 i2/size(PXY,2)])
-     end;
-      hold on
+      pXY=PXY{i2};
+       for j1=1:size(pXY,1)
+            pxy=pXY{j1};
+           for i1=1:size(pxy,2)
+            pX=pxy{1,i1};
+            pY=pxy{2,i1};
+            pZ=mean(z(:,i2))*ones(size(pY));
+            if isempty(pX)==0
+                plot3(pX',pY',pZ','Color',[0 0 i2/size(PXY,2)])
+            end;
+           end;
+            hold on
+        end;
     end;
 end;
 hold off
@@ -67,24 +74,31 @@ plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность') %
 hold on
 
 if Nl==1
-    for i1=1:size(PXY,2)
-        pX=PXY{1,i1};
-        pY=PXY{2,i1};
+    pxy=PXY{1};
+    for i1=1:size(pxy,2)
+        pX=pxy{1,i1};
+        pY=pxy{2,i1};
         
         for i=1:size(pX,1)
-            plot(pX(i,:),pY(i,:),'Color',[0 0 i1/size(PXY,2)])
+            plot(pX(i,:),pY(i,:),'Color',[0 0 i1/size(pxy,2)])
             hold on
         end;
-    end;    
+    end;
 else
     for i2=1:Nl
-      pX=PXY{1,i2};
-      pY=PXY{2,i2};
-      pZ=mean(z(:,i2))*ones(size(pY));
-     if isempty(pX)==0   
-      plot3(pX',pY',pZ','Color',[0 0 i2/size(PXY,2)])
-     end;
-      hold on
+      pXY=PXY{i2};
+       for j1=1:size(pXY,1)
+            pxy=pXY{j1};
+           for i1=1:size(pxy,2)
+            pX=pxy{1,i1};
+            pY=pxy{2,i1};
+            pZ=mean(z(:,i2))*ones(size(pY));
+            if isempty(pX)==0
+                plot3(pX',pY',pZ','Color',[0 0 i2/size(PXY,2)])
+            end;
+           end;
+            hold on
+        end;
     end;
 end;
 hold off

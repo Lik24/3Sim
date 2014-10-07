@@ -22,8 +22,7 @@ GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 [gt,GS]=Tresh_Gor(1,DATA.XY,PR.Nl);
 %nt(:)={[]};
 [C,A2C,dVc,pc,DATA.WonV,DATA.Lc]=Conek2(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,WData.r0);
-spy(C)
-dfdf
+
 %[nt2,PXY2]=derevo(nt,DATA.XY,23);
 gt(:)={[]};
 %nt2(:)={[]};

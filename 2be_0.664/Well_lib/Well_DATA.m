@@ -8,7 +8,7 @@ n1=size(Z);
 %a=rand(n(1),1);
   Uf=-ones(5,1);
   Uf(1)=1;
-  Uf(2:3)=0;
+  Uf(2:4)=0;
  % Uf=a0;
 
 %Uf=uf2;

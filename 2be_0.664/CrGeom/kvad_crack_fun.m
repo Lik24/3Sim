@@ -8,7 +8,8 @@ dl2=6.5*dh;         % Очитска вокруг трещины
 
 ws=size(WXY,1);
 NT=cell(NL,1);
-PXY=cell(2,NL);
+PXY=cell(NL,1);
+
 g_cr{1,1}=[];
    % Nt l    X  Y
 g_cr{1,1}=[250,250;
@@ -63,7 +64,7 @@ if isempty(g_cr{1,1})==0;
 
 for l=1:NL
 rl=find(ImA(:,l));  
-  for i=rl 
+  for i=rl' 
      cr=crk{i,l};
      nt=[];
       for j=1:size(cr,1)
@@ -79,7 +80,7 @@ end;
     
 for l=1:NL
 rl=find(ImA(:,l));  
-  for i=rl 
+  for i=rl' 
    crn=crk{i,l};
    x1=crn(1:end-1,1);
    x2=crn(2:end,1);

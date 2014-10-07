@@ -52,6 +52,7 @@ XY=repmat(XY,Nl,1);
 nw=size(p,2);
 nwc=size(A2C,1);
 raz=nw-nwc;
+
 A2C(raz+1:end+raz,:)=A2C;
 A2C(1:raz,:)=0;
 A2C=A2C(p,:);

@@ -27,13 +27,13 @@ for l=1:Nl
     
     [L,~,~,H]=Geome3(A,XY,Z,HH(:,l));
     mnt=size(Nt,2);
+    dVB=cell(mnt,1);
+    CB=cell(mnt,1);
+    LB=cell(mnt,1);
+    A2CB=cell(mnt,1);
+
     for i=1:mnt
         
-        dVB=cell(mnt,1);
-        CB=cell(mnt,1);
-        LB=cell(mnt,1);
-        A2CB=cell(mnt,1);
-
         nt=Nt{i};   % Список ячеек с трещинами
         kc=Kc(i);   % Проницаемость трещины
         dh=Dh(i);   % Раскрытость трещины
@@ -65,27 +65,24 @@ for l=1:Nl
         CB(i)={C};
         LB(i)={L};
         A2CB(i)={A2C};
-        
         sntl=sntl+size(nt,2);
     end;
     nc1=nc1+sntl;
-    
     C_L(l)=Mat_Constr(CB);
     L_L(l)=Mat_Constr(LB);
-    A2C_L(l)=Mat_Constr(A2CB);
-    dV_L(l)=Mat_Constr(dVB);
+    A2C_L(l)={cell2mat(A2CB')};
+    dV_L(l)={cell2mat(dVB)};
 end;
 
     C_cell=Mat_Constr(C_L);
     L_cell=Mat_Constr(L_L);
-    A2C_cell=Mat_Constr(A2C_L);
-    dV_cell=Mat_Constr(dV_L);
-    C_cell
-    sdsd
+    A2C=cell2mat(A2C_L');
+    dVc=cell2mat(dV_L);
+
     C=cell2mat(C_cell);
     L=cell2mat(L_cell);
-    A2C=cell2mat(A2C_cell);
-    dVc=cell2mat(dV_cell);
+   % A2C=cell2mat(A2C_cell);
+   % dVc=cell2mat(dV_cell);
 
     p=symrcm(C);
     C=C(p,p);
