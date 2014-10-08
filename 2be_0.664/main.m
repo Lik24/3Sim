@@ -13,7 +13,7 @@ PR=Gl_PRM;
 
 GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
-[nt,PXY]=elka(PR.Nl,DATA.XY,8,20,0,25);  % кол-во трещин, длинна, флаг к скважине
+[nt,PXY]=elka(PR.Nl,DATA.XY,2,5,0,25);  % кол-во трещин, длинна, флаг к скважине
 
 %load('elka_tst1.mat','nt','PXY')
 [CrDATA]=CrackProp(DATA,PR,nt);
@@ -22,8 +22,8 @@ GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 
 [gt,GS]=Tresh_Gor(1,DATA.XY,PR.Nl);
 %nt(:)={[]};
-[C,A2C,dVc,pc,DATA.WonV,DATA.Lc]=Conek2(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,WData.r0);
-
+[C,A2C,dVc,pc,DATA.WonV,DATA.Lc,CR_GRUP]=Conek2(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,WData.r0);
+sdsd
 %[nt2,PXY2]=derevo(nt,DATA.XY,23);
 gt(:)={[]};
 %nt2(:)={[]};
@@ -33,7 +33,7 @@ gt(:)={[]};
 %[XY,K,Z,Pi,Sw,Cp,p,Q]=Sim_MKT(Prop,C,A2C,G,A2G,dVc,dVg,DATA,WData);
 [XY,KX,Z,Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,dQ,dSS,dt1,V0]=SimT_MKT(PR,C,A2C,G,A2G,dVc,dVg,DATA,WData,GYData,1);
 
-VZL(XY,KX,WXY,Z,Pi,Sw,Ti,MCp,PR.Nl,p,Q,PXY,gt);
+VZL(XY,KX,WXY,Z,Pi,Sw,Ti,MCp,PR.Nl,p,Q,PXY,gt,SwC,CR_GRUP,pc,nt,C);
 VZL_VORONOI(XY,Sw(:,end),p,WXY,WData.Uf(:,end))
 
 

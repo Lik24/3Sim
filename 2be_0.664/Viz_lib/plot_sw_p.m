@@ -14,9 +14,9 @@ subplot1 = subplot(1,2,1,'Parent',figure1,'YGrid','on','XGrid','on',...
     'Layer','top',...
     'CLim',[0 1]);
 %% Uncomment the following line to preserve the X-limits of the axes
-% xlim(subplot1,[1 201]);
-%% Uncomment the following line to preserve the Y-limits of the axes
-% ylim(subplot1,[1 201]);
+xlim(subplot1,[min(xd1(:))-1, max(xd1(:))+1]);
+ylim(subplot1,[min(yd1(:))-1, max(yd1(:))+2]);
+
 box(subplot1,'on');
 hold(subplot1,'all');
 
@@ -50,11 +50,11 @@ plot(X2,Y2,'Parent',subplot1,'MarkerFaceColor',[0 0 0],...
 % Create subplot
 subplot2 = subplot(1,2,2,'Parent',figure1,'YGrid','on','XGrid','on',...
     'Layer','top',...
-    'CLim',[50 100]);
+    'CLim',[50 62 ]);
 %% Uncomment the following line to preserve the X-limits of the axes
-% xlim(subplot2,[1 201]);
+xlim(subplot2,[min(xd1(:))-1, max(xd1(:))+1]);
 %% Uncomment the following line to preserve the Y-limits of the axes
-% ylim(subplot2,[1 201]);
+ylim(subplot2,[min(yd1(:))-1, max(yd1(:))+2]);
 box(subplot2,'on');
 hold(subplot2,'all');
 

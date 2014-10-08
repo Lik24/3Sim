@@ -1,6 +1,6 @@
 function video_save(XY,WXY,Z,Pi,Sw,Nl,pp,PXY,PXY2,uf)
 tic
-writerObj = VideoWriter('Pre_new_7ve.avi','MPEG-4');
+writerObj = VideoWriter('Pre_new.avi','MPEG-4');
 open(writerObj);
 size(Pi)
 size(XY)

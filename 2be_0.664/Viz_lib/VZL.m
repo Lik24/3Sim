@@ -1,4 +1,4 @@
-function VZL(XY,K,WXY,WZ,P,Sw,T,Cp,Nl,pp,Q,PXY,gt)
+function VZL(XY,K,WXY,WZ,P,Sw,T,Cp,Nl,pp,Q,PXY,gt,SwC,CR_GRUP,pc,NT,C)
 
  %cmap1=summer;
  %colormap(cmap1);
@@ -13,8 +13,12 @@ P(pp,:)=P;
 Sw(pp,:)=Sw;
 Cp(pp,:)=Cp;
 T(pp,:)=T;
+SwC(pc,:)=SwC;
+C(pc,:)=C;
+C(:,pc)=C;
 nxy=size(WZ,1)/Nl;
-
+[A]=MR_Prop(XY,1);
+A=A.*(A>0);
 for l=1:Nl
     
 Z(nxy*(l-1)+1:nxy*l)=(-l+1)*20;
@@ -61,6 +65,61 @@ else
             pZ=mean(z(:,i2))*ones(size(pY));
             if isempty(pX)==0
                 plot3(pX',pY',pZ','Color',[0 0 i2/size(PXY,2)])
+            end;
+           end;
+            hold on
+        end;
+    end;
+end;
+hold off
+
+if Nl==1
+Nt=NT{1};
+    SwC_L=SwC(CR_GRUP(:,2)==Nl);
+    cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
+    C_L=C(CR_GRUP(:,2)==Nl,:);
+    C_L=C_L(:,CR_GRUP(:,2)==Nl);
+    
+    for i1=1:size(Nt,2)
+        nt=Nt{i1};
+        SwC_nC=SwC_L(cr_grup==i1);
+
+        C_nC=C_L(cr_grup==i1,:);
+        C_nC=C_nC(:,cr_grup==i1);
+        
+ %       A1=A(nt,:);
+        vnt=1:size(nt,2);
+        for i=1:size(nt,2)
+            col=find(C_nC(i,:));
+            for ic=1:size(col,2)
+                col2=find(col(ic)==vnt);
+              %  SwC_nC(vnt(col2))
+                if isempty(col2)==0
+                col_sw=(SwC_nC(i)+SwC_nC(vnt(col2)))/2;
+                vx=[XY(nt(i),1),XY(nt(col2),1)];
+                vy=[XY(nt(i),2),XY(nt(col2),2)];
+                plot(vx,vy,'Color',[col_sw col_sw col_sw])
+                end;
+            end;
+             
+%             col_sw=SwC_nC(i);
+%             vx=XY(nt(i),1);
+%             vy=XY(nt(i),2);
+          %  plot(vx,vy,'Color',[col_sw col_sw col_sw])
+            hold on
+        end;
+    end;
+else
+    for i2=1:Nl
+    Nt=NT{i2};
+       for j1=1:size(pXY,1)
+            pxy=pXY{j1};
+           for i1=1:size(pxy,2)
+            pX=pxy{1,i1};
+            pY=pxy{2,i1};
+            pZ=mean(z(:,i2))*ones(size(pY));
+            if isempty(pX)==0
+                plot3(pX',pY',pZ','Color',[col_sw col_sw col_sw])
             end;
            end;
             hold on

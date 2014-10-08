@@ -22,4 +22,4 @@ WXY=zeros(4,2);
 WXY(:,1)=[0,250,0,250]';
 WXY(:,2)=[0,0,250,250]';
 uf=[1,-1,-1,-1]';
-video_save(XY,WXY,Z,Pi(:,1:30:end),Sw(:,1:30:end),Nl,p,PXY,PXY,uf)
+video_save(XY,WXY,Z,Pi(:,1:1:end),Sw(:,1:1:end),Nl,p,PXY,PXY,uf)

@@ -6,7 +6,7 @@ nt=cell(Nl,1);
 for l=1:Nl
     [A]=MR_Prop(gXY,1);
     na=size(gXY,1);
-    new_nt=[];
+
     A=A.*(A>0);
     %A(:,Nt)=0;
     x3=[];
