@@ -84,6 +84,7 @@ dVCG=[dV;dVC;dVG;dVD];
 Cw(:,1)=Sw(RC.ACr,1);
 Gw(:,1)=Sw(RC.AGr,1);
 Pi(1:na,1)=P;
+
 Pi(na+1:na+nc,1)=P(RC.ACr);
 Pi(na+nc+1:na+nc+ng,1)=P(RC.AGr);
 
