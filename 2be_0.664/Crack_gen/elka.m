@@ -28,7 +28,10 @@ for l=1:Nl
           end;
         end;
         
-         new=ni;
+         new(1,1)=ni;
+         A(ni,:)=0;
+         nt1=[];
+         nt2=[];
          for j=1:dlin
              r=find(A(:,ni));
              if isempty(r)==0
@@ -44,15 +47,20 @@ for l=1:Nl
                  
                  
                  plot([x2;x1(r(nj))'],[y2;y1(r(nj))']);
+                 ni0=ni;
                  ni=r(nj(1));
 
                  x3=[x3;[x2',x1(r(nj))]];
                  y3=[y3;[y2',y1(r(nj))]];
                
-                 new=[new,r(nj)'];
+%                 new=[new,r(nj)'];
+               
+                 nt1=[nt1,ni0*ones(1,size(nj,1))];
+                 nt2=[nt2,r(nj)'];
              end;
          end;
-         new=NODuble(new);
+         new=[nt1;nt2];
+         %new=NODuble(new);
          new_nt(i)={new};
          
          pxy(1,i)={x3};

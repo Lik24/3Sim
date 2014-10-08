@@ -43,69 +43,60 @@ figure(98),subplot(2,4,1);
 plot_fild(x,y,z,p,Nl,X,Y,WXY,'Пластовое давление') % 
 hold on
 
-if Nl==1
-    pxy=PXY{1};
-    for i1=1:size(pxy,2)
-        pX=pxy{1,i1};
-        pY=pxy{2,i1};
-        
-        for i=1:size(pX,1)
-            plot(pX(i,:),pY(i,:),'Color',[0 0 i1/size(pxy,2)])
-            hold on
-        end;
-    end;
-else
-    for i2=1:Nl
-      pXY=PXY{i2};
-       for j1=1:size(pXY,1)
-            pxy=pXY{j1};
-           for i1=1:size(pxy,2)
-            pX=pxy{1,i1};
-            pY=pxy{2,i1};
-            pZ=mean(z(:,i2))*ones(size(pY));
-            if isempty(pX)==0
-                plot3(pX',pY',pZ','Color',[0 0 i2/size(PXY,2)])
-            end;
-           end;
-            hold on
-        end;
-    end;
-end;
-hold off
+% if Nl==1
+%     pxy=PXY{1};
+%     for i1=1:size(pxy,2)
+%         pX=pxy{1,i1};
+%         pY=pxy{2,i1};
+%         
+%         for i=1:size(pX,1)
+%             plot(pX(i,:),pY(i,:),'Color',[0 0 i1/size(pxy,2)])
+%             hold on
+%         end;
+%     end;
+% else
+%     for i2=1:Nl
+%       pXY=PXY{i2};
+%        for j1=1:size(pXY,1)
+%             pxy=pXY{j1};
+%            for i1=1:size(pxy,2)
+%             pX=pxy{1,i1};
+%             pY=pxy{2,i1};
+%             pZ=mean(z(:,i2))*ones(size(pY));
+%             if isempty(pX)==0
+%                 plot3(pX',pY',pZ','Color',[0 0 i2/size(PXY,2)])
+%             end;
+%            end;
+%             hold on
+%         end;
+%     end;
+% end;
+% hold off
 
 if Nl==1
 Nt=NT{1};
-    SwC_L=SwC(CR_GRUP(:,2)==Nl);
+    SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
     cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
-    C_L=C(CR_GRUP(:,2)==Nl,:);
-    C_L=C_L(:,CR_GRUP(:,2)==Nl);
+%     C_L=C(CR_GRUP(:,2)==Nl,:);
+%     C_L=C_L(:,CR_GRUP(:,2)==Nl);
     
     for i1=1:size(Nt,2)
         nt=Nt{i1};
         SwC_nC=SwC_L(cr_grup==i1);
 
-        C_nC=C_L(cr_grup==i1,:);
-        C_nC=C_nC(:,cr_grup==i1);
-        
- %       A1=A(nt,:);
+%         C_nC=C_L(cr_grup==i1,:);
+%         C_nC=C_nC(:,cr_grup==i1);
+        unt=unique(nt);
         vnt=1:size(nt,2);
         for i=1:size(nt,2)
-            col=find(C_nC(i,:));
-            for ic=1:size(col,2)
-                col2=find(col(ic)==vnt);
-              %  SwC_nC(vnt(col2))
-                if isempty(col2)==0
-                col_sw=(SwC_nC(i)+SwC_nC(vnt(col2)))/2;
-                vx=[XY(nt(i),1),XY(nt(col2),1)];
-                vy=[XY(nt(i),2),XY(nt(col2),2)];
-                plot(vx,vy,'Color',[col_sw col_sw col_sw])
-                end;
-            end;
-             
-%             col_sw=SwC_nC(i);
-%             vx=XY(nt(i),1);
-%             vy=XY(nt(i),2);
-          %  plot(vx,vy,'Color',[col_sw col_sw col_sw])
+            rr1=find(nt(1,i)==unt);
+            rr2=find(nt(2,i)==unt);
+            col_sw=(SwC_nC(rr1)+SwC_nC(rr2))/2;
+            col_sw=((1-col_sw)*0.7+0.3);
+            vx=[XY(nt(1,i),1),XY(nt(2,i),1)];
+            vy=[XY(nt(1,i),2),XY(nt(2,i),2)];
+            plot(vx,vy,'Color',[col_sw col_sw col_sw])
+            
             hold on
         end;
     end;
@@ -133,19 +124,28 @@ plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность') %
 hold on
 
 if Nl==1
-    pxy=PXY{1};
-    for i1=1:size(pxy,2)
-        pX=pxy{1,i1};
-        pY=pxy{2,i1};
-        
-        for i=1:size(pX,1)
-            plot(pX(i,:),pY(i,:),'Color',[0 0 i1/size(pxy,2)])
+Nt=NT{1};
+    SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
+    cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
+    for i1=1:size(Nt,2)
+        nt=Nt{i1};
+        SwC_nC=SwC_L(cr_grup==i1);
+        unt=unique(nt);
+        for i=1:size(nt,2)
+            rr1=find(nt(1,i)==unt);
+            rr2=find(nt(2,i)==unt);
+            col_sw=(SwC_nC(rr1)+SwC_nC(rr2))/2;
+            col_sw=((1-col_sw)*0.7+0.3);
+            vx=[XY(nt(1,i),1),XY(nt(2,i),1)];
+            vy=[XY(nt(1,i),2),XY(nt(2,i),2)];
+            plot(vx,vy,'Color',[col_sw col_sw col_sw])
+            
             hold on
         end;
     end;
 else
     for i2=1:Nl
-      pXY=PXY{i2};
+    Nt=NT{i2};
        for j1=1:size(pXY,1)
             pxy=pXY{j1};
            for i1=1:size(pxy,2)
@@ -153,7 +153,7 @@ else
             pY=pxy{2,i1};
             pZ=mean(z(:,i2))*ones(size(pY));
             if isempty(pX)==0
-                plot3(pX',pY',pZ','Color',[0 0 i2/size(PXY,2)])
+                plot3(pX',pY',pZ','Color',[col_sw col_sw col_sw])
             end;
            end;
             hold on

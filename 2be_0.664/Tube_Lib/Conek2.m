@@ -37,37 +37,48 @@ for l=1:Nl
         nt=Nt{i};   % Список ячеек с трещинами
         kc=Kc(i);   % Проницаемость трещины
         dh=Dh(i);   % Раскрытость трещины
+
+        A(:)=0;
+         for ia=1:size(nt,2)
+           A(nt(2,ia),nt(1,ia))=1;
+         end;
+         A=A+A';
+%        figure(235),spy(A) 
+       unt=unique(nt);
+
+        A1=A(unt,:);   A2=A1(:,unt);
+        L1=L(unt,:);   L2=L1(:,unt);
+        H1=H(unt,:);   H2=H1(:,unt);
         
-        A1=A(nt,:);   A2=A1(:,nt);
-        L1=L(nt,:);   L2=L1(:,nt);
-        H1=H(nt,:);   H2=H1(:,nt);
-        
-        [r,c]=find(A2==1);
-        for ir=1:size(r,1)
-           if sum(r(ir)==nt)==0
-            A2(r(ir),c(ir))=0;
-            L2(r(ir),c(ir))=0;
-            H2(r(ir),c(ir))=0;
-           end;
-        end;
-        
+%        figure(234),spy(A2)
+%        jhjh
+%         [r,c]=find(A2==1);
+%         for ir=1:size(r,1)
+%            if sum(r(ir)==nt)==0
+%             A2(r(ir),c(ir))=0;
+%             L2(r(ir),c(ir))=0;
+%             H2(r(ir),c(ir))=0;
+%            end;
+%         end;
+%             unt'
+%             Won'     
         for j=1:size(Won,1)
-            ty=find(Won(j)==nt);
+            ty=find(Won(j)==unt);
             if isempty(ty)==0
                 k=k+1;
-                WonV(k,1)=ty(1)+nc1;
+                WonV(k,1)=ty(1)+sntl;
                 WonV(k,2)=HH(Won(j),l)*dh*kc*8.64/r0;%dC*100;
                 WonV(k,3)=Won(j);
             end;
         end;
-        
+%         WonV
         n=size(A2,1);
         [r,c]=find(A2==1);
         C=H2(r+(c-1)*n)*dh./L2(r+(c-1)*n)*kc*8.34;
         C=sparse(r,c,C,n,n);
         
         a2c=sum(H2.*L2,2);
-        A2C=sparse(nt,1:n,a2c,np,n);
+        A2C=sparse(unt,1:n,a2c,np,n);
         dVc=sum(H2.*L2.*dh,2);
         dVB(i)={dVc};
         CB(i)={C};
@@ -76,6 +87,7 @@ for l=1:Nl
         Cr_grup(i)={[i*ones(size(C,1),1),l*ones(size(C,1),1)]};
         sntl=sntl+size(nt,2);
     end;
+
     nc1=nc1+sntl;
     C_L(l)=Mat_Constr(CB);
     L_L(l)=Mat_Constr(LB);
