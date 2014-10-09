@@ -8,7 +8,7 @@ n1=size(Z);
 %a=rand(n(1),1);
   Uf=-ones(5,1);
   Uf(1)=1;
-  Uf(2:4)=0;
+  Uf(3)=0;
  % Uf=a0;
 
 %Uf=uf2;
@@ -36,7 +36,7 @@ WData.Uf=repmat(Uf,1,Ta);
 WData.CpW=repmat(CpW,1,Ta);
 WData.Qz=repmat(Qz,1,Ta);
 WData.TeW=repmat(TeW,1,Ta);
-WData.Doly=ones(n(1),1);
+WData.Doly=ones(n(1),n1(2));
 WData.r0=r0;
 WData.WXY=WXY;
 

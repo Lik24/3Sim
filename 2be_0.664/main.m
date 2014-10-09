@@ -21,7 +21,9 @@ GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 % [nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
 
 [gt,GS]=Tresh_Gor(1,DATA.XY,PR.Nl);
-%nt(:)={[]};
+
+%nt0={[]};
+%nt(:)={nt0};
 [C,A2C,dVc,pc,DATA.WonV,DATA.Lc,CR_GRUP]=Conek2(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,WData.r0);
 
 %[nt2,PXY2]=derevo(nt,DATA.XY,23);

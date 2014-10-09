@@ -1,9 +1,9 @@
-function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0)
+function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0,Nl)
 Fc=PR.Fc;
 Sc=PR.Sc2;
 
 dP=P(RC.Acr2(:,2))-P(RC.Acr2(:,1));
-dPw=P(Won)-Pw;
+dPw=P(Won)-repmat(Pw,Nl,1);
 v1=dP>0;
 TL=TL(RC.Acr2(:,1)+(RC.Acr2(:,2)-1)*na);
 

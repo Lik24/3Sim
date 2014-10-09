@@ -127,8 +127,8 @@ if Nl==1
 else
     for i2=1:Nl
         Nt=NT{i2};
-        SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
-        cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
+        SwC_L=SwC(CR_GRUP(:,2)==i2,end);
+        cr_grup=CR_GRUP(CR_GRUP(:,2)==i2,1);
         
         for i1=1:size(Nt,2)
             nt=Nt{i1};

@@ -1,5 +1,6 @@
-function Wf=KWell(K,H,S,L,B,Won,r,c,Perf,r0,XY)
+function Wf=KWell(K,H,S,L,B,Won_all,r,c,Perf,r0,XY,Nw,Nl)
 
+Won=Won_all(1:Nw);
 WXY=XY(Won,:);
 
 tet=2*pi*ones(size(WXY,1),1);
@@ -59,8 +60,12 @@ for i=1:size(Won,1);
     clear b1 l1 Con1
 end;
 
-Wcof=K(Won).*H(Won)./log(Rk/r0).*Perf;
-Wf=2*pi*Wcof;
+for l=1:Nl
+   Wcof(:,l)=K(Won,l).*H(Won,l)./log(Rk/r0).*Perf(:,l);
+end;
+
+Wf=2*pi*Wcof(:);
+
 
 end
 

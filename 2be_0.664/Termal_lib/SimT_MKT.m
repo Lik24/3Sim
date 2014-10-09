@@ -26,6 +26,7 @@ Qz=WData.Qz;
 
 Nl=PR.Nl;  as=PR.as; aw=PR.aw; ts=PR.ts; tw=PR.tw; mu=PR.mu; mup=PR.mup;
 Ta=PR.Ta;  dtt=PR.dt; ndt=PR.ndt; zc=PR.zc; Bo=PR.Bo;  kms=PR.kms;  Ro=PR.Ro;
+Nw=size(Qz,1);
 
 Qm=zeros(size(Uf,1),5,size(Uf,2));
 Qc=zeros(size(WonC,1),5,size(Uf,2));
@@ -41,9 +42,9 @@ qg=zeros(size(Uf,1),5);
 
 [L,B,S,H1]=Geome3_1(A,XY,Z,H);
 
-[r,c]=find(A==1);
+[r,c]=find(A(1:size(XY,1),1:size(XY,1))==1);
 
-Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0,XY);
+Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0,XY,Nw,Nl);
 XY=repmat(XY,Nl,1);
 
 [A,L,S,B,H1,K,XY,Mp,Sw,H,Z,P,MCp,T,NTG,p,rz,cz,BXY,BZ,dH,NL,NamXY,GYData]=PereYpor(A,L,S,B,H1,KX,KY,KZ,Mp,Sw,XY,H,Z,P,MCp,DATA,GYData);
@@ -278,7 +279,7 @@ fp=1;
     %sum(sQo(:))
     dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
     
-    dt=vibor_t2(dtt,Pi(1:na),RC,dV,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw2,dt);
+    dt=vibor_t2(dtt,Pi(1:na),RC,dV,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw2,dt,Nl);
     st=st+dt;
     t_flag=st~=Ta;
 

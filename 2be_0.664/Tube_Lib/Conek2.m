@@ -13,7 +13,7 @@ WonV(1,:)=[];
 k=0;
 nc1=0;
 sntl=0;
-[A]=MR_Prop(XY,1);
+[AA]=MR_Prop(XY,1);
 
 dV_L=cell(Nl,1);
 C_L=cell(Nl,1);
@@ -25,19 +25,20 @@ for l=1:Nl
     Kc=KC{l};
     Dh=DH{l};
     
-    [L,~,~,H]=Geome3(A,XY,Z,HH(:,l));
+    [L,~,~,H]=Geome3(AA,XY,Z,HH(:,l));
     mnt=size(Nt,2);
     dVB=cell(mnt,1);
     CB=cell(mnt,1);
     LB=cell(mnt,1);
     A2CB=cell(mnt,1);
-
+    Cr_grup=cell(mnt,1);
+    
     for i=1:mnt
         
         nt=Nt{i};   % Список ячеек с трещинами
         kc=Kc(i);   % Проницаемость трещины
         dh=Dh(i);   % Раскрытость трещины
-
+        A=AA;
         A(:)=0;
          for ia=1:size(nt,2)
            A(nt(2,ia),nt(1,ia))=1;
@@ -85,7 +86,7 @@ for l=1:Nl
         LB(i)={L};
         A2CB(i)={A2C};
         Cr_grup(i)={[i*ones(size(C,1),1),l*ones(size(C,1),1)]};
-        sntl=sntl+size(nt,2);
+        sntl=sntl+size(unt,1);
     end;
 
     nc1=nc1+sntl;
@@ -93,14 +94,14 @@ for l=1:Nl
     L_L(l)=Mat_Constr(LB);
     A2C_L(l)={cell2mat(A2CB')};
     dV_L(l)={cell2mat(dVB)};
-    CR_grup(l)={cell2mat(Cr_grup')};
+    CR_grup(l)={cell2mat(Cr_grup)};
 end;
 
     C_cell=Mat_Constr(C_L);
     L_cell=Mat_Constr(L_L);
     A2C=cell2mat(A2C_L');
     dVc=cell2mat(dV_L);
-    CR_GRUP=cell2mat(CR_grup);
+    CR_GRUP=cell2mat(CR_grup');
     C=cell2mat(C_cell);
     L=cell2mat(L_cell);
    % A2C=cell2mat(A2C_cell);
