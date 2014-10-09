@@ -13,9 +13,9 @@ PR=Gl_PRM;
 
 GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
-[nt,PXY]=elka(PR.Nl,DATA.XY,10,10,0,25);  % кол-во трещин, длинна, флаг к скважине
+[nt,PXY]=elka(PR.Nl,DATA.XY,10,20,0,25);  % кол-во трещин, длинна, флаг к скважине
 
-load('elka_tst.mat','nt','PXY')
+%load('elka_tst.mat','nt','PXY')
 [CrDATA]=CrackProp(DATA,PR,nt);
 
 % [nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
