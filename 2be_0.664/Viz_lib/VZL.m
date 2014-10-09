@@ -102,7 +102,7 @@ end;
 end
 
 function plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z)
-size(z)
+
 if Nl==1
     Nt=NT{1};
     SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
@@ -141,7 +141,7 @@ else
                 col_sw=((1-col_sw)*0.9+0.1);
                 vx=[XY(nt(1,i),1),XY(nt(2,i),1)];
                 vy=[XY(nt(1,i),2),XY(nt(2,i),2)];
-                vz=[z(nt(1,i),2),z(nt(2,i),2)];
+                vz=[z(nt(1,i),i2),z(nt(2,i),i2)];
                 
                 plot3(vx,vy,vz,'Color',[col_sw col_sw col_sw])
                 

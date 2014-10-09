@@ -18,8 +18,8 @@ g_cr{1,1}=[250,250;
 g_cr{2,1}=[220,210;
            100,120]; %����
        
-%g_cr{2,2}=[110,110;
-%           140,170]; %����
+g_cr{1,2}=[110,110;
+           140,170]; %����
 
 ImA=zeros(size(g_cr,1),NL);
 
@@ -63,7 +63,7 @@ if isempty(g_cr{1,1})==0;
         
 
 for l=1:NL
-rl=find(ImA(:,l));  
+rl=find(ImA(:,l)); 
   for i=rl' 
      cr=crk{i,l};
      nt=[];
@@ -79,7 +79,7 @@ NLT(l)={Nt};
 Nt={[]};
 end;
 
-    
+   
 for l=1:NL
 rl=find(ImA(:,l));  
   for i=rl' 

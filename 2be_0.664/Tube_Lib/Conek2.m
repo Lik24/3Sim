@@ -79,7 +79,7 @@ for l=1:Nl
         C=sparse(r,c,C,n,n);
         
         a2c=sum(H2.*L2,2);
-        A2C=sparse(unt,1:n,a2c,np,n);
+        A2C=sparse(unt+(l-1)*np,1:n,a2c,np*Nl,n);
         dVc=sum(H2.*L2.*dh,2);
         dVB(i)={dVc};
         CB(i)={C};
