@@ -1,4 +1,4 @@
-function video_save(XY,WXY,Z,Pi,Sw,Nl,pp,PXY,PXY2,uf)
+function video_save(XY,WXY,Z,Pi,Sw,Nl,pp,PXY,PXY2,uf,SwC,NT,CR_GRUP)
 tic
 writerObj = VideoWriter('Pre_new.avi','MPEG-4');
 open(writerObj);
@@ -35,7 +35,7 @@ end;
 flt=flt(:,1:10:end);
 
 for j=1:t
- [frame(j)]=gogi(P2(:,j),P3(:,j),pp,Z,Nl,x,y,WXY,X,Y,PXY,PXY2,flt(:,j),uf);
+ [frame(j)]=gogi(P2(:,j),P3(:,j),pp,Z,Nl,x,y,WXY,X,Y,PXY,PXY2,flt(:,j),uf,SwC(:,j),NT,CR_GRUP,XY);
 %frame = imdilate(frame, se);
 
 end
@@ -50,7 +50,7 @@ close(writerObj);
 toc
 end
 
-function [frame]=gogi(P2,P3,pp,WZ,Nl,x,y,WXY,X,Y,PXY,PXY2,flt,uf)
+function [frame]=gogi(P2,P3,pp,WZ,Nl,x,y,WXY,X,Y,PXY,PXY2,flt,uf,SwC,NT,CR_GRUP,XY)
 Pt(pp)=P2;
 p1=reshape(Pt,size(WZ,1)/Nl,Nl);
 Pt(pp)=P3;
@@ -67,7 +67,7 @@ end;
 %h=figure(1);
 % contourf(X,Y,mean(B,3),'LineStyle','none','LineColor',[0 0 0],...
 %     'Fill','on');
-h=plot_sw_p(X,Y,B,Bp,WXY(uf==-1,1),WXY(uf==-1,2),WXY(uf==1,1),WXY(uf==1,2),PXY,PXY2,flt);
+h=plot_sw_p(X,Y,B,Bp,WXY(uf==-1,1),WXY(uf==-1,2),WXY(uf==1,1),WXY(uf==1,2),PXY,PXY2,flt,SwC,NT,Nl,CR_GRUP,XY);
 %h=plot_sw(X,Y,B,WXY([1,4,7],1),WXY([1,4,7],2),WXY([3,6,9],1),WXY([3,6,9],2),PXY);
 %h1=plot_p(X,Y,Bp,WXY([1,4,7],1),WXY([1,4,7],2),WXY([3,6,9],1),WXY([3,6,9],2),PXY);
 % set(gca,'nextplot','replacechildren');

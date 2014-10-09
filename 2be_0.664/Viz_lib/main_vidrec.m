@@ -4,6 +4,7 @@
 
 %SD=SD;
 Nl=1;
+dt=1;
 CD=SD{7};
 Q=CD{1,1};
 Sw=CD{2,1};
@@ -18,8 +19,12 @@ PXY=CD{8,1};
 gt=CD{9,1};
 Z=CD{10,1};
 uf=CD{11,1};
+SwC=CD{12,1};
+NT=CD{13,1};
+CR_GRUP=CD{14,1};
+
 WXY=zeros(4,2);
 WXY(:,1)=[0,250,0,250]';
 WXY(:,2)=[0,0,250,250]';
 uf=[1,-1,-1,-1]';
-video_save(XY,WXY,Z,Pi(:,1:1:end),Sw(:,1:1:end),Nl,p,PXY,PXY,uf)
+video_save(XY,WXY,Z,Pi(:,1:dt:end),Sw(:,1:dt:end),Nl,p,PXY,PXY,uf,SwC(1:dt:end),NT,CR_GRUP)

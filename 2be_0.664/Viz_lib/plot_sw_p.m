@@ -1,4 +1,4 @@
-function figure1 =plot_sw_p(xd1, yd1,zd1, zd2, X1, Y1, X2,Y2,PXY,PXY2,flt)
+function figure1 =plot_sw_p(xd1, yd1,zd1, zd2, X1, Y1, X2,Y2,PXY,PXY2,flt,SwC,NT,Nl,CR_GRUP,XY)
 %CREATEFIGURE(ZDATA1, A1)
 %  ZDATA1:  contour z
 %  A1:  contour z
@@ -89,7 +89,7 @@ colorbar('peer',subplot1,'NorthOutside','XAxisLocation','top');
 
 % Create colorbar
 colorbar('peer',subplot2,'NorthOutside','XAxisLocation','top');
-flt
+
 % if flt(1)==1
      c1r='black';
 % else
@@ -103,72 +103,116 @@ flt
 % end;
 
 
+% 
+% for i1=1:size(PXY,2)
+%     pX=PXY{1,i1};
+%     pY=PXY{2,i1};
+%     
+%     for i=1:size(pX,1)
+%         plot(pX(i,:),pY(i,:),'Parent',subplot1,'Color',c2r,'LineWidth',1)
+%         hold on
+%     end;
+% end;
+% 
+% for i1=1:size(PXY,2)
+%     pX=PXY{1,i1};
+%     pY=PXY{2,i1};
+%     
+%     for i=1:size(pX,1)
+%         plot(pX(i,:),pY(i,:),'Parent',subplot2,'Color',c2r,'LineWidth',1)
+%         hold on
+%     end;
+% end;
+% 
+% for i1=1:size(PXY2,2)
+%     pX=PXY2{1,i1};
+%     pY=PXY2{2,i1};
+%     
+%     for i=1:size(pX,1)
+%         plot(pX(i,:),pY(i,:),'Parent',subplot1,'Color',c2r,'LineWidth',1)
+%         hold on
+%     end;
+% end;
+% 
+% for i1=1:size(PXY2,2)
+%     pX=PXY2{1,i1};
+%     pY=PXY2{2,i1};
+%     
+%     for i=1:size(pX,1)
+%         plot(pX(i,:),pY(i,:),'Parent',subplot2,'Color',c2r,'LineWidth',1)
+%         hold on
+%     end;
+% end;
 
-for i1=1:size(PXY,2)
-    pX=PXY{1,i1};
-    pY=PXY{2,i1};
+
+% if flt(1)==1
+%     PXY=PXY;
+% else
+%     PXY=PXY2;
+% end;
+
+% for i1=1:size(PXY,2)
+%     pX=PXY{1,i1};
+%     pY=PXY{2,i1};
+%     
+%     for i=1:size(pX,1)
+%         plot(pX(i,:),pY(i,:),'Parent',subplot1,'Color',c1r,'LineWidth',1.5)
+%         hold on
+%     end;
+% end;
+% 
+% for i1=1:size(PXY,2)
+%     pX=PXY{1,i1};
+%     pY=PXY{2,i1};
+%     
+%     for i=1:size(pX,1)
+%         plot(pX(i,:),pY(i,:),'Parent',subplot2,'Color',c1r,'LineWidth',1.5)
+%         hold on
+%     end;
+% end;
+  plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,subplot1)
+  plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,subplot2)
+  
+end
+
+function plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,sp)
+
+if Nl==1
+    Nt=NT{1};
+    SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
+    cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
     
-    for i=1:size(pX,1)
-        plot(pX(i,:),pY(i,:),'Parent',subplot1,'Color',c2r,'LineWidth',1)
-        hold on
+    for i1=1:size(Nt,2)
+        nt=Nt{i1};
+        SwC_nC=SwC_L(cr_grup==i1);
+        unt=unique(nt);
+        for i=1:size(nt,2)
+            rr1=find(nt(1,i)==unt);
+            rr2=find(nt(2,i)==unt);
+            col_sw=(SwC_nC(rr1)+SwC_nC(rr2))/2;
+            col_sw=((1-col_sw)*0.9+0.1);
+            vx=[XY(nt(1,i),1),XY(nt(2,i),1)];
+            vy=[XY(nt(1,i),2),XY(nt(2,i),2)];
+            plot(vx,vy,'Parent',sp,'Color',[col_sw col_sw col_sw],'LineWidth',1.5)
+            
+            hold on
+        end;
     end;
-end;
-
-for i1=1:size(PXY,2)
-    pX=PXY{1,i1};
-    pY=PXY{2,i1};
-    
-    for i=1:size(pX,1)
-        plot(pX(i,:),pY(i,:),'Parent',subplot2,'Color',c2r,'LineWidth',1)
-        hold on
-    end;
-end;
-
-for i1=1:size(PXY2,2)
-    pX=PXY2{1,i1};
-    pY=PXY2{2,i1};
-    
-    for i=1:size(pX,1)
-        plot(pX(i,:),pY(i,:),'Parent',subplot1,'Color',c2r,'LineWidth',1)
-        hold on
-    end;
-end;
-
-for i1=1:size(PXY2,2)
-    pX=PXY2{1,i1};
-    pY=PXY2{2,i1};
-    
-    for i=1:size(pX,1)
-        plot(pX(i,:),pY(i,:),'Parent',subplot2,'Color',c2r,'LineWidth',1)
-        hold on
-    end;
-end;
-
-
-if flt(1)==1
-    PXY=PXY;
 else
-    PXY=PXY2;
-end;
-
-for i1=1:size(PXY,2)
-    pX=PXY{1,i1};
-    pY=PXY{2,i1};
-    
-    for i=1:size(pX,1)
-        plot(pX(i,:),pY(i,:),'Parent',subplot1,'Color',c1r,'LineWidth',1.5)
-        hold on
+    for i2=1:Nl
+        Nt=NT{i2};
+        for j1=1:size(pXY,1)
+            pxy=pXY{j1};
+            for i1=1:size(pxy,2)
+                pX=pxy{1,i1};
+                pY=pxy{2,i1};
+                pZ=mean(z(:,i2))*ones(size(pY));
+                if isempty(pX)==0
+                    plot3(pX',pY',pZ','Parent',sp,'Color',[col_sw col_sw col_sw])
+                end;
+            end;
+            hold on
+        end;
     end;
 end;
-
-for i1=1:size(PXY,2)
-    pX=PXY{1,i1};
-    pY=PXY{2,i1};
-    
-    for i=1:size(pX,1)
-        plot(pX(i,:),pY(i,:),'Parent',subplot2,'Color',c1r,'LineWidth',1.5)
-        hold on
-    end;
-end;
-
-
+end

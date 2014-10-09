@@ -1,4 +1,4 @@
-function VZL(XY,K,WXY,WZ,P,Sw,T,Cp,Nl,pp,Q,PXY,gt,SwC,CR_GRUP,pc,NT,C)
+function VZL(XY,K,WXY,WZ,P,Sw,T,Cp,Nl,pp,Q,SwC,CR_GRUP,pc,NT)
 
  %cmap1=summer;
  %colormap(cmap1);
@@ -14,11 +14,10 @@ Sw(pp,:)=Sw;
 Cp(pp,:)=Cp;
 T(pp,:)=T;
 SwC(pc,:)=SwC;
-C(pc,:)=C;
-C(:,pc)=C;
+
 nxy=size(WZ,1)/Nl;
-[A]=MR_Prop(XY,1);
-A=A.*(A>0);
+%[A]=MR_Prop(XY,1);
+%A=A.*(A>0);
 for l=1:Nl
     
 Z(nxy*(l-1)+1:nxy*l)=(-l+1)*20;
@@ -42,124 +41,13 @@ my(2)=max(XY(:,2));
 figure(98),subplot(2,4,1);
 plot_fild(x,y,z,p,Nl,X,Y,WXY,'Пластовое давление') % 
 hold on
-
-% if Nl==1
-%     pxy=PXY{1};
-%     for i1=1:size(pxy,2)
-%         pX=pxy{1,i1};
-%         pY=pxy{2,i1};
-%         
-%         for i=1:size(pX,1)
-%             plot(pX(i,:),pY(i,:),'Color',[0 0 i1/size(pxy,2)])
-%             hold on
-%         end;
-%     end;
-% else
-%     for i2=1:Nl
-%       pXY=PXY{i2};
-%        for j1=1:size(pXY,1)
-%             pxy=pXY{j1};
-%            for i1=1:size(pxy,2)
-%             pX=pxy{1,i1};
-%             pY=pxy{2,i1};
-%             pZ=mean(z(:,i2))*ones(size(pY));
-%             if isempty(pX)==0
-%                 plot3(pX',pY',pZ','Color',[0 0 i2/size(PXY,2)])
-%             end;
-%            end;
-%             hold on
-%         end;
-%     end;
-% end;
-% hold off
-
-if Nl==1
-Nt=NT{1};
-    SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
-    cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
-%     C_L=C(CR_GRUP(:,2)==Nl,:);
-%     C_L=C_L(:,CR_GRUP(:,2)==Nl);
-    
-    for i1=1:size(Nt,2)
-        nt=Nt{i1};
-        SwC_nC=SwC_L(cr_grup==i1);
-
-%         C_nC=C_L(cr_grup==i1,:);
-%         C_nC=C_nC(:,cr_grup==i1);
-        unt=unique(nt);
-        vnt=1:size(nt,2);
-        for i=1:size(nt,2)
-            rr1=find(nt(1,i)==unt);
-            rr2=find(nt(2,i)==unt);
-            col_sw=(SwC_nC(rr1)+SwC_nC(rr2))/2;
-            col_sw=((1-col_sw)*0.7+0.3);
-            vx=[XY(nt(1,i),1),XY(nt(2,i),1)];
-            vy=[XY(nt(1,i),2),XY(nt(2,i),2)];
-            plot(vx,vy,'Color',[col_sw col_sw col_sw])
-            
-            hold on
-        end;
-    end;
-else
-    for i2=1:Nl
-    Nt=NT{i2};
-       for j1=1:size(pXY,1)
-            pxy=pXY{j1};
-           for i1=1:size(pxy,2)
-            pX=pxy{1,i1};
-            pY=pxy{2,i1};
-            pZ=mean(z(:,i2))*ones(size(pY));
-            if isempty(pX)==0
-                plot3(pX',pY',pZ','Color',[col_sw col_sw col_sw])
-            end;
-           end;
-            hold on
-        end;
-    end;
-end;
+plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
 hold off
 
 figure(98),subplot(2,4,2);
 plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность') % 
 hold on
-
-if Nl==1
-Nt=NT{1};
-    SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
-    cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
-    for i1=1:size(Nt,2)
-        nt=Nt{i1};
-        SwC_nC=SwC_L(cr_grup==i1);
-        unt=unique(nt);
-        for i=1:size(nt,2)
-            rr1=find(nt(1,i)==unt);
-            rr2=find(nt(2,i)==unt);
-            col_sw=(SwC_nC(rr1)+SwC_nC(rr2))/2;
-            col_sw=((1-col_sw)*0.7+0.3);
-            vx=[XY(nt(1,i),1),XY(nt(2,i),1)];
-            vy=[XY(nt(1,i),2),XY(nt(2,i),2)];
-            plot(vx,vy,'Color',[col_sw col_sw col_sw])
-            
-            hold on
-        end;
-    end;
-else
-    for i2=1:Nl
-    Nt=NT{i2};
-       for j1=1:size(pXY,1)
-            pxy=pXY{j1};
-           for i1=1:size(pxy,2)
-            pX=pxy{1,i1};
-            pY=pxy{2,i1};
-            pZ=mean(z(:,i2))*ones(size(pY));
-            if isempty(pX)==0
-                plot3(pX',pY',pZ','Color',[col_sw col_sw col_sw])
-            end;
-           end;
-            hold on
-        end;
-    end;
-end;
+plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
 hold off
 
 
@@ -172,24 +60,6 @@ plot_fild(x,y,z,tt,Nl,X,Y,WXY,'Температура') %
 figure(98),subplot(2,4,5);
 plot_fild(x,y,z,log10k,Nl,X,Y,WXY,'Проницаемость') % 
 
-
-
-% 
-% 
-% for i2=1:size(gt,2)
-%    for i1=1:size(gt,1)
-%     a=gt{i1,i2};   
-%     if isempty(a)==0
-%     b=convhull(XY(a,1),XY(a,2));
-%     plot(XY(a(b),1),XY(a(b),2),'m--')
-%     end;
-%    end
-% end;
-% hold off
-% 
-% subplot(2,4,2);
-% contourf(X,Y,mean(C,3))
-% 
 
 
  subplot(2,4,8);
@@ -229,4 +99,55 @@ end;
  title(text);
  colorbar;
  hold off
+end
+
+function plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z)
+size(z)
+if Nl==1
+    Nt=NT{1};
+    SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
+    cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
+    
+    for i1=1:size(Nt,2)
+        nt=Nt{i1};
+        SwC_nC=SwC_L(cr_grup==i1);
+        unt=unique(nt);
+        for i=1:size(nt,2)
+            rr1=find(nt(1,i)==unt);
+            rr2=find(nt(2,i)==unt);
+            col_sw=(SwC_nC(rr1)+SwC_nC(rr2))/2;
+            col_sw=((1-col_sw)*0.9+0.1);
+            vx=[XY(nt(1,i),1),XY(nt(2,i),1)];
+            vy=[XY(nt(1,i),2),XY(nt(2,i),2)];
+            plot(vx,vy,'Color',[col_sw col_sw col_sw])
+            
+            hold on
+        end;
+    end;
+else
+    for i2=1:Nl
+        Nt=NT{i2};
+        SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
+        cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
+        
+        for i1=1:size(Nt,2)
+            nt=Nt{i1};
+            SwC_nC=SwC_L(cr_grup==i1);
+            unt=unique(nt);
+            for i=1:size(nt,2)
+                rr1=find(nt(1,i)==unt);
+                rr2=find(nt(2,i)==unt);
+                col_sw=(SwC_nC(rr1)+SwC_nC(rr2))/2;
+                col_sw=((1-col_sw)*0.9+0.1);
+                vx=[XY(nt(1,i),1),XY(nt(2,i),1)];
+                vy=[XY(nt(1,i),2),XY(nt(2,i),2)];
+                vz=[z(nt(1,i),2),z(nt(2,i),2)];
+                
+                plot3(vx,vy,vz,'Color',[col_sw col_sw col_sw])
+                
+                hold on
+            end;
+        end;
+    end;
+end;
 end
