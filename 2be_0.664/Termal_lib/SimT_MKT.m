@@ -1,4 +1,4 @@
-function [XY,KX,Z,Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,Cw,NDT,dQ,dSS,dt1,V0]=SimT_MKT(PR,C,A2C,G,A2G,dVC,dVG,DATA,WData,GYData,fll)
+function [XY,KX,Z,Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,Cw,NDT,dQ,dSS,dt1,V0]=SimT_MKT(PR,C,A2C,G,A2G,dVC,dVG,DATA,WData,GYData,fll,CR_GRUP)
 tic
 
 KX=DATA.gKX;
@@ -97,6 +97,7 @@ j=0;
 PpW=zeros(size(Uf));
 
 [CR_rc]=Pre_Crack(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
+[CR_ind]=Pre_Crack_p(RC,na,TM,Wf,Won,WonM,nw,CR_GRUP,C,G,A2C,A2G,K(:,1),WonC,WonG);
 [CR]=SS_ind(RC,na);
 
 
@@ -246,6 +247,10 @@ fp=1;
 
  [SCw,SCp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...
      Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
+     W7,L,DATA.Lc,DATA.Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,Clp);
+ 
+  [SCw1,SCp1,NDT1(t),Q11,Q21,Qm11,dSS1(t)]=Sat_fast_1(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...
+     Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_ind,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
      W7,L,DATA.Lc,DATA.Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,Clp);
     
     Sw(:,1)=SCw(1:na);
