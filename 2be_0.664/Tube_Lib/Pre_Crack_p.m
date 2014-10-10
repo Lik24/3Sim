@@ -31,7 +31,7 @@ for l=1:size(L_grup,1)
         A2C_cell(soc)={A2C_CrS};
         [r1,c1]=find(A2C_CrS);
         
-        CR_rc=Narez_Index(v1,r1,na,r,c,T,Wf,Won,WonM,Wn,A2C,A2G);
+        CR_rc=Narez_Index(v1,r1,na,r,c,T,Wf,Won,WonM,Wn,A2C_CrS,A2G);
         
         [r2,c2]=find(C_CrS>0);
         RC.Cr=r2;
@@ -59,9 +59,15 @@ for l=1:size(L_grup,1)
         RC.AGr=r4;
         RC.AGc=c4;
         
+        k=0;
         for i=1:size(WonC,1)
          ri=find(WonC(i,1)==vc_CrS);
-         wonC=WonC(ri,:);
+         wonC(1,1:3)=1;
+         wonC(1,:)=[];
+         if isempty(ri)==0
+           k=k+1;  
+           wonC(k,:)=WonC(ri,:);
+         end;
         end;
         
         CR_ind(soc,1)={CR_rc};

@@ -70,3 +70,4 @@ CR.rc_gy=rc_gy;
 CR.rc_in_h=rc_in_h;
 CR.T_gy=T_gy;
 CR.T_in_h=T_in_h;
+CR.v2=v2;

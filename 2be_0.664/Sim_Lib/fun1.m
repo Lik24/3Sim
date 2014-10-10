@@ -78,7 +78,8 @@ vac=sort(r1);
 vca=Na+sort(c1);
 vag=sort(r2);
 vga=Na+nc+sort(c2);
-
+% vca
+% Na
 kfw=zeros(size(SCwC));
 kfo=zeros(size(SCwC));
 
@@ -100,7 +101,6 @@ i=i+1;
      
      Kfw(v1==1)=kfw(1:Na);
      Kfo(v1==1)=kfo(1:Na);
-     
      
      [vPa1,vPc1,vPc2,vPg1,vPg2,dPa,dPc,dPg]=pre_potok_2(Pi,Pj,RC,rc_in_h,Na);
      

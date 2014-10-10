@@ -18,8 +18,12 @@ PwNl=repmat(Pw,Nl,1);
 % aw1=sum(SCw(vc).*dV(vc));
 
  if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
-     
-     
+  bwc=zeros(na,size(CR_ind,1));
+  bwg=zeros(na,size(CR_ind,1));
+  blc=zeros(na,size(CR_ind,1));
+  blg=zeros(na,size(CR_ind,1));
+  Qm1=zeros(size(Qz,1));
+  
      for i=1:size(CR_ind,1)
       CR_cr=CR_ind{i,1};
       TC=CR_ind{i,2};
@@ -28,6 +32,7 @@ PwNl=repmat(Pw,Nl,1);
       A2G=CR_ind{i,5};
       RC_p=CR_ind{i,6};
       vc_p=CR_ind{i,7};
+      rv=find(CR_cr.v2==1);
       
       RC.Cr2=RC_p.Cr2;
       RC.Cc2=RC_p.Cc2;
@@ -38,17 +43,27 @@ PwNl=repmat(Pw,Nl,1);
       RC.ACr=RC_p.ACr;
       RC.AGr=RC_p.AGr;
       RC.nc=size(vc_p,2);
-      
       WonC=CR_ind{i,8};
       WonG=CR_ind{i,9};            
-      
-     [bwc(:,i),bwg(:,i),blc(:,i),blg(:,i),Sw(vc_p),Sw(vg),ndt,Q1,Q2,Qm,dSS]=fun1(RC,Pi([va,vc_p]),Sw([va,vc_p]),Cp([va,vc_p]),PR,TC,TG,A2C,...
+
+
+     [bwc_1,bwg_1,blc_1,blg_1,Sw(vc_p),Sw(vg),ndt,Q1,Q2,Qm_i,dSS]=fun1(RC,Pi([va,vc_p]),Sw([va,vc_p]),Cp([va,vc_p]),PR,TC,TG,A2C,...
          A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0([va,vc_p]),L,Lc,Lg,Ke);
+
+      bwc(:,i)=sparse(rv,1,bwc_1,na,1);
+    %  bwg(:,i)=sparse(r,1,bwg_1,na,1);
+      blc(:,i)=sparse(rv,1,blc_1,na,1);
+     % blg(:,i)=sparse(r,1,blg_1,na,1);
+     Qm_i
+      Qm1(CR_cr.wn,:)=Qm_i;
+      Qm1
      end;
      
      Blc=sum(blc,2);
      Blg=sum(blg,2);
-
+     Qm=Qm1;
+     
+     
      WM1=sparse(WonM,Won,W1,nw,na);
      WM2=WM1';
      W3vec=sparse(WonM,1,W1,nw,1);
@@ -60,7 +75,7 @@ PwNl=repmat(Pw,Nl,1);
      b1wm=b1wm.*(sum(WM1(Qf==0,:),1)~=0)';
      bl=b1wm'+BLGY_GIM;
      
-     Bl=bl'-sparse(r,ones(sum(v1),1),Blc,na,1)/dt-sparse(r,ones(sum(v1),1),Blg,na,1)/dt;
+     Bl=bl'-Blc/dt;%-sparse(r,ones(sum(v1),1),Blg,na,1)/dt;
      
      A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,Clp(va)+b1gm',na,na);
      
@@ -74,8 +89,8 @@ PwNl=repmat(Pw,Nl,1);
      PwNl(Qf~=0)=Pt(na+1:end);
      
      %временно
-     Bpc=zeros(size(Bwc));
-     Bpg=zeros(size(Bwc));
+     Bpc=zeros(size(Blc));
+     Bpg=zeros(size(Blc));
     
  else
      Bwc=zeros(nc,1);
@@ -97,8 +112,8 @@ Bwg=sum(bwg,2);
      bw=sparse(Won,ones(1,size(Won,1)),-W6.*(Pi(Won)-PwNl),na,1);
      bp=sparse(Won,ones(1,size(Won,1)),-W7.*(Pi(Won)-PwNl),na,1);
      
-     Bw=bw+sparse(r,ones(sum(v1),1),Bwc,na,1)/dt+sparse(r,ones(sum(v1),1),Bwg,na,1)/dt-Cwp(va).*(Pi(va)-Pi0(va));
-     Bp=bp+sparse(r,ones(sum(v1),1),Bpc,na,1)/dt+sparse(r,ones(sum(v1),1),Bpg,na,1)/dt-Cp(va).*Cwp(va).*(Pi(va)-Pi0(va));
+     Bw=bw+Bwc/dt-Cwp(va).*(Pi(va)-Pi0(va));%+sparse(r,ones(sum(v1),1),Bwg,na,1)/dt
+     Bp=bp+Bpc/dt-Cp(va).*Cwp(va).*(Pi(va)-Pi0(va)); %+sparse(r,ones(sum(v1),1),Bpg,na,1)/dt
      tmp=sum(Bw);    
 
      Sw_old=Sw(va);
