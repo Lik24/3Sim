@@ -10,6 +10,8 @@ va=1:na;
 vc=na+1:na+nc;
 vg=na+nc+1:na+nc+ng;
 
+NwC=size(WonC,1);
+
 PwNl=repmat(Pw,Nl,1);
      v1=zeros(na,1);
      v1([RC.ACr;RC.AGr])=1;
@@ -43,22 +45,26 @@ PwNl=repmat(Pw,Nl,1);
       RC.ACr=RC_p.ACr;
       RC.AGr=RC_p.AGr;
       RC.nc=size(vc_p,2);
-      WonC=CR_ind{i,8};
+      wonC=CR_ind{i,8};
       WonG=CR_ind{i,9};            
 
 
-     [bwc_1,bwg_1,blc_1,blg_1,Sw(vc_p),Sw(vg),ndt,Q1,Q2,Qm_i,dSS]=fun1(RC,Pi([va,vc_p]),Sw([va,vc_p]),Cp([va,vc_p]),PR,TC,TG,A2C,...
-         A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0([va,vc_p]),L,Lc,Lg,Ke);
+     [bwc_1,bwg_1,blc_1,blg_1,Sw(vc_p),Sw(vg),ndt(i),Q1_i,Q2,Qm_i,dSS]=fun1(RC,Pi([va,vc_p]),Sw([va,vc_p]),Cp([va,vc_p]),PR,TC,TG,A2C,...
+         A2G,wonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0([va,vc_p]),L,Lc,Lg,Ke);
 
       bwc(:,i)=sparse(rv,1,bwc_1,na,1);
     %  bwg(:,i)=sparse(r,1,bwg_1,na,1);
       blc(:,i)=sparse(rv,1,blc_1,na,1);
      % blg(:,i)=sparse(r,1,blg_1,na,1);
-     Qm_i
+%     Qm_i
       Qm1(CR_cr.wn,:)=Qm_i;
-      Qm1
+%      i
+      QW1(wonC(:,3),:)=Q1_i;
      end;
      
+     for i=1:NwC 
+        Q1(i,:)=QW1(WonC(i,3),:);
+     end
      Blc=sum(blc,2);
      Blg=sum(blg,2);
      Qm=Qm1;
@@ -82,7 +88,7 @@ PwNl=repmat(Pw,Nl,1);
      WM1=WM1(Qf~=0,:);
      WM2=WM2(:,Qf~=0);
      WM3=WM3(Qf~=0,Qf~=0);
-     Qzm1(CR_cr.wn)=(Qm(:,1)+Qm(:,2))/dt;
+     Qzm1(CR_cr.wn)=(Qm_i(:,1)+Qm_i(:,2))/dt;
      Pt=[Bl',Qzm1(Qf~=0)']/[A1,WM2;WM1,WM3];
      
      Pi(va)=Pt(va)';

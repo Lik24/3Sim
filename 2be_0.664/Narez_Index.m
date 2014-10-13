@@ -41,7 +41,7 @@ A2G11(v2~=1,:)=[];
 
 qw=zeros(na,1);
 qw(Won)=1;
-qw(v1==0)=[];
+qw(v2==0)=[];
 won=find(qw);
 
 qw=zeros(na,1);
