@@ -61,7 +61,7 @@ PwNl=repmat(Pw,Nl,1);
 %      i
       QW1(wonC(:,3),:)=Q1_i;
      end;
-     
+
      for i=1:NwC 
         Q1(i,:)=QW1(WonC(i,3),:);
      end
