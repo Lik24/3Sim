@@ -264,7 +264,7 @@ fp=1;
     %% Дебиты
     
     Qm(:,:,t+1)=QBild(W1,W6.*A(Won),W7,Pi(1:na,1),Uf(:,ft+1),Won,dt,Pw(WonM,ft+1));
-   % Qm(CR_rc.wn,:,t+1)=Qm1(CR_rc.wn,:);
+    %Qm(CR_rc.wn,:,t+1)=Qm1(CR_rc.wn,:);
     Qm(CR_rc.wn,:,t+1)=Qm1;
     Qc(:,:,t+1)=Q1;%QBild(W1C,W6C,W7C,Pi(na+1:na+nc,1),Uf(WonC(:,3),t+1),WonC(:,1),dt,Pw(WonC(:,3),t+1));
     Qg(:,:,t+1)=Q2;%QBild(W1G,W6G,W7G,Pi(na+nc+1:end,1),Uf(WNG,t+1),WonG(:,1),dt,Pw(WNG,t+1));

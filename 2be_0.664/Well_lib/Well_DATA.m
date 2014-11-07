@@ -11,13 +11,16 @@ n1=size(Z);
   Uf(3)=0;
  % Uf=a0;
 
+ uf1=Uf; uf1(3:5)=0;
+ uf2=Uf;    uf2([2:3,5])=0;
+ uf3=Uf;    uf3([2:4])=0;
 %Uf=uf2;
 
 Pw(Uf==1,1)=50;
 Pw(Uf==-1,1)=150;
 
 Qz(Uf(1:n(1))==1,1)=0;
-Qz(Uf(1:n(1))==-1,1)=-1.5;
+Qz(Uf(1:n(1))==-1,1)=-15;
 
 Uf=repmat(Uf,n1(2),1);
 
@@ -40,15 +43,18 @@ WData.Doly=ones(n(1),n1(2));
 WData.r0=r0;
 WData.WXY=WXY;
 
-% for i=1:Ta
-%  if mod(i,8*280)<8*140
-%    WData.Uf(:,i)=uf1(:,i);  
-%  else
-%    WData.Uf(:,i)=uf2(:,i);  
-%  end;
-%   uf=WData.Uf(1:n(1),i);
-%  WData.Qz(uf==-1,i)=-125; 
-% end;
+for i=1:Ta
+ if mod(i,30)<10
+   WData.Uf(:,i)=uf1;  
+ elseif mod(i,30)<20
+   WData.Uf(:,i)=uf2;  
+ else
+   WData.Uf(:,i)=uf3;  
+ end;
+  uf=WData.Uf(1:n(1),i);
+ WData.Qz(uf==-1,i)=-45; 
+ WData.Qz(uf==0,i)=0; 
+end;
 
 %WData.CpW(:,ceil(end/3*2):end)=0.01+WData.CpW(:,ceil(end/3*2):end);
 % plot(sum(WData.Uf,1))

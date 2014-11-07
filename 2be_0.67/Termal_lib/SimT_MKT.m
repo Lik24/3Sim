@@ -104,7 +104,7 @@ WW=sum(WW,1)~=0;
 Mc=ones(nc,1);
 Mg=ones(ng,1);
 Md=ones(nd,1);
-Mb=ones(nb,1);
+Mb=100*ones(nb,1);
 
 CCp(:,1)=zeros(nc,1);
 GCp(:,1)=zeros(ng,1);
@@ -278,7 +278,8 @@ fp=1;
            A2DL', C2DL',G2DL', D1,  D2BL;
            A2BL', C2BL',G2BL',D2BL', B1];
         
-        BM=[b1wm;b1wc;b1wg;b1wd;b1wb]'+[-b1gm(2,:).*GY_Pz'-b1gm(1,:).*GY_Pxy',b1gc,b1gg,[-b1gd(2,:).*GY_Pz(vd)'-b1gd(1,:).*GY_Pxy(vd)'],-b1gb.*GY_Pxy2']-(Clp.*Pi)';
+        BM=[b1wm;b1wc;b1wg;b1wd;b1wb]'+[-b1gm(2,:).*GY_Pz'-b1gm(1,:).*GY_Pxy',b1gc,b1gg,...
+            [-b1gd(2,:).*GY_Pz(vd)'-b1gd(1,:).*GY_Pxy(vd)'],-b1gb.*GY_Pxy2']-(Clp.*Pi)';
         BLGY_GIM=[[-b1gm(2,:).*GY_Pz'-b1gm(1,:).*GY_Pxy'],[-b1gd(2,:).*GY_Pz(vd)'-b1gd(1,:).*GY_Pxy(vd)'],...
             -b1gb.*GY_Pxy2']-(Clp([va,vd,vb]).*Pi([va,vd,vb]))';
         

@@ -57,7 +57,7 @@ WXY=SD1.WXY;
 %  WXY4=SD1.WXY4;
 %  WXY=[WXY;WXY4];
 
-mXY=min([XY_GY;XY_GY_new;WXY]);
+mXY=min([XY_GY;WXY]);
 
 XY_GY(:,1)=XY_GY(:,1)-mXY(1);
 XY_GY(:,2)=XY_GY(:,2)-mXY(2);

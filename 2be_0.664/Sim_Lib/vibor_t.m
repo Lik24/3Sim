@@ -31,6 +31,9 @@ if  fl==0
     else 
      ndt2=0;   
     end;
+%     ndt1
+%     ndt2
+%     sdf
     ndt=ceil(max([ndt1;ndt2])*Fc);
   end;
 else

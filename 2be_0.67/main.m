@@ -6,7 +6,7 @@ PR=Gl_PRM;
 
 [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new]=Sintetic_Real(PR.Ns,PR.Nl);
 KX=10*KX;
-KX(:)=1;
+KX(:)=mean(KX(:));
 XY_GYs=XY_GY;
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z]=Sintetic(PR.Ns,PR.Nl);
 [WData]=Well_DATA(WXY,Z,PR.Ta);
@@ -15,7 +15,7 @@ Sw(:)=0;
 [nt,PXY,gXY,PR.dl,tXY,XY_GY]=kvad_crack_fun(XY_GY,PR.Nl,WXY);
 [DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY(1:33,:),H,Z,tXY,PR.Nl,WXY,XY_GY);
 Sw0=DATA.gSw;
-[GYData,DATA.gKX,DATA.gSw,B,A2B,dVb]=GY_DATA(DATA,XY_GYs,XY_GY_new,PR);
+[GYData,DATA.gKX,DATA.gSw,B,A2B,dVb,pb]=GY_DATA(DATA,XY_GYs,XY_GY_new,PR);
 %[WData.Doly,DATA.gKX,GYData.GY_Kxy]=Load_adp_prm2(WData.Doly,DATA.gKX,GYData.GY_Kxy);
 %[WData.Doly,DATA,GYData]=Load_adp_prm(DATA,GYData,tXY);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
@@ -43,7 +43,7 @@ d2=[];
 %[XY,K,Z,Pi,Sw,Cp,p,Q]=Sim_MKT(Prop,C,A2C,G,A2G,dVc,dVg,DATA,WData);
 [Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0]=SimT_MKT(PR,C,A2C,G,A2G,B,A2B,D,A2D,dVc,dVg,dVb,DATA,WData,GYData,1,CR_GRUP);
 
-VZL(DATA,WXY,Pi,Sw(:,2),Ti,MCp,PR.Nl,p,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,end));
+VZL(DATA,WXY,Pi,Sw(:,end),Ti,MCp,PR.Nl,p,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,end),pb,GYData,XY_GY_new);
 %VZL_VORONOI(XY,Sw(:,end),p,WXY,WData.Uf(:,end))
 
 

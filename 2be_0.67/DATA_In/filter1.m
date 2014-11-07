@@ -27,7 +27,7 @@ end
 
 [row,col]=find(v1==0);
 for i=1:size(col,1)
-    V(:,:,col(i))=Vostanovlenie(V(:,:,col(i)),WXY,r(row(i)),c(row(i)));
+     V(:,:,col(i))=Vostanovlenie(V(:,:,col(i)),WXY,r(row(i)),c(row(i)));
 end;
 
 K=V(:,:,1);
@@ -49,13 +49,11 @@ for l=cu'
     x(k==0)=[];
     y(k==0)=[];
     k(k==0)=[];
-    
+    if size(x,1)>2
     F=scatteredInterpolant(x,y,k,'linear','nearest');
-    %F(WXY(r(c==l),1),WXY(r(c==l),2))
-%     plot(x,y,'*',WXY(r(c==l),1),WXY(r(c==l),2),'o')
-%     hold on
-%     text(x,y,num2str(k))
-%    V(r(c==l),l)
     V(r(c==l),l)=F(WXY(r(c==l),1),WXY(r(c==l),2));
+    else
+    V(r(c==l),l)=mean(k);    
+    end
 end;
 end

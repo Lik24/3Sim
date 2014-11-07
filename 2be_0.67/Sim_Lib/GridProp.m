@@ -127,11 +127,10 @@ ka=(gKX+gKY+gKZ).*gMp.*gNTG.*gH;
 
 gSw(XY(:,1)<500)=0.3;
 gSw(XY(:,2)>1150)=0.3;
-gSw(:)=0;
 
-gKX(XY(:,1)<500)=mean(wKx)/1000*8.64;
-gKX(XY(:,2)>1150)=mean(wKx)/1000*8.64;
-gKX(:)=mean(wKx)/1000*8.64;
+
+gKX(XY(:,1)<500)=mean(wKx);
+gKX(XY(:,2)>1150)=mean(wKx);
 
 gMp(XY(:,1)<500)=0.3289;
 gMp(XY(:,2)>1150)=0.3289;

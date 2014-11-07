@@ -1,6 +1,6 @@
 %%Готовим историю
 load('DOB_ZAK_in','WN','DOB','ZAK')
-load('DOB_ZAK_in','DOBM','ZAKM')
+%load('DOB_ZAK_in','DOBM','ZAKM')
 wn=N2C(WN);
 
 wn=N2C(wn);
@@ -14,7 +14,7 @@ DOB(:,2)=PrepText(DOB(:,2));
 ZAK(:,2)=PrepText(ZAK(:,2));
 
 % for i=1:size(DOB,1)
-%  for j=1:9   
+%  for j=1:8   
 %   if isempty(DOB{i,j+3})==0  
 %    DOBM(i,j)=DOB{i,j+3};
 %   else
@@ -24,7 +24,7 @@ ZAK(:,2)=PrepText(ZAK(:,2));
 % end;
 % 
 % for i=1:size(ZAK,1)
-%  for j=1:7   
+%  for j=1:6   
 %   if isempty(ZAK{i,j+3})==0  
 %    ZAKM(i,j)=ZAK{i,j+3};
 %   else
@@ -35,8 +35,8 @@ ZAK(:,2)=PrepText(ZAK(:,2));
 
 LName=unique([DOB(:,2);ZAK(:,2)]);
 
-r1=strcmp('K',DOB(:,2));
-r2=strcmp('K',ZAK(:,2));
+r1=strcmp('J',DOB(:,2));
+r2=strcmp('J',ZAK(:,2));
 
 [DB,ZK,tim_step,NDay_D,NDay_Z]=History_Time(DOB(r1,3),ZAK(r2,3));
 

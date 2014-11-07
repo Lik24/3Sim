@@ -1,7 +1,7 @@
 clearvars
 
 addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','GeoMeh_Lib',...
-    'DATA','Well_lib','Crack_gen','Problems','Poly_lib','SS_lib','Diff_lib','Viz_lib');
+    'DATA','Well_lib','Crack_gen','Problems','Poly_lib','SS_lib','Diff_lib','Viz_lib','result');
 PR=Gl_PRM;
 
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XYc]=Sintetic_Real(PR.Ns,PR.Nl);
@@ -13,9 +13,9 @@ PR=Gl_PRM;
 
 GYData=GY_DATA(DATA.BndXY,DATA.BndZ);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
-%[nt,PXY]=elka(PR.Nl,DATA.XY,10,20,0,25);  % кол-во трещин, длинна, флаг к скважине
+[nt,PXY]=elka(PR.Nl,DATA.XY,6,10,0,25);  % кол-во трещин, длинна, флаг к скважине
 
-%load('elka_tst.mat','nt','PXY')
+load('mfti_tresh.mat','nt')
 [CrDATA]=CrackProp(DATA,PR,nt);
 
 % [nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);

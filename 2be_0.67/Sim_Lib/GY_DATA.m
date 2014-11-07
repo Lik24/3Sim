@@ -1,4 +1,4 @@
-function [GY_Data,KX,Sw,B,A2B,dVb]=GY_DATA(DATA,xy1,xy2,PR)
+function [GY_Data,KX,Sw,B,A2B,dVb,p]=GY_DATA(DATA,xy1,xy2,PR)
 
 dh=24;
 drob=6.5*dh;        % Густота сетки
@@ -144,8 +144,10 @@ TB=TB.*PR.aw(1)./PR.mu(1);
 TB=sparse(r,c,TB,nb,nb);
 B=TB-sparse(1:nb,1:nb,sum(TB,2),nb,nb);
 
-GY_Data.P0=P0+10;
+GY_Data.P0=P0;
 GY_Data.T0=40;
+GY_Data.XY=XY;
+GY_Data.BND=BND1;
 
 GY_Data.GY_Txy=H.*B_GY_2.*K;
 end

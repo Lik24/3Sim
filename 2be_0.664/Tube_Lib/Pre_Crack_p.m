@@ -92,6 +92,3 @@ for l=1:size(L_grup,1)
     end;
 %             fgfg
 end;
-A2C_cell;
-
-
