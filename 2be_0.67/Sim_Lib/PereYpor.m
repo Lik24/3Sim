@@ -80,13 +80,13 @@ GY_Swxy=GYData.GY_Swxy;
 BndXY=BndXY(p);
 BndZ=BndZ(p);
 
-GYData1.GY_Kz=GY_Kz(p);
-GYData1.GY_Pz=GY_Pz(p);
-GYData1.GY_Swz=GY_Swz(p);
+GYData1.GY_Kz=GY_Kz(p,1);
+GYData1.GY_Pz=GY_Pz(p,1);
+GYData1.GY_Swz=GY_Swz(p,1);
 
-GYData1.GY_Kxy=GY_Kxy(p);
-GYData1.GY_Pxy=GY_Pxy(p);
-GYData1.GY_Swxy=GY_Swxy(p);
+GYData1.GY_Kxy=GY_Kxy(p)';
+GYData1.GY_Pxy=GY_Pxy(p)';
+GYData1.GY_Swxy=GY_Swxy(p)';
 GYData1.P0=GYData.P0;
 GYData1.T0=GYData.T0;
 GYData1.GY_Txy=GYData.GY_Txy;

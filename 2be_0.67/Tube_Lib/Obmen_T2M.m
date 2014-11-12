@@ -1,5 +1,7 @@
 function [A2CL,A2CW,A2CP,A2CG]=Obmen_T2M(A2C,Pm,Pt,Sw,Cw,K,PR,MCp,CCp)
 
+if isempty(Pm)==0 && isempty(Pt)==0
+    
 as=PR.as;
 aw=PR.aw;
 ts=PR.ts;
@@ -62,3 +64,9 @@ A2CL=sparse(r,c,a2cl,n,m);
 A2CW=sparse(r,c,a2cw,n,m);
 A2CP=sparse(r,c,a2cp,n,m);
 A2CG=1;
+else
+    A2CL=A2C;
+    A2CW=A2C;
+    A2CP=A2C;
+    A2CG=1;  
+end

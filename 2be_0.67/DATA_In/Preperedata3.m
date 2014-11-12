@@ -54,3 +54,5 @@ for i=1:size(wn,1)
 end;
 
 [K,Sw,Mp,Hk,H]=filter1(K,Sw,Mp,Hk,H,WXY);
+
+[Z]=filterZ(Z,H,WXY);

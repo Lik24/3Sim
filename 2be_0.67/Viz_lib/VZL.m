@@ -1,7 +1,7 @@
 function VZL(DATA,WXY,P,Sw,T,Cp,Nl,pp,Q,SwC,CR_GRUP,pc,NT,XYgy,a0,pb,GYData,XYgy2)
 
 XY=DATA.XY;
-WZ=DATA.gZ;
+WZ=DATA.gZ(:);
 ka=DATA.ka;
 K=DATA.gKX;
 
@@ -17,8 +17,8 @@ Cp1(pp,:)=Cp;
 T1(pp,:)=T1;
 SwC(pc,:)=SwC;
 
-P1GY=P(size(pp,2)+1:end,:);
-P1GY(pb,:)=P1GY;
+%P1GY=P(size(pp,2)+1:end,:);
+%P1GY(pb,:)=P1GY;
 XY_GY2=GYData.XY;
 
 XYgy=DATA.XY(DATA.BND(:,1),:);
@@ -49,8 +49,8 @@ end;
 
 x=reshape(XY(:,1),size(WZ,1)/Nl,Nl);
 y=reshape(XY(:,2),size(WZ,1)/Nl,Nl);
-x1=reshape(XY_GY2(:,1),size(XY_GY2,1)/Nl,Nl);
-y1=reshape(XY_GY2(:,2),size(XY_GY2,1)/Nl,Nl);
+% x1=reshape(XY_GY2(:,1),size(XY_GY2,1)/Nl,Nl);
+% y1=reshape(XY_GY2(:,2),size(XY_GY2,1)/Nl,Nl);
 
 z=reshape(Z,size(WZ,1)/Nl,Nl);
 log10k=reshape((K/8.64),size(WZ,1)/Nl,Nl);
@@ -59,30 +59,30 @@ sw=reshape(Sw(:,end),size(WZ,1)/Nl,Nl);
 cp=reshape(Cp(:,end),size(WZ,1)/Nl,Nl);
 tt=reshape(T(:,end),size(WZ,1)/Nl,Nl);
 
-pgy=reshape(P1GY(:,end),size(XY_GY2,1)/Nl,Nl);
+%pgy=reshape(P1GY(:,end),size(XY_GY2,1)/Nl,Nl);
 
 mx(1)=min(XY(:,1));
 mx(2)=max(XY(:,1));
 my(1)=min(XY(:,2));
 my(2)=max(XY(:,2));
-[X,Y]=meshgrid(mx(1):5:mx(2),my(1):5:my(2));
+[X,Y]=meshgrid(mx(1):50:mx(2),my(1):50:my(2));
 
-mx(1)=min(XY_GY2(:,1));
-mx(2)=max(XY_GY2(:,1));
-my(1)=min(XY_GY2(:,2));
-my(2)=max(XY_GY2(:,2));
-[X1,Y1]=meshgrid(mx(1):5:mx(2),my(1):5:my(2));
- 
+% mx(1)=min(XY_GY2(:,1));
+% mx(2)=max(XY_GY2(:,1));
+% my(1)=min(XY_GY2(:,2));
+% my(2)=max(XY_GY2(:,2));
+% [X1,Y1]=meshgrid(mx(1):5:mx(2),my(1):5:my(2));
+%  
 figure(98),s1=subplot(2,4,1);
-plot_fild(x1,y1,z,pgy,Nl,X1,Y1,WXY,'Пластовое давление',XYgy2,a0,'nearest') % 
-hold on
+% plot_fild(x1,y1,z,pgy,Nl,X1,Y1,WXY,'Пластовое давление',XYgy2,a0,'nearest') % 
+% hold on
 plot_fild(x,y,z,p,Nl,X,Y,WXY,'Пластовое давление',XYgy,a0,'nearest') % 
 hold on
-ax=[XY_GY2(GYData.BND(:,1),1),XY_GY2(GYData.BND(:,2),1)];
-ay=[XY_GY2(GYData.BND(:,1),2),XY_GY2(GYData.BND(:,2),2)];
-plot(ax,ay,'k','LineWidth',2)
+%ax=[XY_GY2(GYData.BND(:,1),1),XY_GY2(GYData.BND(:,2),1)];
+%ay=[XY_GY2(GYData.BND(:,1),2),XY_GY2(GYData.BND(:,2),2)];
+%plot(ax,ay,'k','LineWidth',2)
 plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
-set(s1,'CLim',[min([pgy;p]) max([pgy;p])])
+%set(s1,'CLim',[min([pgy;p]) max([pgy;p])])
 hold off
 
 figure(98),subplot(2,4,2);
@@ -144,7 +144,7 @@ else
         hold on
     end;
 
-     plot3(repmat(WXY(:,1),1,2)',repmat(WXY(:,2),1,2)',[min(z(:))*ones(size(WXY,1),1),5+max(z(:))*ones(size(WXY,1),1)]','LineWidth',2,'Color',[0.749019622802734 0 0.749019622802734])
+   %  plot3(repmat(WXY(:,1),1,2)',repmat(WXY(:,2),1,2)',[min(z(:))*ones(size(WXY,1),1),5+max(z(:))*ones(size(WXY,1),1)]','LineWidth',2,'Color',[0.749019622802734 0 0.749019622802734])
 end;
  title(text);
  colorbar;

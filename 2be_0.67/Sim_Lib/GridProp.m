@@ -12,7 +12,7 @@ Con=XY(ON==1,:);
 
 % xc=sum(Con(:,1),1)/size(Con,1);
 % yc=sum(Con(:,2),1)/size(Con,1);
-[t,R]=cart2pol(Con(:,1)-500,Con(:,2)-1000);
+[t,R]=cart2pol(Con(:,1)-15000,Con(:,2)-5000);
 [P,n]=sort(t);
 XYgy=Con(n,:);
         
@@ -109,7 +109,7 @@ Won=Won(:);
 BndZ=zeros(size(gKX(:),1),1);
 BndZ(1:ncg)=1;
 BndZ(ncg*(nl-1)+1:end)=2;
-BndZ(XY(:,1)>1200)=0;
+%BndZ(XY(:,1)>1200)=0;
 
 dH=gZ+gH;
 NL=meshgrid(1:nl,1:ncg);
@@ -120,26 +120,26 @@ gKY(gKY<=0)=0;
 gKZ(gKZ<=0)=0;
 gMp(gMp<=0)=0;
 gSw(gSw<0)=0;
-gH(gH<=0)=0;
-gNTG(gNTG<0)=0;
+gH(gH<=0.001)=0;
+gNTG(gNTG<=0)=0;
 
 ka=(gKX+gKY+gKZ).*gMp.*gNTG.*gH;
 
-gSw(XY(:,1)<500)=0.3;
-gSw(XY(:,2)>1150)=0.3;
+% gSw(XY(:,1)<500)=0.3;
+% gSw(XY(:,2)>1150)=0.3;
 
 
-gKX(XY(:,1)<500)=mean(wKx);
-gKX(XY(:,2)>1150)=mean(wKx);
+% gKX(XY(:,1)<500)=mean(wKx);
+% gKX(XY(:,2)>1150)=mean(wKx);
+% 
+% gMp(XY(:,1)<500)=0.3289;
+% gMp(XY(:,2)>1150)=0.3289;
 
-gMp(XY(:,1)<500)=0.3289;
-gMp(XY(:,2)>1150)=0.3289;
-
-gH(XY(:,1)<500)=10.94;
-gH(XY(:,2)>1150)=10.94;
-
-gNTG(XY(:,1)<500)=6.62/10.94;
-gNTG(XY(:,2)>1150)=6.62/10.94;
+% gH(XY(:,1)<500)=10.94;
+% gH(XY(:,2)>1150)=10.94;
+% 
+% gNTG(XY(:,1)<500)=6.62/10.94;
+% gNTG(XY(:,2)>1150)=6.62/10.94;
 
 % mean([gKX(XY(:,1)<500);gKX(XY(:,2)>1050)])
 % mean([gMp(XY(:,1)<500);gMp(XY(:,2)>1050)])
@@ -174,7 +174,16 @@ end
 function B=razmaz(A,WXY,XY)
  F=scatteredInterpolant(WXY(:,1),WXY(:,2),A,'linear','nearest');
  B=F(XY(:,1),XY(:,2));
-%B=mean(A)*ones(size(XY,1),1);
+  
+% mx(1)=min(WXY(:,1));
+% mx(2)=max(WXY(:,1));
+% my(1)=min(WXY(:,2));
+% my(2)=max(WXY(:,2));
+% [X,Y]=meshgrid(mx(1):50:mx(2),my(1):50:my(2));%,mz(1):5:mz(2)
+% A(A==0)=nan;
+% F=scatteredInterpolant(WXY(:,1),WXY(:,2),A,'linear','nearest');
+% Vz=F(X,Y);
+% Vz=inpaintn(Vz);
 end
 
 function XY=NODuble(XY)

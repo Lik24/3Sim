@@ -1,14 +1,15 @@
 function [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new]=Sintetic_Real(Nw,Nl)
-SD=load('RIGIS_DATA_A1.mat');
-SD1=load('WCoord.mat');
+SD=load('RIGIS_DATA_U.mat');
+SD1=load('Wprop_URA.mat');
 XY_GY=[SD1.GY(:,1),SD1.GY(:,2)];
 
-pR=200;
+pR=2000;
 min_gy=min(XY_GY);
 max_gy=max(XY_GY);
 dx=max_gy(1)-min_gy(1);
 dy=max_gy(2)-min_gy(2);
 xyc=mean(XY_GY(1:end-1,:));
+xyc(2)=xyc(2)+2000;
 if dx>dy
   xc(1)=xyc(1)-0.25*dx;
   xc(2)=xyc(1)+0.25*dx;
@@ -81,7 +82,7 @@ KZ=SD.K/1000*8.64;
 Sor=0;%SD.Sor;
 Swr=0;%SD.Swr;
 Sw=SD.Sw;
-Z=SD.Z;
+Z=SD.Z3;
 
 H=SD.H;
 NTG=SD.Hk./H;

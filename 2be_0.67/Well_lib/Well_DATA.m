@@ -3,11 +3,12 @@ r0=0.084;
 
 n=size(WXY);
 n1=size(Z);
-load('history_deb_day','a0','dob_lik2','zak_lik2');
+%n1(2)=2;
+load('history_deb_day_ura','a0','dob_lik2','zak_lik2');
 
 %a=rand(n(1),1);
-  Uf=ones(33,1);
-  Uf(16)=1;
+  Uf=ones(1098,1);
+  Uf(1:10:end)=-1;
   %Uf(1:3:end)=-1;
 %  Uf=a0(:,end);
 %  Uf(Uf<0)=0;
@@ -48,8 +49,8 @@ WData.r0=r0;
 WData.WXY=WXY;
 WData.PwQC_bnd=Pw_Q_C_bnd;
 
-%WData.Uf=a0;
-%WData.Qz=dob_lik2-zak_lik2;
+% WData.Uf=a0;
+% WData.Qz=dob_lik2-zak_lik2;
 % for i=1:Ta
 %  if mod(i,8*280)<8*140
 %    WData.Uf(:,i)=uf1(:,i);  

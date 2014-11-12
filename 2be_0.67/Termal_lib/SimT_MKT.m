@@ -1,4 +1,4 @@
-function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,Cw,NDT,Uf,dt1,dV0]=SimT_MKT(PR,C,A2C,G,A2G,BB,A2B,D,A2D,dVC,dVG,dVB,DATA,WData,GYData,fll,CR_GRUP)
+function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,Cw,NDT,Uf,dt1,dV0,ka]=SimT_MKT(PR,C,A2C,G,A2G,BB,A2B,D,A2D,dVC,dVG,dVB,DATA,WData,GYData,fll,CR_GRUP)
 tic
 
 KX=DATA.gKX;
@@ -45,18 +45,27 @@ qd=zeros(size(Uf,1),5);
 
 [A]=MR_Prop_Bond(XY,Nl,BND);
 [L,B,S,H1]=Geome3_1(A,XY,Z,H);
-
+ka(sum(A)==-1)=0;
 [r,c]=find(A(1:size(XY,1),1:size(XY,1))==1);
 
 Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0,XY,Nw,Nl);
 XY=repmat(XY,Nl,1);
 ka1=ka(Won);
-
+Won1=Won;
 [A,L,B,S,H1,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf,ka);
+ka2=ka(ka~=0);
+
+ka2(sum(A)==-1)=0;
+ka2(sum(S)==0)=0;
+ka(ka~=0)=ka2;
+
+ka1=ka(Won1);
+[A,L,B,S,H1,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf,ka2);
+
 [A,L,S,B,H1,K,XY,Mp,Sw,H,Z,P,MCp,T,NTG,p,rz,cz,BXY,BZ,dH,NL,NamXY,GYData]=PereYpor(A,L,S,B,H1,KX,KY,KZ,Mp,Sw,...
     XY,H,Z,P,MCp,DATA,GYData,ka);
 [r,c]=find(L);
-
+A2C(ka2==0,:)=[];
 nw=size(p,2);
 nwc=size(A2C,1);
 raz=nw-nwc;
@@ -134,7 +143,7 @@ Ti(vd,1)=T(RC.ADr);
 Ti(vb,1)=GYData.T0;
 
 j=0;
-Pwt=zeros(size(Uf));
+Pwt=zeros(size(Pw));
 PpW=zeros(size(Uf));
 
 [CR_rc]=Pre_Crack(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
@@ -215,7 +224,7 @@ fp=1;
     flag_pwq=1;
 
     while flag_gim==1 && kj<10 && flag_pwq==1
-        
+        flag_pwq=0; 
         kj=kj+1;
 
         [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dVCG./Mp(:,1),SCw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd,vb,dt);
@@ -295,7 +304,7 @@ fp=1;
         pw=Pw(:,ft+1);
         pw(Qf~=0)=Pt(na+nc+ng+nd+nb+1:end);
         
-        [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond(pw,Pt(Won),W1,Uf(WonM,ft+1),Qf,PwQC_bnd);
+        %[flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond(pw,Pt(Won),W1,Uf(WonM,ft+1),Qf,PwQC_bnd);
         Pt0=Pt;
         
     end

@@ -23,12 +23,12 @@ pm=[z,y];
 
 ww=zeros(size(pm,1),1);
 
-    for j =1:size(WXY,1)
-        xx=WXY(j,1:2);
-        [k,d]=dsearchn(xx,pm);
+%    for j =1:size(WXY,1)
+       % xx=WXY(j,1:2);
+        [k,d]=dsearchn(WXY,pm);
         ww(d<=rad)=1;
         ww(d==0)=0;
-    end;
+%    end;
 
 zz(:,1)=pm(:,1);
 yy(:,1)=pm(:,2);

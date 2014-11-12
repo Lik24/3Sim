@@ -10,19 +10,21 @@ V(:,:,1)=K;
 V(:,:,2)=Sw;
 V(:,:,3)=Mp;
 V(:,:,4)=Hk;
+V(:,:,5)=H;
 
 %% Толшины
 H(Hi==0)=Hk(Hi==0);
 
-Si=(Ki+Swi+Mpi+Hki);
+Si=(Ki+Swi+Mpi+Hki+Hi);
 
-[r,c]=find((Si<4).*(Si~=0));
+[r,c]=find((Si<5).*(Si~=0));
 
 for i=1:size(r,1)
   v1(i,1)=sum(Ki(r(i),c(i)));
   v1(i,2)=sum(Swi(r(i),c(i)));
   v1(i,3)=sum(Mpi(r(i),c(i)));
   v1(i,4)=sum(Hki(r(i),c(i)));
+  v1(i,5)=sum(Hi(r(i),c(i)));
 end
 
 [row,col]=find(v1==0);
@@ -34,6 +36,7 @@ K=V(:,:,1);
 Sw=V(:,:,2);
 Mp=V(:,:,3);
 Hk=V(:,:,4);
+H=V(:,:,5);
 
 end
 

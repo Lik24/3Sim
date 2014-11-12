@@ -33,14 +33,7 @@ y=y(:);
 bnd=[min(x) max(x) min(y) max(y)]; %data bounds
 crs=double([bnd(1) bnd(4);bnd(2) bnd(4);bnd(2) bnd(3);bnd(1) bnd(3);bnd(1) bnd(4)]); %data boundary corners
 
-d=0*10;
-xc=mean(x);
-yc=mean(y);
-
-K=convhull(x,y);
-[O,R]=cart2pol(x(K)-xc,y(K)-yc);
-[x2,y2]=pol2cart(O,R+d);
-crs=[x(BND),y(BND)];
+crs=[x(BND(:)),y(BND(:))];
 
 dt=DelaunayTri(x(:),y(:));
 [V,C]=voronoiDiagram(dt); %This structure gives vertices for each individual point but is missing all "infinite" vertices
@@ -92,7 +85,7 @@ for ii=1:length(vxyl)
     end
 end
 
-mix=find(xix==1)./2; %index of missing values
+mix=find(xix(2,:)==1); %index of missing values
 lmix=length(mix);
 mvx=vx(2,mix); %missing vx
 mvy=vy(2,mix); %missing vy
