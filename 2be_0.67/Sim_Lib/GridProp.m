@@ -115,6 +115,8 @@ dH=gZ+gH;
 NL=meshgrid(1:nl,1:ncg);
 NamXY=repmat([1:ncg]',1,nl);
 
+GY=load('GY_Ura');
+
 gKX(gKX<=0)=0;
 gKY(gKY<=0)=0;
 gKZ(gKZ<=0)=0;
@@ -122,6 +124,10 @@ gMp(gMp<=0)=0;
 gSw(gSw<0)=0;
 gH(gH<=0.001)=0;
 gNTG(gNTG<=0)=0;
+
+for l=1:size(gKX,2)
+ gKX(:,l)=sub_bond(gKX(:,l),xy,XY);
+end
 
 ka=(gKX+gKY+gKZ).*gMp.*gNTG.*gH;
 
@@ -172,7 +178,7 @@ DATA.XYgy=XYgy;
 end
 
 function B=razmaz(A,WXY,XY)
- F=scatteredInterpolant(WXY(:,1),WXY(:,2),A,'linear','nearest');
+ F=scatteredInterpolant(WXY(:,1),WXY(:,2),A,'nearest','nearest');
  B=F(XY(:,1),XY(:,2));
   
 % mx(1)=min(WXY(:,1));
@@ -196,4 +202,13 @@ while i<size(XY,1)
      XY(r(2:end),:)=[];
     end;
 end;
+end
+
+function B=sub_bond(B,xy,XY)
+
+ in=inpolygon(XY(:,1),XY(:,2),xy(:,1),xy(:,2));
+ tempKX=B(in==1,l);
+ tempKX(tempKX==0)=mean(tempKX(tempKX~=0));
+ B(in==1,l)=tempKX;
+  
 end
