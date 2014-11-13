@@ -126,7 +126,15 @@ gH(gH<=0.001)=0;
 gNTG(gNTG<=0)=0;
 
 for l=1:size(gKX,2)
- gKX(:,l)=sub_bond(gKX(:,l),xy,XY);
+ xy=GY.xy{l};
+ a=GY.a{l};
+ gKX(:,l)=sub_bond(gKX(:,l),xy(a,:),XY);
+ gKY(:,l)=sub_bond(gKY(:,l),xy(a,:),XY);
+ gKZ(:,l)=sub_bond(gKZ(:,l),xy(a,:),XY);
+ gMp(:,l)=sub_bond(gMp(:,l),xy(a,:),XY);
+ gSw(:,l)=sub_bond(gSw(:,l),xy(a,:),XY);
+ gH(:,l)=sub_bond(gH(:,l),xy(a,:),XY);
+ gNTG(:,l)=sub_bond(gNTG(:,l),xy(a,:),XY);
 end
 
 ka=(gKX+gKY+gKZ).*gMp.*gNTG.*gH;
@@ -207,8 +215,8 @@ end
 function B=sub_bond(B,xy,XY)
 
  in=inpolygon(XY(:,1),XY(:,2),xy(:,1),xy(:,2));
- tempKX=B(in==1,l);
+ tempKX=B(in==1);
  tempKX(tempKX==0)=mean(tempKX(tempKX~=0));
- B(in==1,l)=tempKX;
+ B(in==1)=tempKX;
   
 end

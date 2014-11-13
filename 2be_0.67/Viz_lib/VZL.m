@@ -1,4 +1,4 @@
-function VZL(DATA,WXY,P,Sw,T,Cp,Nl,pp,Q,SwC,CR_GRUP,pc,NT,XYgy,a0,pb,GYData,XYgy2)
+function VZL(DATA,WXY,P,Sw,T,Cp,Nl,pp,Q,SwC,CR_GRUP,pc,NT,XYgy,a0,pb,GYData,XYgy2,dtz)
 
 XY=DATA.XY;
 WZ=DATA.gZ(:);
@@ -103,7 +103,7 @@ plot_fild(x,y,z,log10k,Nl,X,Y,WXY,'Проницаемость',XYgy,a0,'nearest') %
 
 
  subplot(2,4,8);
- T=1:size(Q,3);
+ T=(1:size(Q,3))*dtz;
 % 
 Qz(:,:)=sum(Q(:,1,:));
 Qd(:,:)=sum(Q(:,2,:));

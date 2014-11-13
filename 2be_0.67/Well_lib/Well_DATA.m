@@ -4,7 +4,7 @@ r0=0.084;
 n=size(WXY);
 n1=size(Z);
 %n1(2)=2;
-load('history_deb_day_ura','a0','dob_lik2','zak_lik2');
+%load('history_deb_day_ura','a0','dob_lik2','zak_lik2');
 
 %a=rand(n(1),1);
   Uf=ones(1098,1);

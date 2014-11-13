@@ -1,4 +1,4 @@
-function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,Cw,NDT,Uf,dt1,dV0,ka]=SimT_MKT(PR,C,A2C,G,A2G,BB,A2B,D,A2D,dVC,dVG,dVB,DATA,WData,GYData,fll,CR_GRUP)
+function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,Cw,NDT,Uf,dt1,dV0,ka,dtz]=SimT_MKT(PR,C,A2C,G,A2G,BB,A2B,D,A2D,dVC,dVG,dVB,DATA,WData,GYData,fll,CR_GRUP)
 tic
 
 KX=DATA.gKX;
@@ -368,7 +368,7 @@ fp=1;
  %       TeW(:,t+1),Qm(:,:,t+1),Qc(:,:,t+1),Qg(:,:,t+1),C2GL,TL,CL,GL,TW,CW,GW,A2CL,A2CW,A2GL,A2GW,Wf,NDT(t),t,T,S,BZ);
     
         Ti(:,1)=Ti(:,1);
-    if mod(t,1)==0
+    if mod(t,100)==0
         j=j+1;
         Pj(:,j)=Pi;
         Swj(:,j)=Sw;
@@ -391,7 +391,7 @@ fp=1;
 %     Uf(WonM,ft+1:end)=Uf(WonM,ft+1:end).*repmat(qo>PwQC_bnd(5,1),1,size(Uf(:,ft+1:end),2));
 end;
 
-[Q,Pw,PpW]=Q2Sut(Qm,Qc,Qg,Pwt(:,1:t+1),PpW(:,1:t+1),dt1,Ta);
+[Q,Pw,PpW,dtz]=Q2Sut(Qm,Qc,Qg,Pwt(:,1:t+1),PpW(:,1:t+1),dt1,Ta);
 % GY_Pxy(p)=GY_Pxy;
 % save('GY_Pxy.mat','GY_Pxy')
 %  Bnd_xy(p)=DATA.BndXY;
