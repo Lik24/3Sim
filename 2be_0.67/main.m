@@ -41,11 +41,12 @@ gt(:)={[]};
 %nt2(:)={[]};
 [G,A2G,dVg,pg,DATA.WonG,DATA.Lg]=Conek(DATA.XY,gt,PR.Nl,CrDATA,DATA.Won,PR.dh,PR.Kc,WData.r0);%Gorizont(DATA.XY,GS,gt,WXY,WData.r0);
 
-nd=[];
-%[D,A2D,dVd,pd,DATA.WonD,DATA.Ld]=DobPor(DATA.XY,d2,PR.Nl,DATA.Won,WData.r0,DATA.ka);
-[D,A2D,dVd,pd,DATA.WonD,DATA.Ld,~]=Conek2D(DATA,nd,PR.Nl,CrDATA,WData.r0);
+nd=DPorist(DATA.XY,PR.Nl);
+% nd0={[]};
+% nd(1:3)={nd0};
+[D,A2D,dVd,pd,DATA.WonD,DATA.Ld,~]=Conek2D(DATA,nd,PR.Nl,CrDATA,WData);
 
-[Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz]=SimT_MKT(PR,C,A2C,G,A2G,B,A2B,D,A2D,dVc,dVg,dVb,DATA,WData,GYData,1,CR_GRUP);
+[Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz]=SimT_MKT(PR,C,A2C,G,A2G,B,A2B,D,A2D,dVc,dVg,dVd,dVb,DATA,WData,GYData,1,CR_GRUP);
 
 VZL(DATA,WXY,Pi,Sw(:,end),Ti,MCp,PR.Nl,p,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,end),pb,GYData,XY_GY_new,dtz);
 %VZL_VORONOI(XY,Sw(:,end),p,WXY,WData.Uf(:,end))

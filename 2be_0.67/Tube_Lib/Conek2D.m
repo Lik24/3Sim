@@ -1,18 +1,18 @@
-function [D,A2D,dVd,p,WonV,L,CR_GRUP]=Conek2D(DATA,NLT,Nl,CrDATA,r0)
+function [D,A2D,dVd,p,WonV,L,CR_GRUP]=Conek2D(DATA,NLT,Nl,CrDATA,WData)
 
 XY=DATA.XY;
 Won=DATA.Won;
 ka=DATA.ka;
 BND=DATA.BND;
-H=DATA.gH;
+Hi=DATA.gH;
 Z=DATA.gZ;
 
 np=size(XY,1);
-HH=CrDATA.H;
-dC=CrDATA.dC;
+
 KD=CrDATA.KD;
 DH=CrDATA.DH;
 
+Nw=size(WData.Doly,1);
 
 WonV(1,1:3)=1;
 WonV(1,:)=[];
@@ -27,17 +27,27 @@ L_L=cell(Nl,1);
 A2D_L=cell(Nl,1);
 
 [AA]=MR_Prop_Bond(XY,Nl,BND);
-[L,B,S,H1]=Geome3_1(AA,XY,Z,H);
+[L,B,S,H]=Geome3_1(AA,XY,Z,Hi);
 ka(sum(AA)==-1)=0;
 [r,c]=find(AA(1:size(XY,1),1:size(XY,1))==1);
-Wf=KWell(KD,H,S,L,B,Won,r,c,WData.Doly,WData.r0,XY,Nw,Nl);
+K=cell2mat(KD);
+K=repmat(K,size(XY,1),1);
+Wf=KWell(K,Hi,S,L,B,Won,r,c,WData.Doly,WData.r0,XY,Nw,Nl);
+
+% ka1=ka(Won);
+% Wf=Wf(ka1==1);
+
+im=zeros(size(ka));
+im(Won)=1;
+im=im(ka==1);
+Won=find(im(:));
+
 
 for l=1:Nl
     Nt=NLT{l};
     Kd=KD{l};
     Dh=DH{l};
     
-    [L,~,~,H]=Geome3(AA,XY,Z,HH(:,l));
     mnt=size(Nt,2);
     dVB=cell(mnt,1);
     CB=cell(mnt,1);
@@ -49,7 +59,6 @@ for l=1:Nl
         
         nt=Nt{i};   % Список ячеек с трещинами
         kd=Kd(i);   % Проницаемость трещины
-        dh=Dh(i);   % Раскрытость трещины
         A=AA;
        
         unt=unique(nt);
@@ -57,37 +66,32 @@ for l=1:Nl
         A1=A(unt,:);   A2=A1(:,unt);
         L1=L(unt,:);   L2=L1(:,unt);
         H1=H(unt,:);   H2=H1(:,unt);
-        
-%        figure(234),spy(A2)
-%        jhjh
-%         [r,c]=find(A2==1);
-%         for ir=1:size(r,1)
-%            if sum(r(ir)==nt)==0
-%             A2(r(ir),c(ir))=0;
-%             L2(r(ir),c(ir))=0;
-%             H2(r(ir),c(ir))=0;
-%            end;
-%         end;
-%             unt'
-%             Won'     
+        B1=B(unt,:);   B2=B1(:,unt);
+        S1=S(unt,:);   S2=S1(:,unt);
+    
         for j=1:size(Won,1)
             ty=find(Won(j)==unt);
             if isempty(ty)==0
                 k=k+1;
                 WonV(k,1)=ty(1)+sntl;
-                WonV(k,2)=Wf(Won(j));%dC*100;
-                WonV(k,3)=Won(j);
+                WonV(k,2)=Wf(j);%dC*100;
+                WonV(k,3)=j;
             end;
         end;
 %         WonV
         n=size(A2,1);
         [r,c]=find(A2==1);
-        D=H2(r+(c-1)*n)*dh./L2(r+(c-1)*n)*kd*8.34;
+        
+        Lm=L2(r+(c-1)*n);
+        Bm=B2(r+(c-1)*n);
+        H1m=H2(r+(c-1)*n);
+        D=kd.*Bm.*H1m./Lm;
+        %D=H2(r+(c-1)*n)*dh./L2(r+(c-1)*n)*kd*8.34;
         D=sparse(r,c,D,n,n);
         
-        a2d=sum(H2.*L2,2);
-        A2D=sparse(unt+(l-1)*np,1:n,a2d,np*Nl,n);
-        dVd=sum(H2.*L2.*dh,2);
+        a2d=sum(H2.*S2,2);
+        A2D=sparse(unt,1:n,a2d,np*Nl,n);
+        dVd=sum(H2.*S2,2);
         dVB(i)={dVd};
         CB(i)={D};
         LB(i)={L};
@@ -111,10 +115,12 @@ end;
     CR_GRUP=cell2mat(CR_grup');
     D=cell2mat(C_cell);
     L=cell2mat(L_cell);
-   % A2C=cell2mat(A2C_cell);
-   % dVc=cell2mat(dV_cell);
-
-
+    
+    D=D(ka==1,ka==1);
+    L=L(ka==1,ka==1);
+    A2D=A2D(:,ka==1);
+    dVd=dVd(ka==1);
+   
     p=symrcm(D);
     D=D(p,p);
     L=L(p,p);
