@@ -1,4 +1,4 @@
-function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0,Nl,ka1)
+function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0,Nl,ka1,DL,W1D,WonD,nd)
 Fc=PR.Fc;
 Sc=PR.Sc2;
 

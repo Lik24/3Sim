@@ -1,4 +1,4 @@
-function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,Cw,NDT,Uf,dt1,dV0,ka,dtz]=SimT_MKT(PR,C,A2C,G,A2G,BB,A2B,D,A2D,dVC,dVG,dVD,dVB,DATA,WData,GYData,fll,CR_GRUP)
+function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,CSw,NDT,Uf,dt1,dV0,ka,dtz]=SimT_MKT(PR,C,A2C,G,A2G,BB,A2B,D,A2D,dVC,dVG,dVD,dVB,DATA,WData,GYData,fll,CR_GRUP)
 tic
 
 KX=DATA.gKX;
@@ -6,7 +6,7 @@ KY=DATA.gKY;
 KZ=DATA.gKZ;
 Mp=DATA.gMp;
 P=DATA.gP;
-Sw=DATA.gSw;
+MSw=DATA.gSw;
 MCp=DATA.gCp;
 XY=DATA.XY;
 BND=DATA.BND;
@@ -36,6 +36,7 @@ Nw=size(Qz,1);
 Qm=zeros(size(Uf,1),5,size(Uf,2));
 Qc=zeros(size(WonC,1),5,size(Uf,2));
 Qg=zeros(size(WNG,1),5,size(Uf,2));
+Qd=zeros(size(WonD,1),5,size(Uf,2));
 
 qm=zeros(size(Uf,1),5);
 qc=zeros(size(Uf,1),5);
@@ -53,7 +54,7 @@ Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0,XY,Nw,Nl);
 XY=repmat(XY,Nl,1);
 ka1=ka(Won);
 Won1=Won;
-[A,L,B,S,H1,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf,ka);
+[A,L,B,S,H1,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf,ka);
 ka2=ka(ka~=0);
 
 ka2(sum(A)==-1)=0;
@@ -61,9 +62,9 @@ ka2(sum(S)==0)=0;
 ka(ka~=0)=ka2;
 
 ka1=ka(Won1);
-[A,L,B,S,H1,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf,ka2);
+[A,L,B,S,H1,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf,ka2);
 
-[A,L,S,B,H1,K,XY,Mp,Sw,H,Z,P,MCp,T,NTG,p,rz,cz,BXY,BZ,dH,NL,NamXY,GYData]=PereYpor(A,L,S,B,H1,KX,KY,KZ,Mp,Sw,...
+[A,L,S,B,H1,K,XY,Mp,MSw,H,Z,P,MCp,T,NTG,p,rz,cz,BXY,BZ,dH,NL,NamXY,GYData]=PereYpor(A,L,S,B,H1,KX,KY,KZ,Mp,MSw,...
     XY,H,Z,P,MCp,DATA,GYData,ka);
 [r,c]=find(L);
 A2C(ka2==0,:)=[];
@@ -124,10 +125,10 @@ dVCG=[dV;dVC;dVG;dVD;dVB];
 dV0=[dV;dVC;dVG;dVD];
 
 [TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txy_GY,Tz_GY]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K(:,1),Ke_gy_XY,Ke_gy_Z,BZ,rz,cz,BndXY(p),BndZ(p),nb);
-Cw(:,1)=Sw(RC.ACr,1);
-Gw(:,1)=Sw(RC.AGr,1);
-Dw(:,1)=Sw(RC.ADr,1);
-BBw(:,1)=ones(nb,1);
+CSw(:,1)=MSw(RC.ACr,1);
+GSw(:,1)=MSw(RC.AGr,1);
+DSw(:,1)=MSw(RC.ADr,1);
+BSw(:,1)=ones(nb,1);
 
 Pi(va,1)=P;
 Pi(vc,1)=P(RC.ACr);
@@ -165,7 +166,6 @@ PpW=zeros(size(Uf));
 st=0;
 t=0;
 t_flag=1;
-Sw2=Sw;
 dt=dtt;
 
 Bwo(:,1:2)=Bo(1)*ones(na+nc+ng+nd+nb,2);
@@ -173,8 +173,8 @@ Bwo(:,3:4)=Bo(2)*ones(na+nc+ng+nd+nb,2);
 
 Mp=repmat([Mp.*ones(na,1);Mc;Mg;Md;Mb],1,2);
 
-SCw=[Sw(:,1);Cw(:,1);Gw(:,1);Dw(:,1);BBw(:,1)];
-V0=sum(dVCG.*(1-SCw));
+Sw=[MSw(:,1);CSw(:,1);GSw(:,1);DSw(:,1);BSw(:,1)];
+V0=sum(dVCG.*(1-Sw));
 P0=Pi;
 Pt0=[P0;Pw(:,1)]';
 dtt1=dtt;
@@ -208,13 +208,13 @@ fp=1;
 %     [C,TC]=GeoMex(C2,TC1,Pi(na+1:na+nc,1),1);
 %     [G,TG]=GeoMex(G2,TG1,Pi(na+nc+1:na+nc+ng,1),1);
 
-     kfw(1:na,1)=Sat_cal(Sw,1,1,as,aw); %water
-     kfo(1:na,1)=Sat_cal(Sw,2,1,as,aw); %oil
+     kfw(1:na,1)=Sat_cal(MSw,1,1,as,aw); %water
+     kfo(1:na,1)=Sat_cal(MSw,2,1,as,aw); %oil
      
-     kfw(na+1:na+nc+ng,1)=Sat_cal([Cw(:,t);Gw(:,t)],1,1,ts,tw); %water
-     kfo(na+1:na+nc+ng,1)=Sat_cal([Cw(:,t);Gw(:,t)],2,1,ts,tw); %oil
+     kfw(na+1:na+nc+ng,1)=Sat_cal([CSw(:,t);GSw(:,t)],1,1,ts,tw); %water
+     kfo(na+1:na+nc+ng,1)=Sat_cal([CSw(:,t);GSw(:,t)],2,1,ts,tw); %oil
 
-    [b1gm,b1gc,b1gg,b1gd,b1gb,b2gm,b2gd]=GY_bild(GYData,Pi(1:na,1),Sw(:,1),BXY,BZ,na,nc,ng,nd,nb,Txy_GY,Tz_GY,as,aw,mu);
+    [b1gm,b1gc,b1gg,b1gd,b1gb,b2gm,b2gd]=GY_bild(GYData,Pi(1:na,1),MSw(:,1),BXY,BZ,na,nc,ng,nd,nb,Txy_GY,Tz_GY,as,aw,mu);
     
     kj=0;
     flag_gim=1;
@@ -224,26 +224,26 @@ fp=1;
         flag_pwq=0; 
         kj=kj+1;
 
-        [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dVCG./Mp(:,1),SCw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd,vb,dt);
+        [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dVCG./Mp(:,1),Sw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd,vb,dt);
         
         [TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),kfw(1:na),kfo(1:na),MCp(:,1),as,aw,mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro,A(va));
-        [CL,~,~]=Potok_Tube(TC,Pi(vc,1),Cw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc));
-        [GL,~,~]=Potok_Tube(TG,Pi(vg,1),Gw(:,t),GCp(:,t),PR,mup,fp,kms(3),DATA.Lg,RC.Gr2,RC.Gc2,ng,A(vg));
-        [DL,DW,DP]=Potok_Tube(TD,Pi(vd,1),Dw(:,t),DCp(:,t),PR,mup,fp,kms(4),DATA.Ld,RC.Dr2,RC.Dc2,nd,A(vd));
+        [CL,~,~]=Potok_Tube(TC,Pi(vc,1),CSw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc));
+        [GL,~,~]=Potok_Tube(TG,Pi(vg,1),GSw(:,t),GCp(:,t),PR,mup,fp,kms(3),DATA.Lg,RC.Gr2,RC.Gc2,ng,A(vg));
+        [DL,DW,DP]=Potok_Tube(TD,Pi(vd,1),DSw(:,t),DCp(:,t),PR,mup,fp,kms(4),DATA.Ld,RC.Dr2,RC.Dc2,nd,A(vd));
         
-        [A2CL,~,~]=Obmen_T2M(A2C,Pi(va,1),Pi(vc,1),Sw(:,1),Cw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
-        [A2GL,~,~]=Obmen_T2M(A2G,Pi(va,1),Pi(vg,1),Sw(:,1),Gw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
-        [A2DL,A2DW,~]=Obmen_T2M(A2D,Pi(va,1),Pi(vd,1),Sw(:,1),Dw(:,t),K(:,1),PR,MCp(:,1),DCp(:,t));
-        [A2BL,A2BW,A2BP]=Obmen_T2M(A2B,Pi(va,1),Pi(vb,1),Sw(:,1),BBw(:,1),ones(na,1),PR,MCp(:,1),BCp(:,1));
-        [D2BL,D2BW,D2BP]=Obmen_T2M(D2B,Pi(vd,1),Pi(vb,1),Dw(:,t),BBw(:,1),K(:,1),PR,DCp(:,1),BCp(:,1));
+        [A2CL,~,~]=Obmen_T2M(A2C,Pi(va,1),Pi(vc,1),MSw(:,1),CSw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
+        [A2GL,~,~]=Obmen_T2M(A2G,Pi(va,1),Pi(vg,1),MSw(:,1),GSw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
+        [A2DL,A2DW,A2DP]=Obmen_T2M(A2D,Pi(va,1),Pi(vd,1),MSw(:,1),DSw(:,t),K(:,1),PR,MCp(:,1),DCp(:,t));
+        [A2BL,A2BW,A2BP]=Obmen_T2M(A2B,Pi(va,1),Pi(vb,1),MSw(:,1),BSw(:,1),ones(na,1),PR,MCp(:,1),BCp(:,1));
+        [D2BL,D2BW,D2BP]=Obmen_T2M(D2B,Pi(vd,1),Pi(vb,1),DSw(:,t),BSw(:,1),K(:,1),PR,DCp(:,1),BCp(:,1));
         
         Wf=Wf0.*(1-0.0001*(P0(Won)-Pi(Won))).^3;
-        [W1,W6,W7]=Well_MKT(Wf,Won,Uf(WonM,ft+1),Sw(:,1),MCp(:,1),aw,as,mu,mup,CpW(WonM,ft+1),A(va));
-        [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),Cw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1),A(vc));
-        [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),Gw(:,t),GCp(:,t),tw,ts,mu,mup,CpW(WNG,ft+1),A(vg));
-        [W1D,W6D,W7D]=Well_MKT(WonD(:,2),WonD(:,1),Uf(WonD(:,3),ft+1),Dw(:,t),DCp(:,t),tw,ts,mu,mup,CpW(WonD(:,3),ft+1),A(vd));
+        [W1,W6,W7]=Well_MKT(Wf,Won,Uf(WonM,ft+1),MSw(:,1),MCp(:,1),aw,as,mu,mup,CpW(WonM,ft+1),A(va));
+        [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),CSw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1),A(vc));
+        [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),GSw(:,t),GCp(:,t),tw,ts,mu,mup,CpW(WNG,ft+1),A(vg));
+        [W1D,W6D,W7D]=Well_MKT(WonD(:,2),WonD(:,1),Uf(WonD(:,3),ft+1),DSw(:,t),DCp(:,t),tw,ts,mu,mup,CpW(WonD(:,3),ft+1),A(vd));
         
-        A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,sum(A2CL,2)+sum(A2GL,2)+sum(A2BL,2)+Clp(va)+sum(b1gm)',na,na);  %Матрица коэф. для пор
+        A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,sum(A2CL,2)+sum(A2GL,2)+sum(A2BL,2)+sum(A2DL,2)+Clp(va)+sum(b1gm)',na,na);  %Матрица коэф. для пор
         C1=CL-sparse(1:nc,1:nc,sum(A2CL,1)+Clp(vc)',nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);                       %Матрица коэф. для вертикальных трещ.
         G1=GL-sparse(1:ng,1:ng,sum(A2GL,1)+Clp(vg)',ng,ng)-sparse(WonG(:,1),WonG(:,1),W1G,ng,ng);                       %Матрица коэф. для гориз. трещ.
         D1=DL-sparse(1:nd,1:nd,sum(A2DL,1)+sum(D2BL,2)'+Clp(vd)',nd,nd)-sparse(WonD(:,1),WonD(:,1),W1D,nd,nd);                       %Матрица коэф. для двойной пор.
@@ -255,7 +255,7 @@ fp=1;
         b1wm=sparse(Won,ones(1,size(Won,1)),-W1.*PwNl,na,1);
         b1wc=sparse(WonC(:,1),ones(1,size(WonC,1)),-W1C.*Pw(WonC(:,3),ft+1),nc,1);
         b1wg=sparse(WonG(:,1),ones(1,size(WonG,1)),-W1G.*Pw(WNG,ft+1),ng,1);
-        b1wd=sparse(WonD(:,1),ones(1,size(WonD,1)),-W1D.*PwNl(WonD(:,3),ft+1),nd,1);
+        b1wd=sparse(WonD(:,1),ones(1,size(WonD,1)),-W1D.*PwNl(WonD(:,3)),nd,1);
 
         
         W2M=sparse(WonM,Won,W1,nw,na);
@@ -310,8 +310,8 @@ fp=1;
     Pw(Qf~=0,ft+1)=Pt(na+nc+ng+nd+nb+1:end);
     Pwt(:,t+1)=Pw(:,ft+1);
     %% Водонасыщенность
-    SCw=[Sw(:,1);Cw(:,t);Gw(:,t);Dw(:,t);BBw(:,1)];
-    Sw0=SCw;
+    Sw=[MSw(:,1);CSw(:,t);GSw(:,t);DSw(:,t);BSw(:,1)];
+    Sw0=Sw;
     SCp=[MCp(:,1);CCp(:,t);GCp(:,t);DCp(:,t);BCp(:,1)];
     
  %[SCw,SCp,NDT(t)]=Sat_fast(SCw,SCp,RC,TC,TG,TA2C,TA2G,TM,Pi(:,1),PR,ndt,Won,Wf,...
@@ -327,26 +327,26 @@ fp=1;
  Qzm1=qm(:,1)+qm(:,2);
  
  Qf=Qz1;
- Sw2=Sw;
+ Sw2=MSw;
 
- [SCw,SCp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...
+ [Sw,SCp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(Sw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...
      Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
      W7,L,DATA.Lc,DATA.Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,b2gm,b1gd,b2gd,GYData,Clp,ka1,...
-     W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,WonD,A2DW);
+     W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WonD,A2DW,A2DP);
 %  
 %  [SCw,SCp,NDT(:,t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_1(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...
 %      Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_ind,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
 %      W7,L,DATA.Lc,DATA.Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,Clp);
     
-    Sw(:,1)=SCw(va);
-    Cw(:,t+1)=SCw(vc);
-    Gw(:,t+1)=SCw(vg);
-    Dw(:,t+1)=Dw(:,1);
+    MSw(:,1)=Sw(va);
+    CSw(:,t+1)=Sw(vc);
+    GSw(:,t+1)=Sw(vg);
+    DSw(:,t+1)=Sw(vd);
     
-    MCp(:,1)=SCp(1:na);
+    MCp(:,1)=SCp(va);
     CCp(:,t+1)=SCp(vc);
     GCp(:,t+1)=SCp(vg);
-    DCp(:,t+1)=DCp(:,1);
+    DCp(:,t+1)=SCp(vd);
 
     %% Дебиты
     
@@ -355,7 +355,7 @@ fp=1;
     Qm(CR_rc.wn,:,t+1)=Qm1;
     Qc(:,:,t+1)=Q1;%QBild(W1C,W6C,W7C,Pi(na+1:na+nc,1),Uf(WonC(:,3),t+1),WonC(:,1),dt,Pw(WonC(:,3),t+1));
     Qg(:,:,t+1)=Q2;%QBild(W1G,W6G,W7G,Pi(na+nc+1:end,1),Uf(WNG,t+1),WonG(:,1),dt,Pw(WNG,t+1));
-    Qd(:,:,t+1)=QBild(W1D,W6D.*A(WonD(:,1)),W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,Pw(WonD(:,3),ft+1));
+    Qd(:,:,t+1)=QBild(W1D,W6D.*A(WonD(:,1)),W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,Pw(WonM,ft+1));
      
     PpW(WonM,t+1)=Pi(Won);
         %% пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
@@ -363,18 +363,19 @@ fp=1;
  %       TeW(:,t+1),Qm(:,:,t+1),Qc(:,:,t+1),Qg(:,:,t+1),C2GL,TL,CL,GL,TW,CW,GW,A2CL,A2CW,A2GL,A2GW,Wf,NDT(t),t,T,S,BZ);
     
         Ti(:,1)=Ti(:,1);
-    if mod(t,100)==0
+    if mod(t,1)==0
         j=j+1;
         Pj(:,j)=Pi;
-        Swj(:,j)=Sw;
+        Swj(:,j)=MSw;
         MCpj(:,j)=MCp;
         Tj(:,j)=Ti;
     end;
-    sQo=sum(Qm(:,2,t+1)-Qm(:,3,t+1)+Qm(:,1,t+1))+sum(Qc(:,2,t+1)-Qc(:,3,t+1)+Qc(:,1,t+1))+sum(Qg(:,2,t+1)-Qg(:,3,t+1)+Qg(:,1,t+1));
+    sQo=sum(Qm(:,2,t+1)-Qm(:,3,t+1)+Qm(:,1,t+1))+sum(Qc(:,2,t+1)-Qc(:,3,t+1)+Qc(:,1,t+1))...
+        +sum(Qg(:,2,t+1)-Qg(:,3,t+1)+Qg(:,1,t+1))+sum(Qd(:,2,t+1)-Qd(:,3,t+1)+Qd(:,1,t+1));
     %sum(sQo(:))
    % dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
     
-    dt=vibor_t2(dtt,Pi(1:na),RC,dV,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw2,dt,Nl,ka1);
+    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw2,dt,Nl,ka1,[va,vd],DL,W1D,WonD(:,1),nd);
     st=st+dt;
     t_flag=st~=Ta;
     

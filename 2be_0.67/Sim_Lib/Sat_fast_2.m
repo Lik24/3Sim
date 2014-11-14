@@ -1,7 +1,7 @@
 function [Sw,Cp,ndt,Q1,Q2,Qm,tmp]=Sat_fast_2(Sw,Cp,RC,TC,TG,A2C,A2G,Pi,PR,...
     ndt0,Won,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,Qz,Qf,Pi0,TL,W1,TW,W6,TP,...
     W7,L,Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qzm1,WonM,nw,b1gm,b2gm,b1gd,b2gd,GYData,...
-    Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,WonD,A2DW)
+    Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WonD,A2DW,A2DP)
 
 na=RC.na;
 nc=RC.nc;
@@ -99,25 +99,30 @@ del=sum(del,2);
          -b2gm(1,:)'.*(Pi(va)-GYData.GY_Pxy)-b2gm(2,:)'.*(Pi(va)-GYData.GY_Pz)-del;
      
      bwd=sparse(WonD(:,1),ones(1,size(WonD,1)),-W6D.*(Pi(WonD(:,1))-PwNl(WonD(:,3))),nd,1)...
-         -b2gd(1,:)'.*(Pi(vd)-GYData.GY_Pxy(vd))-b2gd(2,:)'.*(Pi(vd)-GYData.GY_Pz(vd))...
+         -b2gd(1,:)'.*(Pi(vd)-GYData.GY_Pxy(va))-b2gd(2,:)'.*(Pi(vd)-GYData.GY_Pz(va))...
          -(sum(D2BP,2).*Pi(vd)-D2BP*Pi(vb));
     
      bpm=sparse(Won,ones(1,size(Won,1)),-W7.*(Pi(Won)-PwNl),na,1);
      bpd=sparse(WonD(:,1),ones(1,size(WonD,1)),-W7D.*(Pi(WonD(:,1))-PwNl(WonD(:,3))),nd,1);
      
-     bw=[bwm,bwd];
-     bp=[bpm,bpd];
-     
+     bw=[bwm;bwd];
+     bp=[bpm;bpd];
+%      size(bw)
+%      size(sparse(r,ones(sum(v1),1),Bwc,na+nd,1)/dt)
+%      size(sparse(r,ones(sum(v1),1),Bwg,na+nd,1)/dt)
+%      size(Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd])))
+%      
      Bw=bw+sparse(r,ones(sum(v1),1),Bwc,na+nd,1)/dt+sparse(r,ones(sum(v1),1),Bwg,na+nd,1)/dt-Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]));
      Bp=bp+sparse(r,ones(sum(v1),1),Bpc,na+nd,1)/dt+sparse(r,ones(sum(v1),1),Bpg,na+nd,1)/dt-Cp([va,vd]).*Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]));
      tmp=sum(Bw);    
 
      AM2=[TW,A2DW;A2DW',DW];
+     AM3=[TP,A2DP;A2DP',DP];
      
      Sw_old=Sw([va,vd]);
      Sw([va,vd])=Sw([va,vd])+dt*(AM2*Pi([va,vd])+Bw)./Cws([va,vd]);
 
-     Cp([va,vd])=Sw_old.*Cp([va,vd])+dt*(TP*Pi([va,vd])+Bp)./Cws([va,vd]);
+     Cp([va,vd])=Sw_old.*Cp([va,vd])+dt*(AM3*Pi([va,vd])+Bp)./Cws([va,vd]);
      
      vad=[va,vd];
      v0=Sw(vad)==0;

@@ -116,11 +116,13 @@ end;
     D=cell2mat(C_cell);
     L=cell2mat(L_cell);
     
-    D=D(ka==1,ka==1);
-    L=L(ka==1,ka==1);
-    A2D=A2D(:,ka==1);
-    dVd=dVd(ka==1);
-   
+    if isempty(D)==0
+        D=D(ka==1,ka==1);
+        L=L(ka==1,ka==1);
+        A2D=A2D(:,ka==1);
+        dVd=dVd(ka==1);
+    end
+    
     p=symrcm(D);
     D=D(p,p);
     L=L(p,p);
