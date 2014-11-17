@@ -44,7 +44,7 @@ gt(:)={[]};
 nd=DPorist(DATA.XY,PR.Nl);
 % nd0={[]};
 % nd(1:3)={nd0};
-[D,A2D,dVd,pd,DATA.WonD,DATA.Ld,~]=Conek2D(DATA,nd,PR.Nl,CrDATA,WData);
+[D,A2D,dVd,pd,DATA.WonD,DATA.Ld,~,DATA.gMp,DATA.gMp_d]=Conek2D(DATA,nd,PR.Nl,CrDATA,WData);
 
 [Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz]=SimT_MKT(PR,C,A2C,G,A2G,B,A2B,D,A2D,dVc,dVg,dVd,dVb,DATA,WData,GYData,1,CR_GRUP);
 
@@ -61,6 +61,7 @@ VZL(DATA,WXY,Pi,Sw(:,end),Ti,MCp,PR.Nl,p,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,end),pb,
 
 
 c=1-Qo./Ql;
-dV0(p)=dV0;
+dV0([p,size(p,2)+pd])=dV0;
+Sw0=Sw0(DATA.ka==1); Sw0=[Sw0;Sw0];
 V0=sum(dV0.*(1-Sw0));
 sQo(end,:)/V0

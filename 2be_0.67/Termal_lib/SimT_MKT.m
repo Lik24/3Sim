@@ -15,6 +15,7 @@ BndZ=DATA.BndZ;
 H=DATA.gH;
 Z=DATA.gZ;
 ka=DATA.ka;
+Mp_d=DATA.gMp_d;
 
 Won=DATA.Won;
 WonG=DATA.WonG;
@@ -111,10 +112,9 @@ WW=sum(WW,1)~=0;
 
 [Ke,Ke_gy_XY,Ke_gy_Z,dV]=KH2Mat(K,H,Mp,S,r,c,rz,cz,GYData.GY_Kz,GYData.GY_Kxy,BZ,BndXY(p),BndZ(p)); 
 
-Mc=ones(nc,1);
-Mg=ones(ng,1);
-Md=ones(nd,1);
-Mb=100*ones(nb,1);
+Mp_c=ones(nc,1);
+Mp_g=ones(ng,1);
+Mp_b=100*ones(nb,1);
 
 CCp(:,1)=zeros(nc,1);
 GCp(:,1)=zeros(ng,1);
@@ -150,19 +150,6 @@ PpW=zeros(size(Uf));
 %[CR_ind]=Pre_Crack_p(RC,na,TM,Wf,Won,WonM,nw,CR_GRUP,C,G,A2C,A2G,K(:,1),WonC,WonG);
 [CR]=SS_ind(RC,na);
 
-% C2=C;
-% G2=G;
-% A2C2=A2C;
-% A2G2=A2G;
-% 
-% TC1=TC;
-% TG1=TG;
-% TA2C1=TA2C;
-% TA2G1=TA2G;
-% %WonC(:,2)=0;
-% WonC1=WonC(:,2);
-% WonG1=WonG(:,2);
-
 st=0;
 t=0;
 t_flag=1;
@@ -171,7 +158,7 @@ dt=dtt;
 Bwo(:,1:2)=Bo(1)*ones(na+nc+ng+nd+nb,2);
 Bwo(:,3:4)=Bo(2)*ones(na+nc+ng+nd+nb,2);
 
-Mp=repmat([Mp.*ones(na,1);Mc;Mg;Md;Mb],1,2);
+Mp=repmat([Mp.*ones(na,1);Mp_c;Mp_g;Mp_d;Mp_b],1,2);
 
 Sw=[MSw(:,1);CSw(:,1);GSw(:,1);DSw(:,1);BSw(:,1)];
 V0=sum(dVCG.*(1-Sw));
@@ -237,7 +224,7 @@ fp=1;
         [A2BL,A2BW,A2BP]=Obmen_T2M(A2B,Pi(va,1),Pi(vb,1),MSw(:,1),BSw(:,1),ones(na,1),PR,MCp(:,1),BCp(:,1));
         [D2BL,D2BW,D2BP]=Obmen_T2M(D2B,Pi(vd,1),Pi(vb,1),DSw(:,t),BSw(:,1),K(:,1),PR,DCp(:,1),BCp(:,1));
         
-        Wf=Wf0.*(1-0.0001*(P0(Won)-Pi(Won))).^3;
+        %Wf=Wf0.*(1-0.0001*(P0(Won)-Pi(Won))).^3;
         [W1,W6,W7]=Well_MKT(Wf,Won,Uf(WonM,ft+1),MSw(:,1),MCp(:,1),aw,as,mu,mup,CpW(WonM,ft+1),A(va));
         [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),CSw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1),A(vc));
         [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),GSw(:,t),GCp(:,t),tw,ts,mu,mup,CpW(WNG,ft+1),A(vg));
@@ -311,7 +298,6 @@ fp=1;
     Pwt(:,t+1)=Pw(:,ft+1);
     %% Водонасыщенность
     Sw=[MSw(:,1);CSw(:,t);GSw(:,t);DSw(:,t);BSw(:,1)];
-    Sw0=Sw;
     SCp=[MCp(:,1);CCp(:,t);GCp(:,t);DCp(:,t);BCp(:,1)];
     
  %[SCw,SCp,NDT(t)]=Sat_fast(SCw,SCp,RC,TC,TG,TA2C,TA2G,TM,Pi(:,1),PR,ndt,Won,Wf,...
@@ -327,7 +313,7 @@ fp=1;
  Qzm1=qm(:,1)+qm(:,2);
  
  Qf=Qz1;
- Sw2=MSw;
+ Sw0=Sw;
 
  [Sw,SCp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(Sw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...
      Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
@@ -375,7 +361,7 @@ fp=1;
     %sum(sQo(:))
    % dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
     
-    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw2,dt,Nl,ka1,[va,vd],DL,W1D,WonD(:,1),nd);
+    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,ka1,va,vd,DL,W1D,WonD(:,1),nd);
     st=st+dt;
     t_flag=st~=Ta;
     

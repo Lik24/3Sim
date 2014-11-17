@@ -15,7 +15,7 @@ n1=size(Z);
 %Uf=uf2;
 
 Pw(Uf==1,1)=2;
-Pw(Uf==-1,1)=150;
+Pw(Uf==-1,1)=100;
 % Pw_in=mean(SD.Pw0(a0_h(:,end)==-1));
 % Pw_dob=mean(SD.Pw0(a0_h(:,end)==1));
 
