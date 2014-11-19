@@ -1,5 +1,19 @@
-function [bal,bcl,bgl,bdl,bbl,baw,bdw]=GY_bild(GY_Data,Pi,Sw,BXY,BZ,na,nc,ng,nd,nb,Txy_GY,Tz_GY,as,aw,mu)
-    
+function [bal,bcl,bgl,bdl,bbl]=GY_bild(GY_Data,Pi,Sw,Cp,RC,T_GY_A,T_GY_D,PR)
+
+as=PR.as;
+aw=PR.aw;
+ts=PR.ts;
+tw=PR.tw;
+mu=PR.mu;
+
+na=RC.na;   nc=RC.nc;   ng=RC.ng;   nd=RC.nd;  nb=RC.nb;
+
+MSw=Sw(1:na);
+DSw=Sw(na+1:end);
+
+MCp=Cp(1:na);
+DCp=Cp(na+1:end);
+
 GY_Pxy=GY_Data.GY_Pxy;
 GY_Swxy=GY_Data.GY_Swxy;
 
@@ -7,40 +21,56 @@ GY_Pz=GY_Data.GY_Pz;
 GY_Swz=GY_Data.GY_Swz;
 
 GY_Txy=GY_Data.GY_Txy;
+%% Для матрицы
+vP=GY_Pxy>=Pi(1:na);
+SwT=GY_Swxy.*vP+MSw.*(vP==0);
+MCpT=0.*vP+MCp.*(vP==0);
 
+Kfw_xyM=Sat_cal(SwT,1,1,as,aw); %water
+Kfo_xyM=Sat_cal(SwT,2,1,as,aw); %oil
 
+vP=GY_Pz>=Pi(1:na);
+SwT=GY_Swz.*vP+MSw.*(vP==0);
 
-vP=GY_Pxy>=Pi;
-SwT=GY_Swxy.*vP+Sw.*(vP==0);
+Kfw_zM=Sat_cal(SwT,1,1,as,aw); %water
+Kfo_zM=Sat_cal(SwT,2,1,as,aw); %oil
 
-Kfw_xy=Sat_cal(SwT,1,1,as,aw); %water
-Kfo_xy=Sat_cal(SwT,2,1,as,aw); %oil
+%% Для двойной среды
+vP=GY_Pxy>=Pi(na+1:end);
+SwT=GY_Swxy.*vP+DSw.*(vP==0);
+DCpT=0.*vP+DCp.*(vP==0);
 
-vP=GY_Pz>=Pi;
-SwT=GY_Swz.*vP+Sw.*(vP==0);
+Kfw_xyD=Sat_cal(SwT,1,1,ts,tw); %water
+Kfo_xyD=Sat_cal(SwT,2,1,ts,tw); %oil
 
-Kfw_z=Sat_cal(SwT,1,1,as,aw); %water
-Kfo_z=Sat_cal(SwT,2,1,as,aw); %oil
+vP=GY_Pz>=Pi(na+1:end);
+SwT=GY_Swz.*vP+DSw.*(vP==0);
 
-Tw_xy=Txy_GY.*Kfw_xy/mu(1);
-To_xy=Txy_GY.*Kfo_xy/mu(2);
+Kfw_zD=Sat_cal(SwT,1,1,ts,tw); %water
+Kfo_zD=Sat_cal(SwT,2,1,ts,tw); %oil
+%%
+bal=Abra_GY(T_GY_A,Kfw_xyM,Kfo_xyM,Kfw_zM,Kfo_zM,mu,MCpT);
+bdl=Abra_GY(T_GY_D,Kfw_xyD,Kfo_xyD,Kfw_zD,Kfo_zD,mu,DCpT);
 
-Twz=Tz_GY.*Kfw_z/mu(1);
-Toz=Tz_GY.*Kfo_z/mu(2);
+bcl=zeros(nc,1);
+bgl=zeros(ng,1);
 
-bal=zeros(2,na);
-bal(2,:)=Twz+Toz;
-bal(1,:)=Tw_xy'+To_xy';
+bbl=zeros(nb,1);
+bbl(:,1)=GY_Txy.*aw(1)/mu(1);
+end
 
-baw=zeros(2,na);
-baw(2,:)=Twz;
-baw(1,:)=Tw_xy';
+function bal=Abra_GY(T_GY,Kfw_xy,Kfo_xy,Kfw_z,Kfo_z,mu,Cp)
 
-bcl=zeros(1,nc);
-bgl=zeros(1,ng);
-bdl=zeros(2,nd);
-bdw=zeros(2,nd);
+Tw_xy=T_GY(:,1).*Kfw_xy/mu(1);
+To_xy=T_GY(:,1).*Kfo_xy/mu(2);
 
+Twz=T_GY(:,2).*Kfw_z/mu(1);
+Toz=T_GY(:,2).*Kfo_z/mu(2);
 
-bbl=zeros(1,nb);
-bbl(1,:)=GY_Txy.*aw(1)/mu(1);
+bal(:,1)=Tw_xy+To_xy;
+bal(:,2)=Twz+Toz;
+bal(:,3)=Tw_xy;
+bal(:,4)=Twz;
+bal(:,5)=Tw_xy.*Cp;
+bal(:,6)=Twz.*Cp;
+end

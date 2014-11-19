@@ -25,10 +25,8 @@ pb=[];
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
 %[nt,PXY]=elka(PR.Nl,DATA.XY,6,10,0,25);  % кол-во трещин, длинна, флаг к скважине
 
-%load('elka_tst.mat','nt','PXY')
 [CrDATA]=CrackProp(DATA,PR,nt);
-
-% [nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
+%[nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
 
 [gt,GS]=Tresh_Gor(1,DATA.XY,PR.Nl);
 
@@ -36,7 +34,6 @@ nt0={[]};
 nt(:)={nt0};
 [C,A2C,dVc,pc,DATA.WonV,DATA.Lc,CR_GRUP]=Conek2(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,WData.r0,DATA.ka);
 
-%[nt2,PXY2]=derevo(nt,DATA.XY,23);
 gt(:)={[]};
 %nt2(:)={[]};
 [G,A2G,dVg,pg,DATA.WonG,DATA.Lg]=Conek(DATA.XY,gt,PR.Nl,CrDATA,DATA.Won,PR.dh,PR.Kc,WData.r0);%Gorizont(DATA.XY,GS,gt,WXY,WData.r0);

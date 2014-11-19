@@ -20,3 +20,4 @@ CrDATA.KC=KC;
 CrDATA.DH=DH;
 
 CrDATA.KD=KD;
+CrDATA.Xk=kd;

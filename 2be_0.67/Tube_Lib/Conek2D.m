@@ -6,13 +6,14 @@ ka=DATA.ka;
 BND=DATA.BND;
 Hi=DATA.gH;
 Z=DATA.gZ;
-
 np=size(XY,1);
 
 KD=CrDATA.KD;
 DH=CrDATA.DH;
+Xk=CrDATA.Xk;
 
 Nw=size(WData.Doly,1);
+uj=repmat(1:Nw,1,Nl);
 
 WonV(1,1:3)=1;
 WonV(1,:)=[];
@@ -33,7 +34,7 @@ ka(sum(AA)==-1)=0;
 K=cell2mat(KD);
 K=repmat(K,size(XY,1),1);
 
-K1=DATA.gKX*10;
+K1=DATA.gKX*Xk;
 [r1,c1]=find(AA==1);
 KcKl=K1(r1)+K1(c1);
 Ke=2*K1(r1).*K1(c1)./KcKl;
@@ -41,8 +42,10 @@ KK=sparse(r1,c1,Ke);
 
 Wf=KWell(K1,Hi,S,L,B,Won,r,c,WData.Doly,WData.r0,XY,Nw,Nl);
 
-% ka1=ka(Won);
-% Wf=Wf(ka1==1);
+im=zeros(size(ka));
+im(Won)=uj;
+im=im(ka==1);
+uj=im(im~=0);
 
 im=zeros(size(ka));
 im(Won)=1;
@@ -82,7 +85,7 @@ for l=1:Nl
                 k=k+1;
                 WonV(k,1)=ty(1)+sntl;
                 WonV(k,2)=Wf(j);%dC*100;
-                WonV(k,3)=j;
+                WonV(k,3)=uj(j);
             end;
         end;
 %         WonV
