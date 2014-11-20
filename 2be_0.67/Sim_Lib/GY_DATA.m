@@ -171,7 +171,7 @@ GY_Data.T0=[];
 GY_Data.XY=XY;
 GY_Data.BND=[[],[]];
 
-GY_Data.GY_Txy=zeros(1,0);%H.*B_GY_2.*K;
+GY_Data.GY_Txy=zeros(0,1);%H.*B_GY_2.*K;
 end
 
 function B=razmaz(A,WXY,XY)
