@@ -1,4 +1,4 @@
-function Wf=KWell(K,H,S,L,B,Won_all,r,c,Perf,r0,XY,Nw,Nl)
+function Wf=KWell(K,H,S,L,B,Won_all,r,c,Perf,SDoly,r0,XY,Nw,Nl)
 
 Won=Won_all(1:Nw);
 WXY=XY(Won,:);
@@ -60,7 +60,7 @@ for i=1:size(Won,1);
 end;
 
 for l=1:Nl
-   Wcof(:,l)=K(Won,l).*H(Won,l)./log(Rk/r0).*Perf(:,l);
+   Wcof(:,l)=K(Won,l).*H(Won,l)./log(Rk/r0).*Perf(:,l).*SDoly;
 end;
 
 Wf=2*pi*Wcof(:);

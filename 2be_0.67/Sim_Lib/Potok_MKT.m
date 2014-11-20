@@ -1,4 +1,4 @@
-function [TL,TW,TP,TG]=Potok_MKT(T,P,Kfw,Kfo,Cp,as,aw,mu,rc,mup,fp,kms,L,Ke,Ro,A)
+function [TL,TW,TP,TG]=Potok_MKT(T,P,Kfw,Kfo,Cp,mu,rc,mup,fp,kms,L,Ke,Ro,A)
 n=size(P,1);
 
 r=rc(:,1);

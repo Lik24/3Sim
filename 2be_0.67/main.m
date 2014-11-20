@@ -38,9 +38,7 @@ gt(:)={[]};
 %nt2(:)={[]};
 [G,A2G,dVg,pg,DATA.WonG,DATA.Lg]=Conek(DATA.XY,gt,PR.Nl,CrDATA,DATA.Won,PR.dh,PR.Kc,WData.r0);%Gorizont(DATA.XY,GS,gt,WXY,WData.r0);
 
-nd=DPorist(DATA.XY,PR.Nl);
-% nd0={[]};
-% nd(1:3)={nd0};
+nd=DPorist(0,DATA.XY,PR.Nl); % 0/1 - выкл/вкл. двойная пористость
 [D,A2D,dVd,pd,DATA.WonD,DATA.Ld,~,DATA.gMp,DATA.gMp_d]=Conek2D(DATA,nd,PR.Nl,CrDATA,WData);
 
 [Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz]=SimT_MKT(PR,C,A2C,G,A2G,B,A2B,D,A2D,dVc,dVg,dVd,dVb,DATA,WData,GYData,1,CR_GRUP);

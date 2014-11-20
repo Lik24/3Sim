@@ -51,7 +51,7 @@ qd=zeros(size(Uf,1),5);
 ka(sum(A)==-1)=0;
 [r,c]=find(A(1:size(XY,1),1:size(XY,1))==1);
 
-Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.r0,XY,Nw,Nl);
+Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
 XY=repmat(XY,Nl,1);
 ka1=ka(Won);
 Won1=Won;
@@ -214,7 +214,7 @@ fp=1;
 
         [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dVCG./Mp(:,1),Sw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd,vb,dt);
         
-        [TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),kfw(1:na),kfo(1:na),MCp(:,1),as,aw,mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro,A(va));
+        [TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),kfw(1:na),kfo(1:na),MCp(:,1),mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro,A(va));
         [CL,~,~]=Potok_Tube(TC,Pi(vc,1),CSw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc));
         [GL,~,~]=Potok_Tube(TG,Pi(vg,1),GSw(:,t),GCp(:,t),PR,mup,fp,kms(3),DATA.Lg,RC.Gr2,RC.Gc2,ng,A(vg));
         [DL,DW,DP]=Potok_Tube(TD,Pi(vd,1),DSw(:,1),DCp(:,1),PR,mup,fp,kms(4),DATA.Ld,RC.Dr2,RC.Dc2,nd,A(vd));
