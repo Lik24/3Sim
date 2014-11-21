@@ -1,4 +1,4 @@
-function [GY_Data,KX,Sw,B,A2B,dVb,p]=GY_DATA(DATA,xy1,xy2,PR)
+function [GY_Data,KX,Sw,B,A2B,dVb,p]=GY_DATA(on,DATA,xy2,PR)
 
 dh=100;
 drob=6.5*dh;        % Густота сетки
@@ -49,7 +49,7 @@ end
 [IN2,ON2]=inpolygon(XY(:,1),XY(:,2),xy2(:,1),xy2(:,2));
 xy2=XY(ON2,:);
 %%
-[IN1,ON1]=inpolygon(XY(:,1),XY(:,2),xy1(:,1),xy1(:,2));
+[~,ON1]=inpolygon(XY(:,1),XY(:,2),xy1(:,1),xy1(:,2));
 Con=XY(ON1==1,:);
 
 [t,R]=cart2pol(Con(:,1)-15000,Con(:,2)-5000);
@@ -172,6 +172,13 @@ GY_Data.XY=XY;
 GY_Data.BND=[[],[]];
 
 GY_Data.GY_Txy=zeros(0,1);%H.*B_GY_2.*K;
+
+if on==0
+    B=[];
+    A2B(:,1:end)=[];
+    dVb=[];
+    p=[];
+end
 end
 
 function B=razmaz(A,WXY,XY)

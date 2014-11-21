@@ -7,6 +7,7 @@ BND=DATA.BND;
 Hi=DATA.gH;
 Z=DATA.gZ;
 np=size(XY,1);
+ddol=0.5;
 
 KD=CrDATA.KD;
 DH=CrDATA.DH;
@@ -41,7 +42,7 @@ KcKl=K1(r1)+K1(c1);
 Ke=2*K1(r1).*K1(c1)./KcKl;
 KK=sparse(r1,c1,Ke);
 
-Wf=KWell(K1,Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
+Wf=KWell(K1,ddol*Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
 
 im=zeros(size(ka));
 im(Won)=uj;
@@ -149,9 +150,9 @@ end;
     end;
     
     Mp=DATA.gMp;
-    Mp_d=0.5.*Mp(ka==1);
+    Mp_d=ddol.*Mp(ka==1);
     Mp_d=Mp_d(p);
-    Mp=0.5.*Mp;
+    Mp=ddol.*Mp;
        
     
 DData.D=D;
