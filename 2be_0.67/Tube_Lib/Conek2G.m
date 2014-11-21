@@ -1,4 +1,4 @@
-function [DData,CR_GRUP,Mp]=Conek2D(DATA,NLT,Nl,CrDATA,WData)
+function GData=Conek2G(DATA,NLT,Nl,CrDATA,WData)
 
 XY=DATA.XY;
 Won=DATA.Won;
@@ -8,8 +8,8 @@ Hi=DATA.gH;
 Z=DATA.gZ;
 np=size(XY,1);
 
-KD=CrDATA.KD;
-DH=CrDATA.DH;
+KG=CrDATA.KG;
+HG=CrDATA.GH;
 Xk=CrDATA.Xk;
 
 Nw=size(WData.Doly,1);
@@ -31,17 +31,12 @@ A2D_L=cell(Nl,1);
 [L,B,S,H]=Geome3_1(AA,XY,Z,Hi);
 ka(sum(AA)==-1)=0;
 [r,c]=find(AA(1:size(XY,1),1:size(XY,1))==1);
-K=cell2mat(KD);
+
+K=cell2mat(KG);
+Hi=cell2mat(HG);
 K=repmat(K,size(XY,1),1);
-
-K1=DATA.gKX*Xk;
-
-[r1,c1]=find(AA==1);
-KcKl=K1(r1)+K1(c1);
-Ke=2*K1(r1).*K1(c1)./KcKl;
-KK=sparse(r1,c1,Ke);
-
-Wf=KWell(K1,Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
+Hi=repmat(Hi,size(XY,1),1);
+Wf=KWell(K,Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
 
 im=zeros(size(ka));
 im(Won)=uj;
@@ -55,8 +50,8 @@ Won=find(im(:));
 
 for l=1:Nl
     Nt=NLT{l};
-    Kd=KD{l};
-    Dh=DH{l};
+    Kg=KG{l};
+    Hg=HG{l};
     
     mnt=size(Nt,2);
     dVB=cell(mnt,1);
@@ -68,17 +63,18 @@ for l=1:Nl
     for i=1:mnt
         
         nt=Nt{i};   % Список ячеек с трещинами
-        kd=Kd(i);   % Проницаемость трещины
+        kg=Kg(i);   % Проницаемость трещины
+        hg=Hg(i);   % Проницаемость трещины
         A=AA;
        
         unt=unique(nt);
 
         A1=A(unt,:);    A2=A1(:,unt);
         L1=L(unt,:);    L2=L1(:,unt);
-        H1=H(unt,:);    H2=H1(:,unt);
+        %H1=H(unt,:);    H2=H1(:,unt);
         B1=B(unt,:);    B2=B1(:,unt);
         S1=S(unt,:);    S2=S1(:,unt);
-        KK1=KK(unt,:);  KK2=KK1(:,unt);
+%         KK1=KK(unt,:);  KK2=KK1(:,unt);
     
         for j=1:size(Won,1)
             ty=find(Won(j)==unt);
@@ -95,17 +91,15 @@ for l=1:Nl
         
         Lm=L2(r+(c-1)*n);
         Bm=B2(r+(c-1)*n);
-        H1m=H2(r+(c-1)*n);
-        K1m=KK2(r+(c-1)*n);
+       % H1m=H2(r+(c-1)*n);
        % D=kd.*Bm.*H1m./Lm;
-        km=K1m;
-        D=km.*Bm.*H1m./Lm;
+        D=kg.*Bm.*hg./Lm;
         %D=H2(r+(c-1)*n)*dh./L2(r+(c-1)*n)*kd*8.34;
         D=sparse(r,c,D,n,n);
         
-        a2d=sum(H2.*S2,2)*1e-4;
+        a2d=sum(S2,2).*DATA.gKZ(unt,l);
         A2D=sparse(unt,1:n,a2d,np*Nl,n);
-        dVd=sum(H2.*S2,2);
+        dVd=sum(hg.*S2,2);
         dVB(i)={dVd};
         CB(i)={D};
         LB(i)={L};
@@ -148,23 +142,15 @@ end;
         WonV(i,1)=find(WonV(i,1)==p);
     end;
     
-    Mp=DATA.gMp;
-    Mp_d=0.5.*Mp(ka==1);
-    Mp_d=Mp_d(p);
-    Mp=0.5.*Mp;
-       
-    
-DData.D=D;
-DData.A2D=A2D;
-DData.dVd=dVd;
-DData.pd=p;
-DData.Won=WonV;
-DData.Ld=L;
-DData.gMp_d=Mp_d;
+GData.G=D;
+GData.A2G=A2D;
+GData.dVg=dVd;
+GData.pg=p;
+GData.Won=WonV;
+GData.Lg=L;
+GData.gMp_g=ones(size(D,1),1);
+GData.CR_GRUP=CR_GRUP;
 
-DData.Kd(:,1)=DATA.gKX(ka==1)*Xk;
-DData.Kd(:,2)=DATA.gKY(ka==1)*Xk;
-DData.Kd(:,3)=DATA.gKZ(ka==1)*Xk;
 end
 
 function C=Mat_Constr(c)

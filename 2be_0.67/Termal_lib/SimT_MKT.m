@@ -1,4 +1,4 @@
-function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,CSw,NDT,Uf,dt1,dV0,ka,dtz]=SimT_MKT(PR,C,A2C,G,A2G,BB,A2B,D,A2D,dVC,dVG,dVD,dVB,DATA,WData,GYData,fll,CR_GRUP)
+function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,CSw,NDT,Uf,dt1,dV0,ka,dtz]=SimT_MKT(PR,C,A2C,GData,BB,A2B,DData,dVC,dVB,DATA,WData,GYData,fll,CR_GRUP)
 tic
 
 KX=DATA.gKX;
@@ -15,13 +15,13 @@ BndZ=DATA.BndZ;
 H=DATA.gH;
 Z=DATA.gZ;
 ka=DATA.ka;
-Mp_d=DATA.gMp_d;
+
+[G,A2G,dVG,WonG,Lg,Mp_g]=Rasp(GData,3);   %–аспаковка структуры дл€ гор. трещ.
+[D,A2D,dVD,WonD,Ld,Mp_d]=Rasp(DData,4);   %–аспаковка структуры дл€ двойной среды
 
 Won=DATA.Won;
-WonG=DATA.WonG;
-WNG=DATA.WonG(:,3);
+WNG=WonG(:,3);
 WonC=DATA.WonV;
-WonD=DATA.WonD;
 
 Pw=WData.Pw;
 Uf=WData.Uf;
@@ -110,10 +110,9 @@ WW=sum(WW,1)~=0;
 
 %figure(98),subplot(2,4,7),spy([A,A2C,A2G;A2C',C,C2G;A2G',C2G',G]);
 
-[Ke,Ke_gy,dV]=KH2Mat(K,H,Mp,S,r,c,rz,cz,GYData.GY_Kz,GYData.GY_Kxy,BZ,BndXY(p),BndZ(p)); 
+[Ke,Ke_gy,dV]=KH2Mat(K,H,Mp,S,r,c,rz,cz,GYData.GY_Kz,GYData.GY_Kxy,BndXY(p),DData); 
 
 Mp_c=ones(nc,1);
-Mp_g=ones(ng,1);
 Mp_b=100*ones(nb,1);
 
 CCp(:,1)=zeros(nc,1);
@@ -124,7 +123,8 @@ BCp(:,1)=zeros(nb,1);
 dVCG=[dV;dVC;dVG;dVD;dVB];
 dV0=[dV;dVC;dVG;dVD];
 
-[TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K(:,1),Ke_gy,BZ,rz,cz,BndXY(p),BndZ(p),nb);
+[TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K(:,1),Ke_gy,BndXY(p),BndZ(p),nb);
+vad=RC.ADr;
 CSw(:,1)=MSw(RC.ACr,1);
 GSw(:,1)=MSw(RC.AGr,1);
 DSw(:,1)=MSw(RC.ADr,1);
@@ -216,8 +216,8 @@ fp=1;
         
         [TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),kfw(1:na),kfo(1:na),MCp(:,1),mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro,A(va));
         [CL,~,~]=Potok_Tube(TC,Pi(vc,1),CSw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc));
-        [GL,~,~]=Potok_Tube(TG,Pi(vg,1),GSw(:,t),GCp(:,t),PR,mup,fp,kms(3),DATA.Lg,RC.Gr2,RC.Gc2,ng,A(vg));
-        [DL,DW,DP]=Potok_Tube(TD,Pi(vd,1),DSw(:,1),DCp(:,1),PR,mup,fp,kms(4),DATA.Ld,RC.Dr2,RC.Dc2,nd,A(vd));
+        [GL,~,~]=Potok_Tube(TG,Pi(vg,1),GSw(:,t),GCp(:,t),PR,mup,fp,kms(3),Lg,RC.Gr2,RC.Gc2,ng,A(vg));
+        [DL,DW,DP]=Potok_Tube(TD,Pi(vd,1),DSw(:,1),DCp(:,1),PR,mup,fp,kms(4),Ld,RC.Dr2,RC.Dc2,nd,A(vd));
         
         [A2CL,~,~]=Obmen_T2M(A2C,Pi(va,1),Pi(vc,1),MSw(:,1),CSw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
         [A2GL,~,~]=Obmen_T2M(A2G,Pi(va,1),Pi(vg,1),MSw(:,1),GSw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
@@ -249,7 +249,7 @@ fp=1;
         W2M=sparse(WonM,Won,W1,nw,na);
         W2C=sparse(WonC(:,3),WonC(:,1),W1C,nw,nc);
         W2G=sparse(WNG,WonG(:,1),W1G,nw,ng);
-        W2D=sparse(WonM,WonD(:,1),W1D,nw,nd);
+        W2D=sparse(WonD(:,3),WonD(:,1),W1D,nw,nd);
         W2B=sparse(nw,nb);
         
         
@@ -261,7 +261,7 @@ fp=1;
         
         WM1=[W2M,W2C,W2G,W2D,W2B];
         WM2=WM1';
-        W3vec=sparse(WonM,1,W1,nw,1)+sparse(WonC(:,3),1,W1C,nw,1)+sparse(WNG,1,W1G,nw,1)+sparse(WonM,1,W1D,nw,1);
+        W3vec=sparse(WonM,1,W1,nw,1)+sparse(WonC(:,3),1,W1C,nw,1)+sparse(WNG,1,W1G,nw,1)+sparse(WonD(:,3),1,W1D,nw,1);
         WM3=-sparse(1:nw,1:nw,W3vec,nw,nw);
         
         AM=[A1,   A2CL, A2GL, A2DL, A2BL;
@@ -271,9 +271,9 @@ fp=1;
            A2BL', C2BL',G2BL',D2BL', B1];
         
         BM=[b1wm;b1wc;b1wg;b1wd;b1wb]+[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy;b1gc;b1gg;...
-            [-b1gd(:,2).*GY_Pz(va)-b1gd(:,1).*GY_Pxy(va)];-b1gb.*GY_Pxy2]-(Clp.*Pi);
+            [-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];-b1gb.*GY_Pxy2]-(Clp.*Pi);
         
-        BLGY_GIM=[[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy];[-b1gd(:,2).*GY_Pz(va)-b1gd(:,1).*GY_Pxy(va)];...
+        BLGY_GIM=[[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy];[-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];...
             -b1gb.*GY_Pxy2]-(Clp([va,vd,vb]).*Pi([va,vd,vb]));
         
         WM1=WM1(Qf~=0,:);
@@ -317,7 +317,7 @@ fp=1;
 
  [Sw,Cp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(Sw,Cp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...
      Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
-     W7,L,DATA.Lc,DATA.Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,b1gd,GYData,Clp,ka1,...
+     W7,L,DATA.Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,b1gd,GYData,Clp,ka1,...
      W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WonD,A2DW,A2DP);
 %  
 %  [SCw,SCp,NDT(:,t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_1(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...

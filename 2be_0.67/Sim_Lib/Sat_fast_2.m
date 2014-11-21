@@ -8,6 +8,7 @@ nc=RC.nc;
 ng=RC.ng;
 nd=RC.nd;
 nb=RC.nb;
+vad=RC.ADr;
 
 va=1:na;
 vc=na+1:na+nc;
@@ -94,13 +95,13 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
          -b1gm(:,3).*(Pi(va)-GYData.GY_Pxy)-b1gm(:,4).*(Pi(va)-GYData.GY_Pz)-b_A2B(:,1);
      
      bwd=sparse(WoD(:,1),ones(1,size(WoD,1)),-W6D.*(Pi(WoD(:,1))-PwNl(WoD(:,3))),nd,1)...
-         -b1gd(:,3).*(Pi(vd)-GYData.GY_Pxy(va))-b1gd(:,4).*(Pi(vd)-GYData.GY_Pz(va))-b_D2B(:,1);
+         -b1gd(:,3).*(Pi(vd)-GYData.GY_Pxy(vad))-b1gd(:,4).*(Pi(vd)-GYData.GY_Pz(vad))-b_D2B(:,1);
     
      bpm=sparse(Won,ones(1,size(Won,1)),-W7.*(Pi(Won)-PwNl),na,1)...
          -b1gm(:,5).*(Pi(va)-GYData.GY_Pxy)-b1gm(:,6).*(Pi(va)-GYData.GY_Pz)-b_A2B(:,2);
      
      bpd=sparse(WoD(:,1),ones(1,size(WoD,1)),-W7D.*(Pi(WoD(:,1))-PwNl(WoD(:,3))),nd,1)...
-         -b1gd(:,5).*(Pi(vd)-GYData.GY_Pxy(va))-b1gd(:,6).*(Pi(va)-GYData.GY_Pz(va))-b_D2B(:,2);
+         -b1gd(:,5).*(Pi(vd)-GYData.GY_Pxy(vad))-b1gd(:,6).*(Pi(vd)-GYData.GY_Pz(vad))-b_D2B(:,2);
      
      bw=[bwm;bwd];
      bp=[bpm;bpd];

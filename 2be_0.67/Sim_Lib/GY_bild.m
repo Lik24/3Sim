@@ -6,9 +6,10 @@ ts=PR.ts;
 tw=PR.tw;
 mu=PR.mu;
 
-na=RC.na;   nc=RC.nc;   ng=RC.ng;   nd=RC.nd;  nb=RC.nb;
+na=RC.na;   nc=RC.nc;   ng=RC.ng;   nd=RC.nd;  nb=RC.nb;  
 va=1:na;
 vd=na+1:na+nd;
+vad=RC.ADr;
 
 MSw=Sw(1:na);
 DSw=Sw(na+1:end);
@@ -38,15 +39,15 @@ Kfw_zM=Sat_cal(SwT,1,1,as,aw); %water
 Kfo_zM=Sat_cal(SwT,2,1,as,aw); %oil
 
 %% Для двойной среды
-vP=GY_Pxy(vd)>=Pi(vd);
-SwT=GY_Swxy.*vP+DSw.*(vP==0);
+vP=GY_Pxy(vad)>=Pi(vd);
+SwT=GY_Swxy(vad).*vP+DSw.*(vP==0);
 DCpT=0.*vP+DCp.*(vP==0);
 
 Kfw_xyD=Sat_cal(SwT,1,1,ts,tw); %water
 Kfo_xyD=Sat_cal(SwT,2,1,ts,tw); %oil
 
-vP=GY_Pz(vd)>=Pi(vd);
-SwT=GY_Swz.*vP+DSw.*(vP==0);
+vP=GY_Pz(vad)>=Pi(vd);
+SwT=GY_Swz(vad).*vP+DSw.*(vP==0);
 
 Kfw_zD=Sat_cal(SwT,1,1,ts,tw); %water
 Kfo_zD=Sat_cal(SwT,2,1,ts,tw); %oil

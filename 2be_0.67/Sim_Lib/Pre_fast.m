@@ -1,4 +1,4 @@
-function [TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K,KeGY,bz,rz,cz,BndXY,BndZ,nb)
+function [TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K,KeGY,BndXY,BndZ,nb)
 na=size(A,1); 
 nc=size(C,1); 
 ng=size(G,1); 
@@ -92,6 +92,7 @@ TA2C=full(TA2C);
 TA2G=full(TA2G);
 TA2D=full(TA2D);
 
+vad=RC.ADr;
 AGYXY=sparse(r,c,BndXY(c));
 [rxy,cxy]=find(AGYXY);
 BHL_XY=sparse(rxy,cxy,B(rxy+(cxy-1)*na).*H1(rxy+(cxy-1)*na)./L(rxy+(cxy-1)*na),na,na);
@@ -100,9 +101,11 @@ BHL_XY=sparse(rxy,cxy,B(rxy+(cxy-1)*na).*H1(rxy+(cxy-1)*na)./L(rxy+(cxy-1)*na),n
 AGYZ=sparse(r,c,BndZ(c));
 [rz,cz]=find(AGYZ);
 BHLZ=sparse(rz,cz,B(rz+(cz-1)*na).*H1(rz+(cz-1)*na)./H1(rz+(cz-1)*na),na,na);
+BlHXY=sum(BHL_XY,2);
+BlHZ=sum(BHLZ,2);
 
-Txyz_GY_A(:,1)=KeGY(:,1).*sum(BHL_XY,2);
-Txyz_GY_A(:,2)=KeGY(:,2).*sum(BHLZ,2);
+Txyz_GY_A(:,1)=KeGY(:,1).*BlHXY;
+Txyz_GY_A(:,2)=KeGY(:,2).*BlHZ;
 
-Txyz_GY_D(:,1)=KeGY(:,1).*sum(BHL_XY,2);
-Txyz_GY_D(:,2)=KeGY(:,2).*sum(BHLZ,2);
+Txyz_GY_D(:,1)=KeGY(vad,1).*BlHXY(vad);
+Txyz_GY_D(:,2)=KeGY(vad,2).*BlHZ(vad);
