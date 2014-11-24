@@ -1,4 +1,4 @@
-function [Ke,Ke_gy,dV]=KH2Mat(K,h,Mp,S,r,c,rz,cz,Kz_gy,Kxy_gy,BndXY,DData)
+function [Ke,Ke_gy,dV]=KH2Mat(K,H,Mp,S,r,c,rz,cz,Kz_gy,Kxy_gy,BndXY,DData)
 % H=(h(r)+h(c))/2;
 K(K==0)=0.01;
 n=size(K,1);
@@ -19,7 +19,7 @@ KE(rz+(cz-1)*n)=Kez;
 Ke(isnan(Ke)==1)=0;
 Ke(Ke==-1)=0;
 
-dV=full(Mp.*sum(S,2).*h);
+dV=full(Mp.*sum(S.*H,2));
 
 Ke_gy(:,2)=2*K(:,3).*Kz_gy./(K(:,3)+Kz_gy);
 Ke_gy(isnan(Ke_gy(:,2))==1,2)=0;
@@ -30,6 +30,7 @@ Ke_gy(:,1)=Ke_gy(:,1).*BndXY;
 
 
 Kd=DData.Kd;
+Kd=K;
 Kz_gy=Kz_gy.*Kd(:,1)./K(:,1);
 Kxy_gy=Kxy_gy.*Kd(:,3)./K(:,3);
 

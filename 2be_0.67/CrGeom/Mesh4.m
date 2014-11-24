@@ -40,7 +40,7 @@ g=[g1,g2];
 p=p';
 %TRI=delaunayTriangulation(p(:,1),p(:,2));
 
-pdemesh(p',e,t) , axis equal % Вывод полученной сетки
+%pdemesh(p',e,t) , axis equal % Вывод полученной сетки
 
 
 end

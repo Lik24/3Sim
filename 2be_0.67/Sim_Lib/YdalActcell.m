@@ -18,8 +18,6 @@ Z=Z(ka==1);
 P=P(ka==1);
 MCp=MCp(ka==1);
 
-
-
 ka1=ka(Won);
 Wf=Wf(ka1==1);
 

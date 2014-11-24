@@ -56,19 +56,9 @@ XY=repmat(XY,Nl,1);
 ka1=ka(Won);
 Won1=Won;
 [A,L,B,S,H1,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf,ka);
-ka2=ka(ka~=0);
-
-ka2(sum(A)==-1)=0;
-ka2(sum(S)==0)=0;
-ka(ka~=0)=ka2;
-
-ka1=ka(Won1);
-[A,L,B,S,H1,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf,ka2);
-
 [A,L,S,B,H1,K,XY,Mp,MSw,H,Z,P,MCp,T,NTG,p,rz,cz,BXY,BZ,dH,NL,NamXY,GYData]=PereYpor(A,L,S,B,H1,KX,KY,KZ,Mp,MSw,...
     XY,H,Z,P,MCp,DATA,GYData,ka);
 [r,c]=find(L);
-A2C(ka2==0,:)=[];
 
 nw=size(p,2);
 nwc=size(A2C,1);
@@ -110,7 +100,7 @@ WW=sum(WW,1)~=0;
 
 %figure(98),subplot(2,4,7),spy([A,A2C,A2G;A2C',C,C2G;A2G',C2G',G]);
 
-[Ke,Ke_gy,dV]=KH2Mat(K,H,Mp,S,r,c,rz,cz,GYData.GY_Kz,GYData.GY_Kxy,BndXY(p),DData); 
+[Ke,Ke_gy,dV]=KH2Mat(K,H1,Mp,S,r,c,rz,cz,GYData.GY_Kz,GYData.GY_Kxy,BndXY(p),DData); 
 
 Mp_c=ones(nc,1);
 Mp_b=100*ones(nb,1);
@@ -120,7 +110,7 @@ GCp(:,1)=zeros(ng,1);
 DCp(:,1)=zeros(nd,1);
 BCp(:,1)=zeros(nb,1);
 
-dVCG=[dV;dVC;dVG;dVD;dVB];
+dVCG=[dV;dVC;dVG;dVD.*Mp_d;dVB];
 dV0=[dV;dVC;dVG;dVD];
 
 [TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K(:,1),Ke_gy,BndXY(p),BndZ(p),nb);
@@ -221,7 +211,7 @@ fp=1;
         
         [A2CL,~,~]=Obmen_T2M(A2C,Pi(va,1),Pi(vc,1),MSw(:,1),CSw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
         [A2GL,~,~]=Obmen_T2M(A2G,Pi(va,1),Pi(vg,1),MSw(:,1),GSw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
-        [A2DL,A2DW,A2DP]=Obmen_T2M(A2D,Pi(va,1),Pi(vd,1),MSw(:,1),DSw(:,1),K(:,1),PR,MCp(:,1),DCp(:,1));
+        [A2DL,A2DW,A2DP]=Obmen_T2M(A2D*0,Pi(va,1),Pi(vd,1),MSw(:,1),DSw(:,1),K(:,1),PR,MCp(:,1),DCp(:,1));
         [A2BL,A2BW,A2BP]=Obmen_T2M(A2B,Pi(va,1),Pi(vb,1),MSw(:,1),BSw(:,1),ones(na,1),PR,MCp(:,1),BCp(:,1));
         [D2BL,D2BW,D2BP]=Obmen_T2M(D2B,Pi(vd,1),Pi(vb,1),DSw(:,1),BSw(:,1),K(:,1),PR,DCp(:,1),BCp(:,1));
         
@@ -234,13 +224,13 @@ fp=1;
         A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,sum(A2CL,2)+sum(A2GL,2)+sum(A2BL,2)+sum(A2DL,2)+Clp(va)+sum(b1gm(:,1:2),2),na,na);  %Матрица коэф. для пор
         C1=CL-sparse(1:nc,1:nc,sum(A2CL,1)+Clp(vc)',nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);                       %Матрица коэф. для вертикальных трещ.
         G1=GL-sparse(1:ng,1:ng,sum(A2GL,1)+Clp(vg)',ng,ng)-sparse(WonG(:,1),WonG(:,1),W1G,ng,ng);                       %Матрица коэф. для гориз. трещ.
-        D1=DL-sparse(1:nd,1:nd,sum(A2DL,1)+sum(D2BL,2)'+Clp(vd)',nd,nd)-sparse(WonD(:,1),WonD(:,1),W1D,nd,nd);                       %Матрица коэф. для двойной пор.
+        D1=DL-sparse(WonD(:,1),WonD(:,1),W1D,nd,nd)-sparse(1:nd,1:nd,sum(A2DL,1)+sum(D2BL,2)'+Clp(vd)',nd,nd);                       %Матрица коэф. для двойной пор.
         B1=BB-sparse(1:nb,1:nb,sum(A2BL,1)+sum(D2BL,1)+Clp(vb)'+b1gb',nb,nb);                                                             %Матрица коэф. для границ
          
         PwNl=repmat(Pw(:,ft+1),Nl,1);
-        PwNl=PwNl(ka1==1);
+       % PwNl=PwNl(ka1==1);
         
-        b1wm=sparse(Won,ones(1,size(Won,1)),-W1.*PwNl,na,1);
+        b1wm=sparse(Won,ones(1,size(Won,1)),-W1.*PwNl(WonM),na,1);
         b1wc=sparse(WonC(:,1),ones(1,size(WonC,1)),-W1C.*Pw(WonC(:,3),ft+1),nc,1);
         b1wg=sparse(WonG(:,1),ones(1,size(WonG,1)),-W1G.*Pw(WNG,ft+1),ng,1);
         b1wd=sparse(WonD(:,1),ones(1,size(WonD,1)),-W1D.*PwNl(WonD(:,3)),nd,1);
@@ -362,7 +352,7 @@ fp=1;
     %sum(sQo(:))
    % dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
     
-    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,ka1,va,vd,DL,W1D,WonD(:,1),nd);
+    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,ka1,va,vd,DL,W1D,WonD,nd);
     st=st+dt;
     t_flag=st~=Ta;
     

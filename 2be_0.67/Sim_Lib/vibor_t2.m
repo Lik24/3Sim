@@ -1,5 +1,6 @@
 function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0,Nl,ka1,va,vd,DL,W1D,WonD,nd)
 Fc=PR.Fc;
+Fc2=PR.Fc2;
 Sc=PR.Sc;
 Sc2=PR.Sc2;
 % Sw=Sw([va,vd]);
@@ -39,8 +40,8 @@ if dt==0
         
         dv=dV2(RC.Dr2).*(v2==0)+dV2(RC.Dc2).*v2;
         dt3=1./max(abs(DL.*dP2./dv));
-        dt4=1./max(abs(W1D.*dPw2./dV2(WonD)));
-        dt34=min([dt3,dt4])/Fc;
+        dt4=1./max(abs(W1D.*dPw2./dV2(WonD(:,1))));
+        dt34=min([dt3,dt4])/Fc2;
         
         dt=min([dt12,dt34]);
     end;

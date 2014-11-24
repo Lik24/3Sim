@@ -42,17 +42,7 @@ KcKl=K1(r1)+K1(c1);
 Ke=2*K1(r1).*K1(c1)./KcKl;
 KK=sparse(r1,c1,Ke);
 
-Wf=KWell(K1,ddol*Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
-
-im=zeros(size(ka));
-im(Won)=uj;
-im=im(ka==1);
-uj=im(im~=0);
-
-im=zeros(size(ka));
-im(Won)=1;
-im=im(ka==1);
-Won=find(im(:));
+Wf=KWell(K1,Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
 
 for l=1:Nl
     Nt=NLT{l};
@@ -112,7 +102,7 @@ for l=1:Nl
         LB(i)={L};
         A2DB(i)={A2D};
         Cr_grup(i)={[i*ones(size(D,1),1),l*ones(size(D,1),1)]};
-        sntl=sntl+size(unt,1);
+        sntl=sntl+size(unt,2);
     end;
 
     nc1=nc1+sntl;
@@ -137,6 +127,20 @@ end;
         A2D=A2D(:,ka==1);
         dVd=dVd(ka==1);
     end
+    
+    ka=ka(:);
+    Won=WonV(:,1);
+    Wf=WonV(:,2:3);
+    
+    ka1=ka(Won);
+    Wf=Wf(ka1==1,:);
+    
+    im=zeros(size(ka));
+    im(Won)=1;
+    im=im(ka==1);
+    Won=find(im(:));
+    
+    WonV=[Won,Wf];
     
     p=symrcm(D);
     D=D(p,p);
