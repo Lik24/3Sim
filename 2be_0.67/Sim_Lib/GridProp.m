@@ -117,13 +117,13 @@ NamXY=repmat([1:ncg]',1,nl);
 
 GY=load('GY_Ura');
 
-gKX(gKX<0)=0;
-gKY(gKY<0)=0;
-gKZ(gKZ<0)=0;
-gMp(gMp<0)=0;
-gSw(gSw<0)=0;
-gH(gH<=0.001)=0;
-gNTG(gNTG<=0)=0;
+% gKX(gKX<0)=0;
+% gKY(gKY<0)=0;
+% gKZ(gKZ<0)=0;
+% gMp(gMp<0)=0;
+% gSw(gSw<0)=0;
+% gH(gH<=0.001)=0;
+% gNTG(gNTG<=0)=0;
 
 for l=1:size(gKX,2)
  xy=GY.xy{l};
@@ -216,7 +216,7 @@ function B=sub_bond(B,xy,XY)
 
  in=inpolygon(XY(:,1),XY(:,2),xy(:,1),xy(:,2));
  tempKX=B(in==1);
- tempKX(tempKX<0)=mean(tempKX(tempKX>=0));
+ tempKX(tempKX<=0)=mean(tempKX(tempKX>0));
  B(in==1)=tempKX;
   
 end

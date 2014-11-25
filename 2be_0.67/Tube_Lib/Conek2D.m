@@ -24,13 +24,13 @@ nc1=0;
 sntl=0;
 
 dV_L=cell(Nl,1);
-C_L=cell(Nl,1);
+D_L=cell(Nl,1);
 L_L=cell(Nl,1);
 A2D_L=cell(Nl,1);
 
 [AA]=MR_Prop_Bond(XY,Nl,BND);
 [L,B,S,H]=Geome3_1(AA,XY,Z,Hi);
-ka(sum(AA)==-1)=0;
+%ka(sum(AA)==-1)=0;
 [r,c]=find(AA(1:size(XY,1),1:size(XY,1))==1);
 K=cell2mat(KD);
 K=repmat(K,size(XY,1),1);
@@ -51,7 +51,7 @@ for l=1:Nl
     
     mnt=size(Nt,2);
     dVB=cell(mnt,1);
-    CB=cell(mnt,1);
+    DB=cell(mnt,1);
     LB=cell(mnt,1);
     A2DB=cell(mnt,1);
     Cr_grup=cell(mnt,1);
@@ -68,9 +68,14 @@ for l=1:Nl
         L1=L(unt,:);    L2=L1(:,unt);
         H1=H(unt,:);    H2=H1(:,unt);
         B1=B(unt,:);    B2=B1(:,unt);
-        S1=S(unt,:);    S2=S1(:,unt);
+        S2=S(unt);   
         KK1=KK(unt,:);  KK2=KK1(:,unt);
     
+        A2A=A(unt,:);   A2A(:,unt)=0;
+        S2A=B(unt,:);   S2A(:,unt)=0;
+        Z2A=L(unt,:);   Z2A(:,unt)=0;
+        K2A=KK(unt,:);  K2A(:,unt)=0;
+        
         for j=1:size(Won,1)
             ty=find(Won(j)==unt);
             if isempty(ty)==0
@@ -91,29 +96,41 @@ for l=1:Nl
        % D=kd.*Bm.*H1m./Lm;
         km=K1m;
         D=km.*Bm.*H1m./Lm;
-        %D=H2(r+(c-1)*n)*dh./L2(r+(c-1)*n)*kd*8.34;
-        D=sparse(r,c,D,n,n);
+        %D=sparse(r,c,D,n,n);
         
-        a2d=sum(H2.*S2,2)*1e-4;
+        a2d=S2.*sum(H2,2)*1e-4;
         A2D=sparse(unt,1:n,a2d,np*Nl,n);
-        dVd=sum(H2.*S2,2);
+        dVd=S2.*sum(H2,2);
+        
         dVB(i)={dVd};
-        CB(i)={D};
-        LB(i)={L};
         A2DB(i)={A2D};
         Cr_grup(i)={[i*ones(size(D,1),1),l*ones(size(D,1),1)]};
         sntl=sntl+size(unt,2);
+        
+        n=size(A2A);
+        [r1,c1]=find(A2A==1);
+        
+        Sa=S2A(r1+(c1-1)*n(1));
+        Za=Z2A(r1+(c1-1)*n(1));
+        K1a=K2A(r1+(c1-1)*n(1));
+       % D=kd.*Bm.*H1m./Lm;
+        DD=K1a.*Sa./Za;
+        D=sparse([r;r1],[c+(l-1)*n(1);c1],[D;DD],n(1),n(2));
+        LL=sparse([r;r1],[c+(l-1)*n(1);c1],[Lm;Za],n(1),n(2));
+        
+        DB(i)={D};
+        LB(i)={LL};
     end;
 
     nc1=nc1+sntl;
-    C_L(l)=Mat_Constr(CB);
+    D_L(l)=Mat_Constr(DB);
     L_L(l)=Mat_Constr(LB);
     A2D_L(l)={cell2mat(A2DB')};
     dV_L(l)={cell2mat(dVB)};
     CR_grup(l)={cell2mat(Cr_grup)};
 end;
 
-    C_cell=Mat_Constr(C_L);
+    C_cell=Mat_Constr(D_L);
     L_cell=Mat_Constr(L_L);
     A2D=cell2mat(A2D_L');
     dVd=cell2mat(dV_L);
@@ -121,12 +138,15 @@ end;
     D=cell2mat(C_cell);
     L=cell2mat(L_cell);
     
-    if isempty(D)==0
+    if size(D,1)~=0
         D=D(ka==1,ka==1);
         L=L(ka==1,ka==1);
         A2D=A2D(:,ka==1);
         dVd=dVd(ka==1);
-    end
+    else
+       D=zeros(0,0);
+       L=zeros(0,0);
+     end
     
     ka=ka(:);
     Won=WonV(:,1);
@@ -174,15 +194,15 @@ end
 
 function C=Mat_Constr(c)
 n=size(c,1);
-cb=cell(n,n);
+cb=cell(n,1);
 for i=1:n
     A=c{i};
     ni=size(A,1);
-    for j=1:n
-        mj=size(c{j},2);
-        cb(i,j)={sparse(ni,mj)};
-    end;
-    cb(i,i)=c(i);
+%     for j=1:n
+%           mj=size(c{j},2);
+%          cb(i,j)={sparse(ni,mj)};
+%     end;
+    cb(i,1)=c(i);
 end;
 
 C=cell2mat(cb);

@@ -1,10 +1,11 @@
-function [A,L,B,S,H1,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf,ka)
+function [A,L,B,S,H1,HV,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,HV,XY,KX,KY,KZ,Mp,Sw,H,Z,P,MCp,Won,Wf,ka)
 
 A=A(ka==1,ka==1);
 L=L(ka==1,ka==1);
 B=B(ka==1,ka==1);
-S=S(ka==1,ka==1);
+S=S(ka==1);
 H1=H1(ka==1,ka==1);
+HV=HV(ka==1);
 
 XY=XY(ka==1);
 KX=KX(ka==1);

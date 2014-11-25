@@ -1,4 +1,4 @@
-function [L,B,S,H]=Geome3_1(Ab,XY,Z,h)
+function [L,B,SV,H,HV]=Geome3_1(Ab,XY,Z,h)
 
 X=XY(:,1);  Y=XY(:,2);
 n=size(X,1);
@@ -77,6 +77,7 @@ for i=1:Nl
 end;
 Bc1=reshape(Bc1,Nl,Nl);
 H=cell2mat(Bc1);
+HV=sum(H,2);
 
 L=A_constr(L,Nl,n);
 B=A_constr(B,Nl,n);

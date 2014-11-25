@@ -47,16 +47,16 @@ qd=zeros(size(Uf,1),5);
 %KX(:)=mean(KX(:));
 
 [A]=MR_Prop_Bond(XY,Nl,BND);
-[L,B,S,H1]=Geome3_1(A,XY,Z,H);
-ka(sum(A)==-1)=0;
+[L,B,S,H1,HV]=Geome3_1(A,XY,Z,H);
+%ka(sum(A)==-1)=0;
 [r,c]=find(A(1:size(XY,1),1:size(XY,1))==1);
 
 Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
 XY=repmat(XY,Nl,1);
 ka1=ka(Won);
 Won1=Won;
-[A,L,B,S,H1,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf,ka);
-[A,L,S,B,H1,K,XY,Mp,MSw,H,Z,P,MCp,T,NTG,p,rz,cz,BXY,BZ,dH,NL,NamXY,GYData]=PereYpor(A,L,S,B,H1,KX,KY,KZ,Mp,MSw,...
+[A,L,B,S,H1,HV,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,HV,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf,ka);
+[A,L,S,B,H1,HV,K,XY,Mp,MSw,H,Z,P,MCp,T,NTG,p,rz,cz,BXY,BZ,dH,NL,NamXY,GYData]=PereYpor(A,L,S,B,H1,HV,KX,KY,KZ,Mp,MSw,...
     XY,H,Z,P,MCp,DATA,GYData,ka);
 [r,c]=find(L);
 
@@ -100,7 +100,7 @@ WW=sum(WW,1)~=0;
 
 %figure(98),subplot(2,4,7),spy([A,A2C,A2G;A2C',C,C2G;A2G',C2G',G]);
 
-[Ke,Ke_gy,dV]=KH2Mat(K,H1,Mp,S,r,c,rz,cz,GYData.GY_Kz,GYData.GY_Kxy,BndXY(p),DData); 
+[Ke,Ke_gy,dV]=KH2Mat(K,HV,Mp,S,r,c,rz,cz,GYData.GY_Kz,GYData.GY_Kxy,BndXY(p),DData); 
 
 Mp_c=ones(nc,1);
 Mp_b=100*ones(nb,1);

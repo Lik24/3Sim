@@ -5,7 +5,7 @@ addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','Geo
 PR=Gl_PRM;
 
 [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new]=Sintetic_Real(PR.Ns,PR.Nl);
-Sw(:)=1;
+%Sw(:)=1;
 %KX(:)=mean(KX(:));
 XY_GYs=XY_GY;
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z]=Sintetic(PR.Ns,PR.Nl);
@@ -48,6 +48,6 @@ VZL(DATA,WXY,Pi,Sw(:,end),Ti,MCp,PR.Nl,p,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,end),pb,
 
 c=1-Qo./Ql;
 dV0([p,size(p,2)+DData.pd])=dV0;
-Sw0=Sw0(DATA.ka==1); Sw0=[Sw0;Sw0];
+Sw0=Sw0(DATA.ka==1); Sw0=[Sw0;Sw0(1:size(DData.D,1))];
 V0=sum(dV0.*(1-Sw0));
 sQo(end,:)/V0

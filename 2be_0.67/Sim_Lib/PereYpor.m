@@ -1,4 +1,5 @@
-function [A,L,S,B,H1,K,XY,Mp,Sw,H,Z,P,MCp,T,NTG,p,rz,cz,BndXY,BndZ,dH,NL,NamXY,GYData1]=PereYpor(A,L,S,B,H1,KX,KY,KZ,Mp,Sw,XY,H,Z,P,MCp,DATA,GYData,ka)
+function [A,L,S,B,H1,HV,K,XY,Mp,Sw,H,Z,P,MCp,T,NTG,p,rz,cz,BndXY,BndZ,dH,NL,NamXY,GYData1]=PereYpor(A,L,S,...
+    B,H1,HV,KX,KY,KZ,Mp,Sw,XY,H,Z,P,MCp,DATA,GYData,ka)
 
 % T=DATA.gT;
 % NTG=DATA.gNTG;
@@ -23,9 +24,10 @@ p=symrcm(A);
 
 A=A(p,p);
 L=L(p,p);
-S=S(p,p);
+S=S(p);
 B=B(p,p); 
 H1=H1(p,p);
+HV=HV(p);
 
 KX=KX(:);
 KY=KY(:);
