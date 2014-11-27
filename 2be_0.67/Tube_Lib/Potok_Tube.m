@@ -12,14 +12,14 @@ Kfo=Sat_tube(Sw,2,1,ts,tw); %oil
 dP=P(c)-P(r);
 vP=dP>0;
 
-Kwc=Kfw(r);
-Kwl=Kfw(c);
+Kwc=Kfw(c);
+Kwl=Kfw(r);
 
-Koc=Kfo(r);
-Kol=Kfo(c);
+Koc=Kfo(c);
+Kol=Kfo(r);
 
-Cpc=Cp(r);
-Cpl=Cp(c);
+Cpc=Cp(c);
+Cpl=Cp(r);
 
 Cpe=Cpc.*vP+Cpl.*(vP==0);
 Kfw=Kwc.*vP+Kwl.*(vP==0);

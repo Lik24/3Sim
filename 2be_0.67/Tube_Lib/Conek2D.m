@@ -7,7 +7,7 @@ BND=DATA.BND;
 Hi=DATA.gH;
 Z=DATA.gZ;
 np=size(XY,1);
-ddol=0.5;
+ddol=0.1;
 
 KD=CrDATA.KD;
 DH=CrDATA.DH;
@@ -26,6 +26,7 @@ sntl=0;
 dV_L=cell(Nl,1);
 D_L=cell(Nl,1);
 L_L=cell(Nl,1);
+K_L=cell(Nl,1);
 A2D_L=cell(Nl,1);
 
 [AA]=MR_Prop_Bond(XY,Nl,BND);
@@ -118,13 +119,18 @@ for l=1:Nl
         D=sparse([r;r1],[c+(l-1)*n(1);c1],[D;DD],n(1),n(2));
         LL=sparse([r;r1],[c+(l-1)*n(1);c1],[Lm;Za],n(1),n(2));
         
+        K=sparse([r;r1],[c+(l-1)*n(1);c1],[km;K1a],n(1),n(2));
+                
         DB(i)={D};
         LB(i)={LL};
+        KB(i)={K};
     end;
 
     nc1=nc1+sntl;
     D_L(l)=Mat_Constr(DB);
     L_L(l)=Mat_Constr(LB);
+    K_L(l)=Mat_Constr(KB);
+    
     A2D_L(l)={cell2mat(A2DB')};
     dV_L(l)={cell2mat(dVB)};
     CR_grup(l)={cell2mat(Cr_grup)};
@@ -132,15 +138,19 @@ end;
 
     C_cell=Mat_Constr(D_L);
     L_cell=Mat_Constr(L_L);
+    K_cell=Mat_Constr(K_L);
+    
     A2D=cell2mat(A2D_L');
     dVd=cell2mat(dV_L);
     CR_GRUP=cell2mat(CR_grup');
     D=cell2mat(C_cell);
     L=cell2mat(L_cell);
+    K=cell2mat(K_cell);
     
     if size(D,1)~=0
         D=D(ka==1,ka==1);
         L=L(ka==1,ka==1);
+        K=K(ka==1,ka==1);
         A2D=A2D(:,ka==1);
         dVd=dVd(ka==1);
     else
@@ -165,6 +175,7 @@ end;
     p=symrcm(D);
     D=D(p,p);
     L=L(p,p);
+    K=K(p,p);
     A2D=A2D(:,p);
     A2D=A2D(ka==1,:);
     dVd=dVd(p);
@@ -176,7 +187,7 @@ end;
     Mp=DATA.gMp;
     Mp_d=ddol.*Mp(ka==1);
     Mp_d=Mp_d(p);
-    Mp=ddol.*Mp;
+    Mp=(1-ddol).*Mp;
        
     
 DData.D=D;

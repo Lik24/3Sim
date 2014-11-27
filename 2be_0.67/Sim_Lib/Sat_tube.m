@@ -12,8 +12,9 @@ function Z=Sat_tube(x2,B,C,a_s,aw)
 % else
 %     Sor=SorCUB;
 % end;
-Swr=0;
-Sor=0;
+Swr=aw(4);
+Sor=aw(5);
+aw=aw(1:3);
 
 %   a_s=[2,2];
 %  % aw=0.52;

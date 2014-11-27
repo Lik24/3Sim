@@ -1,4 +1,4 @@
-function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0,Nl,ka1,va,vd,DL,W1D,WonD,nd)
+function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0,Nl,WonM,va,vd,DL,W1D,WonD,nd)
 Fc=PR.Fc;
 Fc2=PR.Fc2;
 Sc=PR.Sc;
@@ -13,8 +13,8 @@ stnd=size(P,1)-nd;
 dP2=P(stnd+RC.Dc2)-P(stnd+RC.Dr2);
 
 PwNl=repmat(Pw,Nl,1);
-PwNl=PwNl(ka1==1);
-dPw1=P(Won)-PwNl;
+%PwNl=PwNl(ka1==1);
+dPw1=P(Won)-PwNl(WonM);
 dPw2=P(WonD(:,1))-PwNl(WonD(:,3));
 v1=dP1>0;
 TL=TL(RC.Acr2(:,1)+(RC.Acr2(:,2)-1)*na);

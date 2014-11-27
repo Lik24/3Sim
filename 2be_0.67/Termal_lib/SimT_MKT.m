@@ -123,7 +123,7 @@ BSw(:,1)=ones(nb,1);
 Pi(va,1)=P;
 Pi(vc,1)=P(RC.ACr);
 Pi(vg,1)=P(RC.AGr);
-Pi(vd,1)=P(RC.ADr);
+Pi(vd,1)=P(RC.ADc);
 Pi(vb,1)=GYData.P0;
 
 Ti(va,1)=T;
@@ -352,7 +352,7 @@ fp=1;
     %sum(sQo(:))
    % dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
     
-    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,ka1,va,vd,DL,W1D,WonD,nd);
+    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd);
     st=st+dt;
     t_flag=st~=Ta;
     
