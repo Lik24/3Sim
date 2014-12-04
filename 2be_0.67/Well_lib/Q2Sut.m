@@ -3,7 +3,7 @@ function [Q,pw,ppl,dtz]=Q2Sut(Qm,Qc,Qg,Pw,PpW,dt1,Ta)
 if Ta<10*365
     dtz=1;
 elseif Ta<100*365
-    dtz=10;
+    dtz=100;
 else
     dtz=365;
 end;

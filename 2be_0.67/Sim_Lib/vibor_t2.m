@@ -1,12 +1,12 @@
-function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0,Nl,WonM,va,vd,DL,W1D,WonD,nd)
+function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2)
 Fc=PR.Fc;
 Fc2=PR.Fc2;
 Sc=PR.Sc;
 Sc2=PR.Sc2;
 % Sw=Sw([va,vd]);
 % Sw2=Sw2([va,vd]);
-dV1=dV(va);
-dV2=dV(vd);
+dVa=dV(va);
+dVd=dV(vd);
 
 dP1=P(RC.Acr2(:,2))-P(RC.Acr2(:,1));
 stnd=size(P,1)-nd;
@@ -33,14 +33,14 @@ if dt==0
       %  dt
     else
                 
-        dv=dV1(RC.Acr2(:,2)).*(v1==0)+dV1(RC.Acr2(:,1)).*v1;
+        dv=dV1(:,1).*(v1==0)+dV1(:,2).*v1;
         dt1=1./max(abs(TL.*dP1./dv));
-        dt2=1./max(abs(W1.*dPw1./dV1(Won)));
+        dt2=1./max(abs(W1.*dPw1./dVa(Won)));
         dt12=min([dt1,dt2])/Fc;
         
-        dv=dV2(RC.Dc2).*(v2==0)+dV2(RC.Dr2).*v2;
+        dv=dV2(:,1).*(v2==0)+dV2(:,2).*v2;
         dt3=1./max(abs(DL.*dP2./dv));
-        dt4=1./max(abs(W1D.*dPw2./dV2(WonD(:,1))));
+        dt4=1./max(abs(W1D.*dPw2./dVd(WonD(:,1))));
         dt34=min([dt3,dt4])/Fc2;
         
         dt=min([dt12,dt34]);

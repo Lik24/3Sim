@@ -1,4 +1,7 @@
-function VZL_VORONOI(xy,Sw,p,WXY,uf,BND)
+function VZL_VORONOI(DATA,Sw,p,WXY,uf)
+xy=DATA.XY;
+BND=DATA.BND;
+ka=DATA.ka;
 
 [V,C]=VoronoiLimit(xy(:,1),xy(:,2),BND); 
 %  DT=delaunayTriangulation(xy(:,1),xy(:,2),BND);
@@ -8,8 +11,11 @@ function VZL_VORONOI(xy,Sw,p,WXY,uf,BND)
 %      
 % [V,C] = voronoiDiagram(TR);
 %[V,C]=voronoin(xy); 
+Sw0=zeros(size(ka,1),size(Sw,2));
+Sw1=Sw(1:size(p,2));
+Sw0(ka==1)=Sw1;
+Sw0(ka==0)=nan;
 
-%Sw(p)=Sw;
 
 figure1=figure(45);
 dx=max(xy(:,1))-min(xy(:,1));
@@ -24,12 +30,11 @@ hold(axes1,'all');
 %     'Position',[0.13 0.11 0.651609195402299 0.815],...
 %     'FontSize',14);
 
-
 for k=1:length(C)
     
     VertCell = V(C{k},:);
     ZZ=0*ones(size(VertCell(:,1)));
-    patch(VertCell(:,1),VertCell(:,2),ZZ,1-Sw(k),'FaceColor','flat')
+    patch(VertCell(:,1),VertCell(:,2),ZZ,Sw0(k),'FaceColor','flat')
     
 end
 %set(gca,'CLim',[0 1])

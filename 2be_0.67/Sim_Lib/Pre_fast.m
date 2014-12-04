@@ -1,4 +1,4 @@
-function [TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K,KeGY,BndXY,BndZ,nb)
+function [TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D,dV1,dV2]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K,KeGY,BndXY,BndZ,nb,dV)
 na=size(A,1); 
 nc=size(C,1); 
 ng=size(G,1); 
@@ -109,3 +109,11 @@ Txyz_GY_A(:,2)=KeGY(:,2).*BlHZ;
 
 Txyz_GY_D(:,1)=KeGY(vad,1).*BlHXY(vad);
 Txyz_GY_D(:,2)=KeGY(vad,2).*BlHZ(vad);
+
+dVa=dV(1:na);
+dVd=dV(na+nc+ng+1:na+nc+ng+nd);
+
+dV1(:,1)=dVa(RC.Acr2(:,2));
+dV1(:,2)=dVa(RC.Acr2(:,1));
+dV2(:,1)=dVd(RC.Dc2);
+dV2(:,2)=dVd(RC.Dr2);

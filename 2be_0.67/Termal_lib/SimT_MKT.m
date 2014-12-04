@@ -113,7 +113,7 @@ BCp(:,1)=zeros(nb,1);
 dVCG=[dV;dVC;dVG;dVD.*Mp_d;dVB];
 dV0=[dV;dVC;dVG;dVD];
 
-[TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K(:,1),Ke_gy,BndXY(p),BndZ(p),nb);
+[TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D,dV1,dV2]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K(:,1),Ke_gy,BndXY(p),BndZ(p),nb,dVCG);
 vad=RC.ADr;
 CSw(:,1)=MSw(RC.ACr,1);
 GSw(:,1)=MSw(RC.AGr,1);
@@ -211,7 +211,7 @@ fp=1;
         
         [A2CL,~,~]=Obmen_T2M(A2C,Pi(va,1),Pi(vc,1),MSw(:,1),CSw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
         [A2GL,~,~]=Obmen_T2M(A2G,Pi(va,1),Pi(vg,1),MSw(:,1),GSw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
-        [A2DL,A2DW,A2DP]=Obmen_T2M(A2D*0,Pi(va,1),Pi(vd,1),MSw(:,1),DSw(:,1),K(:,1),PR,MCp(:,1),DCp(:,1));
+        [A2DL,A2DW,A2DP]=Obmen_T2M(A2D,Pi(va,1),Pi(vd,1),MSw(:,1),DSw(:,1),K(:,1),PR,MCp(:,1),DCp(:,1));
         [A2BL,A2BW,A2BP]=Obmen_T2M(A2B,Pi(va,1),Pi(vb,1),MSw(:,1),BSw(:,1),ones(na,1),PR,MCp(:,1),BCp(:,1));
         [D2BL,D2BW,D2BP]=Obmen_T2M(D2B,Pi(vd,1),Pi(vb,1),DSw(:,1),BSw(:,1),K(:,1),PR,DCp(:,1),BCp(:,1));
         
@@ -339,23 +339,34 @@ fp=1;
  %       TeW(:,t+1),Qm(:,:,t+1),Qc(:,:,t+1),Qg(:,:,t+1),C2GL,TL,CL,GL,TW,CW,GW,A2CL,A2CW,A2GL,A2GW,Wf,NDT(t),t,T,S,BZ);
     
         Ti(:,1)=Ti(:,1);
-    if mod(t,1)==0
+        if Ta<=100
+            zapt=1;
+        elseif Ta<=1000
+            zapt=10;
+        elseif Ta<=1e4
+            zapt=100;
+        else
+            zapt=1000;
+        end;
+     
+    if mod(t,zapt)==0
         j=j+1;
         Pj(:,j)=Pi;
         Swj(:,j)=MSw;
         DSwj(:,j)=DSw;
         MCpj(:,j)=MCp;
         Tj(:,j)=Ti;
+        waitbar(st/Ta)
     end;
     sQo=sum(Qm(:,2,t+1)-Qm(:,3,t+1)+Qm(:,1,t+1))+sum(Qc(:,2,t+1)-Qc(:,3,t+1)+Qc(:,1,t+1))...
         +sum(Qg(:,2,t+1)-Qg(:,3,t+1)+Qg(:,1,t+1))+sum(Qd(:,2,t+1)-Qd(:,3,t+1)+Qd(:,1,t+1));
     %sum(sQo(:))
    % dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
     
-    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd);
+    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2);
     st=st+dt;
     t_flag=st~=Ta;
-    
+%prob.progress;
 %     c_lik=1-Qm(:,3,t+1)./Qm(:,2,t+1);
 %     c_lik(isnan(c_lik)==1)=0;
 %     Uf(WonM,ft+1:end)=Uf(WonM,ft+1:end).*repmat(c_lik<PwQC_bnd(4,1),1,size(Uf(:,ft+1:end),2));
@@ -363,7 +374,7 @@ fp=1;
 %     qo(Uf(WonM,ft+1)==-1)=inf;
 %     Uf(WonM,ft+1:end)=Uf(WonM,ft+1:end).*repmat(qo>PwQC_bnd(5,1),1,size(Uf(:,ft+1:end),2));
 end;
-
+waitbar(st/Ta)
 [Q,Pw,PpW,dtz]=Q2Sut(Qm,Qc,Qg,Pwt(:,1:t+1),PpW(:,1:t+1),dt1,Ta);
 % GY_Pxy(p)=GY_Pxy;
 % save('GY_Pxy.mat','GY_Pxy')

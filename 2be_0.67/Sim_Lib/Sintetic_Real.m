@@ -1,7 +1,18 @@
 function [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new]=Sintetic_Real(Nw,Nl)
 SD=load('RIGIS_DATA_U.mat');
 SD1=load('Wprop_URA.mat');
-XY_GY=[SD1.GY(:,1),SD1.GY(:,2)];
+%XY_GY=[SD1.GY(:,1),SD1.GY(:,2)];
+
+[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3]=read_mr_prop;
+XY_GY=[GY(:,1),GY(:,2)];
+
+SD.Mp=Mp;
+SD.K=K;
+SD.Sw=Sw;
+SD.Z3=Z3;
+SD.H=H;
+SD.Hk=Hk;
+
 
 pR=2000;
 min_gy=min(XY_GY);
@@ -50,7 +61,7 @@ end
 % XY_GY_new(:,1)=XY_GY_new(:,1)+xyc(1);
 % XY_GY_new(:,2)=XY_GY_new(:,2)+xyc(2);
 
-WXY=SD1.WXY;
+%WXY=SD1.WXY;
 % WXY2=SD1.WXY2;
 % 
 % WXY=[WXY;WXY2];
