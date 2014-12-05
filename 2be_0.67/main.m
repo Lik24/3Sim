@@ -4,7 +4,7 @@ addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','Geo
     'Well_lib','Crack_gen','Problems','Poly_lib','SS_lib','Diff_lib','Viz_lib','DATA_In','Adap_lib','2exe');
 PR=imp_glb_prm;%Gl_PRM;
 
-[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new]=Sintetic_Real(PR.Ns,PR.Nl);
+[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(PR.Ns,PR.Nl);
 Sw(:)=0.1;
 %KX(:)=mean(KX(:));
 XY_GYs=XY_GY;
@@ -13,7 +13,7 @@ XY_GYs=XY_GY;
 %[WData,Ppwf,Pw_d,Pw_z]=Well_DATA_Adap(WXY,Z,PR.Ta);
 
 [nt,PXY,gXY,PR.dl,tXY,XY_GY]=kvad_crack_fun(XY_GY,PR.Nl,WXY);
-[DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY(:,:),H,Z,tXY,PR.Nl,WXY,XY_GY);
+[DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY(:,:),H,Z,tXY,PR.Nl,WXY,XY_GY,GY_subl);
 Sw0=DATA.gSw;
 [GYData,DATA.gKX,DATA.gSw,B,A2B,dVb,pb]=GY_DATA(0,DATA,XY_GY_new,PR); %0/1 - выкл/вкл. аквифер
 
@@ -34,8 +34,8 @@ nd=DPorist(1,DATA.XY,PR.Nl); % 0/1 - выкл/вкл. двойная пористость
 
 [Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz]=SimT_MKT(PR,C,A2C,GData,B,A2B,DData,dVc,dVb,DATA,WData,GYData,1,CR_GRUP);
 
-%VZL(DATA,WXY,Pi,Sw(:,end),Ti,MCp,PR.Nl,p,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,end),pb,GYData,XY_GY_new,dtz);
-VZL_VORONOI(DATA,Pi(:,end),p,WXY,WData.Uf(:,end))
+VZL(DATA,WXY,Pi,Sw(:,end),Ti,MCp,PR.Nl,p,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,end),pb,GYData,XY_GY_new,dtz);
+%VZL_VORONOI(DATA,Pi(:,end),p,WXY,WData.Uf(:,end))
 
 
   Qo(:,1)=sum(Q(:,3,:));
@@ -52,3 +52,6 @@ dV0([p,size(p,2)+DData.pd])=dV0;
 Sw0=Sw0(DATA.ka==1); Sw0=[Sw0;Sw0(1:size(DData.D,1))];
 V0=sum(dV0.*(1-Sw0));
 sQo(end,:)/V0
+
+TBL=table(Ql,Qo,Qz,c,'VariableNames',{'Ql','Qo','Qz','c'});
+writetable(TBL,'OutQ.txt','Delimiter','tab')

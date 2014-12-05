@@ -1,4 +1,4 @@
-function [DATA]=GridProp(wKx,wKy,wKz,wMp,wP,wSw,wCp,wT,wNTG,CXY,wH,wZ,gXY,nl,WXY,XYgy)
+function [DATA]=GridProp(wKx,wKy,wKz,wMp,wP,wSw,wCp,wT,wNTG,CXY,wH,wZ,gXY,nl,WXY,XYgy,GY_subl)
 [nw]=size(wKx,1);
 A=zeros(nw,nl*6);
 XY=[gXY];
@@ -115,8 +115,15 @@ dH=gZ+gH;
 NL=meshgrid(1:nl,1:ncg);
 NamXY=repmat([1:ncg]',1,nl);
 
-GY=load('GY_Ura');
-
+%GY=load('GY_Ura');
+a=find(GY_subl(:,2)==-1);
+for l=1:size(a,1)
+ if l<size(a,1)   
+ x_y(l)={GY_subl(a(l)+1:a(l+1)-1,:)};
+ else
+ x_y(l)={GY_subl(a(l)+1:end,:)};    
+ end
+end
 % gKX(gKX<0)=0;
 % gKY(gKY<0)=0;
 % gKZ(gKZ<0)=0;
@@ -126,15 +133,16 @@ GY=load('GY_Ura');
 % gNTG(gNTG<=0)=0;
 
 for l=1:size(gKX,2)
- xy=GY.xy{l};
- a=GY.a{l};
- gKX(:,l)=sub_bond(gKX(:,l),xy(a,:),XY);
- gKY(:,l)=sub_bond(gKY(:,l),xy(a,:),XY);
- gKZ(:,l)=sub_bond(gKZ(:,l),xy(a,:),XY);
- gMp(:,l)=sub_bond(gMp(:,l),xy(a,:),XY);
- gSw(:,l)=sub_bond(gSw(:,l),xy(a,:),XY);
- gH(:,l)=sub_bond(gH(:,l),xy(a,:),XY);
- gNTG(:,l)=sub_bond(gNTG(:,l),xy(a,:),XY);
+%  xy=GY.xy{l};
+%  a=GY.a{l};
+
+ gKX(:,l)=sub_bond(gKX(:,l),x_y{l},XY);
+ gKY(:,l)=sub_bond(gKY(:,l),x_y{l},XY);
+ gKZ(:,l)=sub_bond(gKZ(:,l),x_y{l},XY);
+ gMp(:,l)=sub_bond(gMp(:,l),x_y{l},XY);
+ gSw(:,l)=sub_bond(gSw(:,l),x_y{l},XY);
+ gH(:,l)=sub_bond(gH(:,l),x_y{l},XY);
+ gNTG(:,l)=sub_bond(gNTG(:,l),x_y{l},XY);
 end
 
 ka=(gKX+gKY+gKZ).*gMp.*gNTG.*gH~=0;

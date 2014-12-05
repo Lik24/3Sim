@@ -1,9 +1,9 @@
-function [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new]=Sintetic_Real(Nw,Nl)
+function [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(Nw,Nl)
 SD=load('RIGIS_DATA_U.mat');
 SD1=load('Wprop_URA.mat');
 %XY_GY=[SD1.GY(:,1),SD1.GY(:,2)];
 
-[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3]=read_mr_prop;
+[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop;
 XY_GY=[GY(:,1),GY(:,2)];
 
 SD.Mp=Mp;
