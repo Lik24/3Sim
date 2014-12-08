@@ -7,7 +7,6 @@ BND=DATA.BND;
 Hi=DATA.gH;
 Z=DATA.gZ;
 np=size(XY,1);
-ddol=0.1;
 
 KD=CrDATA.KD;
 DH=CrDATA.DH;
@@ -30,7 +29,7 @@ K_L=cell(Nl,1);
 A2D_L=cell(Nl,1);
 
 [AA]=MR_Prop_Bond(XY,Nl,BND);
-[L,B,S,H]=Geome3_1(AA,XY,Z,Hi);
+[L,B,S,H,HV]=Geome3_1(AA,XY,Z,Hi);
 %ka(sum(AA)==-1)=0;
 [r,c]=find(AA(1:size(XY,1),1:size(XY,1))==1);
 K=cell2mat(KD);
@@ -65,10 +64,11 @@ for l=1:Nl
        
         unt=unique(nt);
 
-        A1=A(unt,:);    A2=A1(:,unt);
-        L1=L(unt,:);    L2=L1(:,unt);
-        H1=H(unt,:);    H2=H1(:,unt);
-        B1=B(unt,:);    B2=B1(:,unt);
+        A1=A(unt,:);     A2=A1(:,unt);
+        L1=L(unt,:);     L2=L1(:,unt);
+        H1=H(unt,:);     H2=H1(:,unt);
+        HV1=HV(unt);   
+        B1=B(unt,:);     B2=B1(:,unt);
         S2=S(unt);   
         KK1=KK(unt,:);  KK2=KK1(:,unt);
     
@@ -101,7 +101,7 @@ for l=1:Nl
         
         a2d=S2.*sum(H2,2)*1e-4;
         A2D=sparse(unt,1:n,a2d,np*Nl,n);
-        dVd=S2.*sum(H2,2);
+        dVd=S2.*HV1;
         
         dVB(i)={dVd};
         A2DB(i)={A2D};
@@ -183,6 +183,12 @@ end;
     for i=1:size(WonV,1)
         WonV(i,1)=find(WonV(i,1)==p);
     end;
+    
+    if size(D,1)~=0
+        ddol=0.5;
+    else
+        ddol=0;
+    end
     
     Mp=DATA.gMp;
     Mp_d=ddol.*Mp(ka==1);

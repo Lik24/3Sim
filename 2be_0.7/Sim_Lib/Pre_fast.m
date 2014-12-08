@@ -1,4 +1,4 @@
-function [TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D,dV1,dV2]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K,KeGY,BndXY,BndZ,nb,dV)
+function [TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D,dV1,dV2,TTM]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K,KeGY,BndXY,BndZ,nb,dV)
 na=size(A,1); 
 nc=size(C,1); 
 ng=size(G,1); 
@@ -25,7 +25,9 @@ RC.Arc=[r,c];
 RC1=sparse(r,c,1);
 U=triu(RC1);
 [rh,ch]=find(U);
-RC.Acr2=[rh,ch];
+RC.Arc2=[rh,ch];
+TTM=sparse(r,c,TM,na,na);
+TTM=TTM(rh+(ch-1)*na);
 
 %TC=C(r2+(c2-1)*nc);
 RC.Cr=r2;
@@ -113,7 +115,7 @@ Txyz_GY_D(:,2)=KeGY(vad,2).*BlHZ(vad);
 dVa=dV(1:na);
 dVd=dV(na+nc+ng+1:na+nc+ng+nd);
 
-dV1(:,1)=dVa(RC.Acr2(:,2));
-dV1(:,2)=dVa(RC.Acr2(:,1));
+dV1(:,1)=dVa(RC.Arc2(:,2));
+dV1(:,2)=dVa(RC.Arc2(:,1));
 dV2(:,1)=dVd(RC.Dc2,1);
 dV2(:,2)=dVd(RC.Dr2,1);

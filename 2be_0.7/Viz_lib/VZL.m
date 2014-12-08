@@ -105,10 +105,10 @@ plot_fild(x,y,z,log10k,Nl,X,Y,WXY,'Проницаемость',XYgy,a0,'nearest') %
  subplot(2,4,8);
  T=(1:size(Q,3))*dtz;
 % 
-Qz(:,:)=sum(Q(:,1,:));
-Qd(:,:)=sum(Q(:,2,:));
-Qo(:,:)=sum(Q(:,3,:));
-Qp(:,:)=sum(Q(:,5,:));
+Qz(:,:)=sum(Q(:,1,:))/dtz;
+Qd(:,:)=sum(Q(:,2,:))/dtz;
+Qo(:,:)=sum(Q(:,3,:))/dtz;
+Qp(:,:)=sum(Q(:,5,:)/dtz);
 plot(T,Qz,T,Qd,T,Qo,T,Qp)
 
 end

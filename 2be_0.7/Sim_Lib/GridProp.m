@@ -136,13 +136,13 @@ for l=1:size(gKX,2)
 %  xy=GY.xy{l};
 %  a=GY.a{l};
 
- gKX(:,l)=sub_bond(gKX(:,l),x_y{l},XY);
- gKY(:,l)=sub_bond(gKY(:,l),x_y{l},XY);
- gKZ(:,l)=sub_bond(gKZ(:,l),x_y{l},XY);
- gMp(:,l)=sub_bond(gMp(:,l),x_y{l},XY);
- gSw(:,l)=sub_bond(gSw(:,l),x_y{l},XY);
- gH(:,l)=sub_bond(gH(:,l),x_y{l},XY);
- gNTG(:,l)=sub_bond(gNTG(:,l),x_y{l},XY);
+ gKX(:,l)=sub_bond(gKX(:,l),x_y{l},XY,1);
+ gKY(:,l)=sub_bond(gKY(:,l),x_y{l},XY,1);
+ gKZ(:,l)=sub_bond(gKZ(:,l),x_y{l},XY,1);
+ gMp(:,l)=sub_bond(gMp(:,l),x_y{l},XY,1);
+ gSw(:,l)=sub_bond(gSw(:,l),x_y{l},XY,0);
+ gH(:,l)=sub_bond(gH(:,l),x_y{l},XY,1);
+ gNTG(:,l)=sub_bond(gNTG(:,l),x_y{l},XY,1);
 end
 
 ka=(gKX+gKY+gKZ).*gMp.*gNTG.*gH~=0;
@@ -220,11 +220,15 @@ while i<size(XY,1)
 end;
 end
 
-function B=sub_bond(B,xy,XY)
+function B=sub_bond(B,xy,XY,fl)
 
  in=inpolygon(XY(:,1),XY(:,2),xy(:,1),xy(:,2));
  tempKX=B(in==1);
- tempKX(tempKX<=0)=mean(tempKX(tempKX>0));
+ if fl==1
+  tempKX(tempKX<=0)=mean(tempKX(tempKX>0));
+ else
+  tempKX(tempKX<0)=mean(tempKX(tempKX>=0));
+ end
  B(in==1)=tempKX;
   
 end

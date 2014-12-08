@@ -8,19 +8,20 @@ Sc2=PR.Sc2;
 dVa=dV(va);
 dVd=dV(vd);
 
-dP1=P(RC.Acr2(:,2))-P(RC.Acr2(:,1));
+dP1=P(RC.Arc2(:,2))-P(RC.Arc2(:,1));
 stnd=size(P,1)-nd;
-dP2=P(stnd+RC.Dc2)-P(stnd+RC.Dr2);
+dP2=P(stnd+RC.Dc2,1)-P(stnd+RC.Dr2,1);
 
 PwNl=repmat(Pw,Nl,1);
 %PwNl=PwNl(ka1==1);
 dPw1=P(Won)-PwNl(WonM);
 dPw2=P(WonD(:,1))-PwNl(WonD(:,3));
 v1=dP1>0;
-TL=TL(RC.Acr2(:,1)+(RC.Acr2(:,2)-1)*na);
+TL=TL(RC.Arc2(:,1)+(RC.Arc2(:,2)-1)*na);
 
 v2=dP2>0;
-DL=DL(RC.Dr2+(RC.Dc2-1)*nd);
+Dl=zeros(0,1);
+Dl=[Dl;DL(RC.Dr2+(RC.Dc2-1)*nd)];
 
 if dt==0
     if (min(Sw(va))>Sc) && (min(Sw(vd))>Sc2)
@@ -28,7 +29,7 @@ if dt==0
         nf=(isnan(MdS)==0);
         dS=max(MdS(nf==1));
       %  dS
-        new_dt=0.005/dS;
+        new_dt=0.01/dS;
         dt=new_dt*dt0;
       %  dt
     else
@@ -39,11 +40,11 @@ if dt==0
         dt12=min([dt1,dt2])/Fc;
         
         dv=dV2(:,1).*(v2==0)+dV2(:,2).*v2;
-        dt3=1./max(abs(DL.*dP2./dv));
+        dt3=1./max(abs(Dl.*dP2./dv));
         dt4=1./max(abs(W1D.*dPw2./dVd(WonD(:,1))));
         dt34=min([dt3,dt4])/Fc2;
         
-        dt=min([dt12,dt34]);
+        dt=min([dt12;dt34(:,1)]);
     end;
     
 

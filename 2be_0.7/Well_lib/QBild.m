@@ -1,4 +1,4 @@
-function Q=QBild(W1,W6,W7,Pi,uf,Won,dt,Pw)
+function Q1=QBild(W1,W6,W7,Pi,uf,Won,dt,Pw,WonM,nw)
 
 dP=(Pi(Won)-Pw)*dt;
 ql=W1.*dP;
@@ -12,4 +12,10 @@ Q(uf==1,3)=ql(uf==1)-qw(uf==1);
 Q(uf==1,4)=0;%qg(uf==-1); 
 Q(uf==1,5)=qp(uf==1); 
  
-
+wn=unique(WonM);
+Q1=zeros(nw,5);
+if numel(W1)~=0
+    for i=1:5
+        Q1(wn,i)=accumarray(WonM,Q(:,i));
+    end
+end

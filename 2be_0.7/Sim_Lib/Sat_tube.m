@@ -24,12 +24,12 @@ aw=aw(1:3);
       %Z=interp1(AA(:,1),AA(:,4-B),x2);
       SW=(x2-Swr)./(1-Sor-Swr);
       if B==2
-          kro=aw(:,2).*(1-SW).^a_s(2);
+          kro=aw(:,2).*(1-SW).^a_s(1,2);
           v1=x2<=(1-Sor);
           v2=x2>Swr;
           Z=kro.*v1.*v2+aw(:,2).*(v2==0);
       elseif B==1
-          krw=aw(:,1).*SW.^a_s(1);
+          krw=aw(:,1).*SW.^a_s(1,1);
           v1=x2<(1-Sor);
           v2=x2>=Swr;
           Z=krw.*v1.*v2+aw(:,1).*(v1==0);

@@ -15,13 +15,13 @@ n1=size(Z);
 %Uf=uf2;
 
 Pw(Uf==1,1)=2;
-Pw(Uf==-1,1)=70;
+Pw(Uf==-1,1)=170;
 % Pw_in=mean(SD.Pw0(a0_h(:,end)==-1));
 % Pw_dob=mean(SD.Pw0(a0_h(:,end)==1));
 
 
 Qz(Uf(1:n(1))==1,1)=0;
-Qz(Uf(1:n(1))==-1,1)=-15*0;
+Qz(Uf(1:n(1))==-1,1)=-150;
 %Qz(:,1)=dob_lik2-zak_lik2;
 
 Uf=repmat(Uf,n1(2),1);

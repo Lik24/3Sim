@@ -83,8 +83,8 @@ PwNl=repmat(Pw,Nl,1);
      Bpg=zeros(size(Bwc));
     
      ndt=1;
-     Q1=zeros(size(WonC(:,3),1),5);
-     Q2=zeros(size(WonG(:,3),1),5);
+     Q1=zeros(nw,5);
+     Q2=zeros(nw,5);
      Qm=zeros(0,5);
  end;
 
