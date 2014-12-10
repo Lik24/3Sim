@@ -82,7 +82,6 @@ vg=na+nc+1:na+nc+ng;
 vd=na+nc+ng+1:na+nc+ng+nd;
 vb=na+nc+ng+nd+1:na+nc+ng+nd+nb;
 
-
 C2G=sparse(nc,ng);     C2GL=C2G;
 C2D=sparse(nc,nd);     C2DL=C2D;
 C2B=sparse(nc,nb);     C2BL=C2B;
@@ -205,12 +204,13 @@ fp=1;
 
         [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dVCG./Mp(:,1),Sw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd,vb,dt);
         
-        %[TL,TW,TP]=Potok_MKT(TM,Pi(1:na,1),kfw(1:na),kfo(1:na),MCp(:,1),mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro,A(va));.
-        [TL,TW,TP]=Potok_Tube(TTM,Pi(1:na,1),MSw,MCp(:,1),PR,mup,fp,kms(1),L,RC.Arc2(:,1),RC.Arc2(:,2),na,A(va));
+        [TL,TW,TP]=Potok_MKT(TM,Pi(va,1),kfw(va),kfo(va),MCp(:,1),mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro,A(va));
+        [TL1,TW1,TP1]=Potok_Tube(TTM,Pi(1:na,1),MSw,MCp(:,1),PR,mup,fp,kms(1),L,RC.Arc2(:,1),RC.Arc2(:,2),na,A(va));
+      %  sum(TL-TL1')
         [CL,~,~]=Potok_Tube(TC,Pi(vc,1),CSw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc));
         [GL,~,~]=Potok_Tube(TG,Pi(vg,1),GSw(:,t),GCp(:,t),PR,mup,fp,kms(3),Lg,RC.Gr2,RC.Gc2,ng,A(vg));
         [DL,DW,DP]=Potok_Tube(TD,Pi(vd,1),DSw(:,1),DCp(:,1),PR,mup,fp,kms(4),Ld,RC.Dr2,RC.Dc2,nd,A(vd));
-        
+  
         [A2CL,~,~]=Obmen_T2M(A2C,Pi(va,1),Pi(vc,1),MSw(:,1),CSw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
         [A2GL,~,~]=Obmen_T2M(A2G,Pi(va,1),Pi(vg,1),MSw(:,1),GSw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
         [A2DL,A2DW,A2DP]=Obmen_T2M(A2D,Pi(va,1),Pi(vd,1),MSw(:,1),DSw(:,1),K(:,1),PR,MCp(:,1),DCp(:,1));

@@ -9,7 +9,7 @@ PR=imp_glb_prm;%Gl_PRM;
 %KX(:)=mean(KX(:));
 XY_GYs=XY_GY;
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z]=Sintetic(PR.Ns,PR.Nl);
-[WData]=Well_DATA(WXY,Z,PR.Ta);
+[WData]=Well_DATA(WXY,Z,PR.Ta,PR.Nl);
 %[WData,Ppwf,Pw_d,Pw_z]=Well_DATA_Adap(WXY,Z,PR.Ta);
 
 [nt,PXY,gXY,PR.dl,tXY,XY_GY]=kvad_crack_fun(XY_GY,PR.Nl,WXY);
@@ -29,7 +29,7 @@ nt=elka(0,PR.Nl,DATA.XY,6,10,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, фл
 gt=Tresh_Gor(0,DATA.XY,PR.Nl);  % 0/1 - выкл/вкл. горизонтальные трещ.
 [GData]=Conek2G(DATA,gt,PR.Nl,CrDATA,WData);
 
-nd=DPorist(1,DATA.XY,PR.Nl); % 0/1 - выкл/вкл. двойная пористость
+nd=DPorist(0,DATA.XY,PR.Nl); % 0/1 - выкл/вкл. двойная пористость
 [DData,~,DATA.gMp]=Conek2D(DATA,nd,PR.Nl,CrDATA,WData);
 
 [Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz]=SimT_MKT(PR,C,A2C,GData,B,A2B,DData,dVc,dVb,DATA,WData,GYData,1,CR_GRUP);

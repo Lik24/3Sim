@@ -117,7 +117,7 @@ function plot_fild(x,y,z,c,Nl,X,Y,WXY,text,XYgy,a0,tn)
 
 
 if Nl==1
-    F=scatteredInterpolant(x(:,1),y(:,1),c(:,1),tn,'none');
+    F=scatteredInterpolant(x(:,1),y(:,1),c(:,1),tn);
     K=F(X,Y);
     [IN,ON]=inpolygon(X(:),Y(:),XYgy(:,1),XYgy(:,2));
     K([IN+ON]==0)=NaN;

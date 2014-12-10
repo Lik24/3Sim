@@ -1,9 +1,9 @@
-function [WData]=Well_DATA(WXY,Z,Ta)
+function [WData]=Well_DATA(WXY,Z,Ta,Nl)
 r0=0.084;
 
 n=size(WXY);
 n1=size(Z);
-%n1(2)=2;
+n1(2)=Nl;
 %load('history_deb_day_ura','a0','dob_lik2','zak_lik2');
 
   %a=rand(n(1),1);

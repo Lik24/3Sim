@@ -150,7 +150,8 @@ dB=dB(p,p);
 S=S(p);
 H1=H1(p,p);
 
-dVb=full(S.*H(p)');
+Hp(:,1)=H(p);
+dVb=full(S.*Hp);
 
 A2B=A2B(:,p);
 

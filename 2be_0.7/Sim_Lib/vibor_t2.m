@@ -1,6 +1,6 @@
 function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2)
-Fc=PR.Fc;
-Fc2=PR.Fc2;
+Fc=PR.Fc*2;
+Fc2=PR.Fc2*2;
 Sc=PR.Sc;
 Sc2=PR.Sc2;
 % Sw=Sw([va,vd]);
@@ -29,7 +29,7 @@ if dt==0
         nf=(isnan(MdS)==0);
         dS=max(MdS(nf==1));
       %  dS
-        new_dt=0.01/dS;
+        new_dt=0.005/dS;
         dt=new_dt*dt0;
       %  dt
     else
