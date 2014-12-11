@@ -1,6 +1,6 @@
 function dt=vibor_t2(dt,P,RC,dV,TL,W1,Won,Pw,na,PR,st,Ta,Sw,Sw2,dt0,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2)
-Fc=PR.Fc*2;
-Fc2=PR.Fc2*2;
+Fc=PR.Fc;
+Fc2=PR.Fc2;
 Sc=PR.Sc;
 Sc2=PR.Sc2;
 % Sw=Sw([va,vd]);
@@ -23,8 +23,14 @@ v2=dP2>0;
 Dl=zeros(0,1);
 Dl=[Dl;DL(RC.Dr2+(RC.Dc2-1)*nd)];
 
+if numel(vd)~=0
+    fl_sw=(min(Sw(va))>Sc)*(min(Sw(vd))>Sc2);
+else
+    fl_sw=(min(Sw(va))>Sc);
+end
+
 if dt==0
-    if (min(Sw(va))>Sc) && (min(Sw(vd))>Sc2)
+    if fl_sw==1
         MdS=abs((Sw2-Sw));
         nf=(isnan(MdS)==0);
         dS=max(MdS(nf==1));

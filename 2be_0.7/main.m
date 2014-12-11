@@ -29,7 +29,7 @@ nt=elka(0,PR.Nl,DATA.XY,6,10,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, фл
 gt=Tresh_Gor(0,DATA.XY,PR.Nl);  % 0/1 - выкл/вкл. горизонтальные трещ.
 [GData]=Conek2G(DATA,gt,PR.Nl,CrDATA,WData);
 
-nd=DPorist(0,DATA.XY,PR.Nl); % 0/1 - выкл/вкл. двойная пористость
+nd=DPorist(1,DATA.XY,PR.Nl); % 0/1 - выкл/вкл. двойная пористость
 [DData,~,DATA.gMp]=Conek2D(DATA,nd,PR.Nl,CrDATA,WData);
 
 [Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz]=SimT_MKT(PR,C,A2C,GData,B,A2B,DData,dVc,dVb,DATA,WData,GYData,1,CR_GRUP);

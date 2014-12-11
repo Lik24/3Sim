@@ -1,4 +1,4 @@
-function [Q,pw,ppl,dtz]=Q2Sut(Qm,Qc,Qg,Pw,PpW,dt1,Ta)
+function [Q,pw,ppl,dtz]=Q2Sut(Qm,Qc,Qg,Qd,Pw,PpW,dt1,Ta)
 
 if Ta<10*365
     dtz=1;
@@ -16,7 +16,10 @@ for i=1:5
     qcs=size(Qg(:,i,:));
     QG(1:qcs(1),1:qcs(3))=Qg(:,i,:);
 
-    Q(:,i,:)=[QM;QC;QG];
+    qcs=size(Qd(:,i,:));
+    QD(1:qcs(1),1:qcs(3))=Qd(:,i,:);
+    
+    Q(:,i,:)=[QM;QC;QG;QD];
 end;
 
 nt=size(dt1,2);

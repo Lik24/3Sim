@@ -204,9 +204,7 @@ fp=1;
 
         [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dVCG./Mp(:,1),Sw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd,vb,dt);
         
-        [TL,TW,TP]=Potok_MKT(TM,Pi(va,1),kfw(va),kfo(va),MCp(:,1),mu,RC.Arc,mup,fp,kms(1),L,Ke,Ro,A(va));
-        [TL1,TW1,TP1]=Potok_Tube(TTM,Pi(1:na,1),MSw,MCp(:,1),PR,mup,fp,kms(1),L,RC.Arc2(:,1),RC.Arc2(:,2),na,A(va));
-      %  sum(TL-TL1')
+        [TL,TW,TP]=Potok_MKT(TTM,Pi(va,1),kfw(va),kfo(va),MCp(:,1),mu,RC.Arc2,mup,fp,kms(1),L,Ke,Ro,A(va));
         [CL,~,~]=Potok_Tube(TC,Pi(vc,1),CSw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc));
         [GL,~,~]=Potok_Tube(TG,Pi(vg,1),GSw(:,t),GCp(:,t),PR,mup,fp,kms(3),Lg,RC.Gr2,RC.Gc2,ng,A(vg));
         [DL,DW,DP]=Potok_Tube(TD,Pi(vd,1),DSw(:,1),DCp(:,1),PR,mup,fp,kms(4),Ld,RC.Dr2,RC.Dc2,nd,A(vd));
@@ -236,7 +234,6 @@ fp=1;
         b1wc=sparse(WonC(:,1),ones(1,size(WonC,1)),-W1C.*Pw(WonC(:,3),ft+1),nc,1);
         b1wg=sparse(WonG(:,1),ones(1,size(WonG,1)),-W1G.*Pw(WNG,ft+1),ng,1);
         b1wd=sparse(WonD(:,1),ones(1,size(WonD,1)),-W1D.*PwNl(WonD(:,3)),nd,1);
-
         
         W2M=sparse(WonM,Won,W1,nw,na);
         W2C=sparse(WonC(:,3),WonC(:,1),W1C,nw,nc);
@@ -385,7 +382,7 @@ DSwj(:,j)=DSw;
 MCpj(:,j)=MCp;
 Tj(:,j)=Ti;
 waitbar(st/Ta)
-[Q,Pw,PpW,dtz]=Q2Sut(Qm,Qc,Qg,Pwt(:,1:t+1),PpW(:,1:t+1),dt1,Ta);
+[Q,Pw,PpW,dtz]=Q2Sut(Qm,Qc,Qg,Qd,Pwt(:,1:t+1),PpW(:,1:t+1),dt1,Ta);
 % GY_Pxy(p)=GY_Pxy;
 % save('GY_Pxy.mat','GY_Pxy')
 %  Bnd_xy(p)=DATA.BndXY;

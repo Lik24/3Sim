@@ -8,7 +8,7 @@ c=rc(:,2);
 
 dP=P(c)-P(r);
 vP=dP>0;
-
+%vP0=dP~=0;
 % Swc=Sw(r);
 % Swl=Sw(c);
 
@@ -38,7 +38,7 @@ To=T.*Kfo1./mu(2);
 
  if kms~=0
      dPL=abs(dP./L((r+(c-1)*n)));
-    %     проверить првильность задания плотности
+    %  проверить првильность задания плотности
     [Tw] = Forh(Tw,kms, Ro(1), Kfw1, Ke, mu(1), dPL);
     [To] = Forh(To,kms, Ro(2), Kfo1, Ke, mu(2), dPL);
 end;
@@ -47,13 +47,13 @@ end;
 % To1=sparse((r+(c-1)*n),ones(size(r)),To,n*n,1);
 
 Twa=Tw.*A(c);
-Tw1a=sparse(r,c,Twa,n,n);
-Tw1=sparse(r,c,Tw,n,n);
-To1=sparse(r,c,To,n,n);
+Tw1a=sparse(r,c,Twa,n,n);     Tw1a=Tw1a+Tw1a';
+Tw1=sparse(r,c,Tw,n,n);       Tw1=Tw1+Tw1';
+To1=sparse(r,c,To,n,n);       To1=To1+To1';
 
-T1=sparse(r,c,abs(dP));
- T1-T1'
- Tw1-Tw1'
+% T1=sparse(r,c,abs(dP),n,n); T1=T1+T1';
+%  T1-T1'
+%  Tw1-Tw1'
 
 TL=To1+Tw1a-sparse(1:n,1:n,sum(To1+Tw1a,2),n,n);
 TW=Tw1-sparse(1:n,1:n,sum(Tw1,2),n,n);

@@ -79,7 +79,7 @@ f=kw/(gam*ko+kw);
 F=diff(f,Sw);
 
 dS=Swr:0.001:(1-Sor);
-fn=(subs(f,dS)-subs(f,0))./(dS-0);
+fn=(subs(f,dS)-subs(f,Swr))./(dS-Swr);
 
 fm=max(eval(fn));%
 fn=eval(fn);
@@ -97,7 +97,7 @@ F=diff(f,Sw);
 
 ds=0.001;
 dS=SwrC:ds:(1-SorC);
-fn=(subs(f,dS)-subs(f,0))./(dS-0);
+fn=(subs(f,dS)-subs(f,SwrC))./(dS-SwrC);
 fm=max(eval(fn));%
 fn=eval(fn);
 
