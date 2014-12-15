@@ -56,9 +56,9 @@ Bg=zeros(size(A2G,2),1);
 Blc=zeros(size(A2C,2),1);
 Blg=zeros(size(A2G,2),1);
 
-Q1=zeros(size(WonC(:,3),1),5);
-Q2=zeros(size(WonG(:,3),1),5);
-Qm=zeros(size(won,1),5);
+Q1=zeros(nw,5);
+Q2=zeros(nw,5);
+Qm=zeros(nw,5);
 
  v1=zeros(na,1);
  v1([RC.ACr;RC.AGr])=1;
@@ -229,9 +229,9 @@ Pg=Pj(Na+nc+1:Na+nc+ng);
 Pa(v1==1)=Pj(1:Na);
 Pi=[Pa;Pc;Pg];
 
-Qm(:,:)=Qm+QBild(W1,W6,W7,Pj(1:Na),Uf(wn),won,dt/ndt,Pw(wn));
-Q1(:,:)=Q1+QBild(W1C,W6C,W7C,Pj(Na+1:Na+nc,1),Uf(WonC(:,3)),WonC(:,1),dt/ndt,Pw(WonC(:,3)));
-Q2(:,:)=Q2+QBild(W1G,W6G,W7G,Pj(vga,1),Uf(WonG(:,3)),WonG(:,1),dt/ndt,Pw(WonG(:,3)));
+Qm(:,:)=Qm+QBild(W1,W6,W7,Pj(1:Na),Uf(wn),won,dt/ndt,Pw(wn),wn,nw);
+Q1(:,:)=Q1+QBild(W1C,W6C,W7C,Pj(Na+1:Na+nc,1),Uf(WonC(:,3)),WonC(:,1),dt/ndt,Pw(WonC(:,3)),WonC(:,1),nw);
+Q2(:,:)=Q2+QBild(W1G,W6G,W7G,Pj(vga,1),Uf(WonG(:,3)),WonG(:,1),dt/ndt,Pw(WonG(:,3)),WonG(:,1),nw);
 %SCwC(Na+1:Na+nc)-1
 ndtI(i)=ndt;
 end;

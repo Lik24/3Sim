@@ -1,7 +1,7 @@
 function [Sw,Cp,ndt,Q1,Q2,Qm,tmp]=Sat_fast_2(Sw,Cp,RC,TC,TG,A2C,A2G,Pi,PR,...
     ndt0,Won,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,Qz,Qf,Pi0,TL,W1,TW,W6,TP,...
     W7,L,Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qzm1,WonM,nw,b1gm,b1gd,GYData,...
-    Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WoD,A2DW,A2DP)
+    Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WoD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb)
 
 na=RC.na;
 nc=RC.nc;
@@ -9,6 +9,7 @@ ng=RC.ng;
 nd=RC.nd;
 nb=RC.nb;
 vad=RC.ADr;
+b1wb=sparse(nb,1);
 
 va=1:na;
 vc=na+1:na+nc;
@@ -33,14 +34,14 @@ PwNl=repmat(Pw,Nl,1);
      
      
      b1wm=sparse(Won,ones(1,size(Won,1)),-W1.*PwNl,na,1);
-     b1wd=sparse(WoD(:,1),ones(1,size(WoD,1)),-W1D.*PwNl,na,1);
+     b1wd=sparse(WoD(:,1),ones(1,size(WoD,1)),-W1D.*PwNl(WoD(:,3)),nd,1);
      
      W2M=sparse(WonM,Won,W1,nw,na);
      W2D=sparse(WoD(:,3),WoD(:,1),W1D,nw,nd);
      W2B=sparse(nw,nb);
 
      b1wm=b1wm.*(sum(W2M(Qf==0,:),1)~=0)';
-     b1wd=b1wd.*(sum(W2M(Qf==0,:),1)~=0)';
+     b1wd=b1wd.*(sum(W2D(Qf==0,:),1)~=0)';
      
      WM1=[W2M,W2D,W2B];
      WM2=WM1';
@@ -49,12 +50,12 @@ PwNl=repmat(Pw,Nl,1);
   
      Qf=Qzm1<0;
             
-     bl=[b1wm,b1wd,b1wb]'+BLGY_GIM;
-     Bl=bl'-sparse(r,ones(sum(v1),1),Blc,na+nd+nb,1)/dt-sparse(r,ones(sum(v1),1),Blg,na+nd+nb,1)/dt;
+     bl=[b1wm;b1wd;b1wb]+BLGY_GIM;
+     Bl=bl-sparse(r,ones(sum(v1),1),Blc,na+nd+nb,1)/dt-sparse(r,ones(sum(v1),1),Blg,na+nd+nb,1)/dt;
      
-     A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,Clp(va)+sum(b1gm(:,1:2))+sum(A2DL,2),na,na);
-     D1=DL-sparse(1:nd,1:nd,sum(A2DL,1)+Clp(vd)'+sum(b1gd(:,1:2)),nd,nd)-sparse(WoD(:,1),WoD(:,1),W1D,nd,nd);                       %Матрица коэф. для двойной пор.
-     B1=BB-sparse(1:nb,1:nb,sum(A2BL,1)+Clp(vb)'+b1gb,nb,nb);
+     A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,Clp(va)+sum(b1gm(:,1:2),2)+sum(A2DL,2),na,na);
+     D1=DL-sparse(WoD(:,1),WoD(:,1),W1D,nd,nd)-sparse(1:nd,1:nd,Clp(vd)+sum(b1gd(:,1:2),2)+sum(A2DL,1)',nd,nd);                       %Матрица коэф. для двойной пор.
+     B1=BB-sparse(1:nb,1:nb,sum(A2BL,1)+sum(D2BL,1)+Clp(vb)'+b1gb',nb,nb);
         
      AM=[A1,   A2DL, A2BL;
         A2DL',  D1,  D2BL;
@@ -63,7 +64,7 @@ PwNl=repmat(Pw,Nl,1);
      W2M=W2M(Qf~=0,:);
      WM2=WM2(:,Qf~=0);
      WM3=WM3(Qf~=0,Qf~=0);
-     Qzm1(CR_cr.wn)=(Qm(:,1)+Qm(:,2))/dt;
+     Qzm1(CR_cr.wn)=(Qm(CR_cr.wn,1)+Qm(CR_cr.wn,2))/dt;
      Pt=[Bl',Qzm1(Qf~=0)']/[AM,WM2;W2M,WM3];
      
      Pi(va)=Pt(va)';
