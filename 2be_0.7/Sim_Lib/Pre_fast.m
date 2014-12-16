@@ -1,4 +1,5 @@
-function [TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D,dV1,dV2,TTM]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K,KeGY,BndXY,BndZ,nb,dV)
+function [TM,TC,TG,TD,TA2C,TA2G,TA2D,TD2C,TD2G,RC,Txyz_GY_A,Txyz_GY_D,dV1,dV2,TTM]=Pre_fast(A,C,G,D,A2C,...
+    A2G,A2D,C2G,D2C,D2G,Ke,L,B,S,H1,K,Kd,KeGY,BndXY,BndZ,nb,dV)
 na=size(A,1); 
 nc=size(C,1); 
 ng=size(G,1); 
@@ -12,6 +13,8 @@ nd=size(D,1);
   [r6,c6]=find(A2G);
   [r7,c7]=find(C2G);
   [r8,c8]=find(A2D);
+  [r9,c9]=find(D2C);
+  [r10,c10]=find(D2G);
      
   RC.rc(:,1)=[r;r2+na;c5+na;r5;r3+na+nc;c6+nc+na;r6];
   RC.rc(:,2)=[c;c2+na;r5;c5+na;c3+na+nc;r6;c6+nc+na];
@@ -78,6 +81,14 @@ RC.CGc=c7;
 %TA2G=A2G(r4+(c4-1)*na).*K(r4);
 RC.ADr=r8;
 RC.ADc=c8;
+
+TD2C=D2C(r9+(c9-1)*nc).*Kd(r9);
+RC.DCr=r9;
+RC.DCc=c9;
+
+TD2G=D2G(r10+(c10-1)*ng).*Kd(r10);
+RC.DGr=r10;
+RC.DGc=c10;
 
 RC.na=na;
 RC.nc=nc;

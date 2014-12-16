@@ -16,6 +16,8 @@ wn=unique(WonM);
 Q1=zeros(nw,5);
 if numel(W1)~=0
     for i=1:5
-        Q1(wn,i)=accumarray(WonM,Q(:,i));
+        for j=1:size(wn,1)
+        Q1(wn(j),i)=sum(Q(wn(j)==WonM,i));
+        end
     end
 end
