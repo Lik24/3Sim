@@ -1,4 +1,4 @@
-function [DData,CR_GRUP,Mp]=Conek2D(DATA,NLT,Nl,CrDATA,WData)
+function [DData,CR_GRUP,Mp]=Conek2D(DATA,NLT,Nl,CrDATA,WData,A2C,A2G)
 
 XY=DATA.XY;
 Won=DATA.Won;
@@ -69,7 +69,8 @@ for l=1:Nl
         H1=H(unt,:);     H2=H1(:,unt);
         HV1=HV(unt);   
         B1=B(unt,:);     B2=B1(:,unt);
-        S2=S(unt);   
+        S2=S(unt);
+        K2=K1(unt);
         KK1=KK(unt,:);  KK2=KK1(:,unt);
     
         A2A=A(unt,:);   A2A(:,unt)=0;
@@ -104,6 +105,7 @@ for l=1:Nl
         dVd=S2.*HV1;
         
         dVB(i)={dVd};
+        KB(i)={K2};
         A2DB(i)={A2D};
         Cr_grup(i)={[i*ones(size(D,1),1),l*ones(size(D,1),1)]};
         sntl=sntl+size(unt,2);
@@ -133,6 +135,7 @@ for l=1:Nl
     
     A2D_L(l)={cell2mat(A2DB')};
     dV_L(l)={cell2mat(dVB)};
+    K1_L(l)={cell2mat(KB)};
     CR_grup(l)={cell2mat(Cr_grup)};
 end;
 
@@ -142,6 +145,7 @@ end;
     
     A2D=cell2mat(A2D_L');
     dVd=cell2mat(dV_L);
+    Kd=cell2mat(K1_L);
     CR_GRUP=cell2mat(CR_grup');
     D=cell2mat(C_cell);
     L=cell2mat(L_cell);
@@ -153,6 +157,7 @@ end;
         K=K(ka==1,ka==1);
         A2D=A2D(:,ka==1);
         dVd=dVd(ka==1);
+        Kd=Kd(ka==1);
     else
        D=zeros(0,0);
        L=zeros(0,0);
@@ -179,6 +184,7 @@ end;
     A2D=A2D(:,p);
     A2D=A2D(ka==1,:);
     dVd=dVd(p);
+    Kd=Kd(p);
     CR_GRUP=CR_GRUP(p,:);
     for i=1:size(WonV,1)
         WonV(i,1)=find(WonV(i,1)==p);
@@ -195,9 +201,12 @@ end;
     Mp_d=Mp_d(p);
     Mp=(1-ddol).*Mp;
        
-    
+            
 DData.D=D;
+DData.Kd=Kd;
 DData.A2D=A2D;
+DData.C2D=D_Conect(A2D,A2C);
+DData.G2D=D_Conect(A2D,A2G);
 DData.dVd=dVd;
 DData.pd=p;
 DData.Won=WonV;
@@ -224,4 +233,21 @@ end;
 
 C=cell2mat(cb);
 C={C};
+end
+function D2C=D_Conect(A2D,A2C)
+ [r1,c1]=find(A2D);
+ [r2,c2]=find(A2C);
+ n1=size(A2C,2);
+ n2=size(A2D,2);
+ A1=sum(A2D,2);
+ A2=sum(A2C,2);
+ A=A1.*A2;
+ r=find(A);
+ R=[];
+ C=[];
+  for i=1:size(r,1)
+      C(i)=c2(r(i)==r2);
+      R(i)=c1(r(i)==r1);
+  end
+  D2C=sparse(C,R,1,n1,n2);
 end

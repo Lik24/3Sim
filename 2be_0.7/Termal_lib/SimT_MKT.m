@@ -83,12 +83,13 @@ vd=na+nc+ng+1:na+nc+ng+nd;
 vb=na+nc+ng+nd+1:na+nc+ng+nd+nb;
 
 C2G=sparse(nc,ng);     C2GL=C2G;
-C2D=sparse(nc,nd);     C2DL=C2D;
 C2B=sparse(nc,nb);     C2BL=C2B;
-G2D=sparse(ng,nd);     G2DL=G2D;
 G2B=sparse(ng,nb);     G2BL=G2B;
 D2B=sparse(nd,nb);    
 b1wb=sparse(nb,1);
+
+C2D=DData.C2D;     C2DL=C2D;
+G2D=DData.G2D;     G2DL=G2D;
 
 WonM=repmat(1:nw,1,Nl)';
 WW=WonM~=0;
@@ -112,7 +113,8 @@ BCp(:,1)=zeros(nb,1);
 dVCG=[dV;dVC;dVG;dVD.*Mp_d;dVB];
 dV0=[dV;dVC;dVG;dVD.*Mp_d];
 
-[TM,TC,TG,TD,TA2C,TA2G,TA2D,RC,Txyz_GY_A,Txyz_GY_D,dV1,dV2,TTM]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,Ke,L,B,S,H1,K(:,1),Ke_gy,BndXY(p),BndZ(p),nb,dVCG);
+[TM,TC,TG,TD,TA2C,TA2G,TA2D,TD2C,TD2G,RC,Txyz_GY_A,Txyz_GY_D,dV1,dV2,TTM]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,C2D,G2D,...
+    Ke,L,B,S,H1,K(:,1),DData.Kd,Ke_gy,BndXY(p),BndZ(p),nb,dVCG);
 vad=RC.ADr;
 CSw(:,1)=MSw(RC.ACr,1);
 GSw(:,1)=MSw(RC.AGr,1);
@@ -135,7 +137,8 @@ j=0;
 Pwt=zeros(size(Pw));
 PpW=zeros(size(Uf));
 
-[CR_rc]=Pre_Crack(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
+% [CR_rc]=Pre_Crack1(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
+[CR_rc]=Pre_Crack(RC,na,nd,TTM,TD,A2C,A2G,C2D,G2D,Wf,Won,WonM,WonD);
 %[CR_ind]=Pre_Crack_p(RC,na,TM,Wf,Won,WonM,nw,CR_GRUP,C,G,A2C,A2G,K(:,1),WonC,WonG);
 [CR]=SS_ind(RC,na);
 
@@ -211,9 +214,13 @@ fp=1;
   
         [A2CL,~,~]=Obmen_T2M(A2C,Pi(va,1),Pi(vc,1),MSw(:,1),CSw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
         [A2GL,~,~]=Obmen_T2M(A2G,Pi(va,1),Pi(vg,1),MSw(:,1),GSw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
+       
         [A2DL,A2DW,A2DP]=Obmen_T2M(A2D,Pi(va,1),Pi(vd,1),MSw(:,1),DSw(:,1),K(:,1),PR,MCp(:,1),DCp(:,1));
         [A2BL,A2BW,A2BP]=Obmen_T2M(A2B,Pi(va,1),Pi(vb,1),MSw(:,1),BSw(:,1),ones(na,1),PR,MCp(:,1),BCp(:,1));
         [D2BL,D2BW,D2BP]=Obmen_T2M(D2B,Pi(vd,1),Pi(vb,1),DSw(:,1),BSw(:,1),K(:,1),PR,DCp(:,1),BCp(:,1));
+        
+        [C2DL,~,~]=Obmen_T2M(C2D,Pi(vc,1),Pi(vd,1),CSw(:,1),DSw(:,t),K(:,1),PR,CCp(:,1),DCp(:,t));
+        [G2DL,~,~]=Obmen_T2M(G2D,Pi(vg,1),Pi(vd,1),GSw(:,1),DSw(:,t),K(:,1),PR,GCp(:,1),DCp(:,t));
         
         %Wf=Wf0.*(1-0.0001*(P0(Won)-Pi(Won))).^3;
         [W1,W6,W7]=Well_MKT(Wf,Won,Uf(WonM,ft+1),MSw(:,1),MCp(:,1),aw,as,mu,mup,CpW(WonM,ft+1),A(va));
@@ -304,7 +311,7 @@ fp=1;
  Qf=Qz1;
  Sw0=Sw;
 
- [Sw,Cp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(Sw,Cp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...
+ [Sw,Cp,NDT(t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_2(Sw,Cp,RC,TC,TG,TA2C,TA2G,TA2D,TD2C,TD2G,Pi(:,1),PR,ndt,Won,...
      Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
      W7,L,DATA.Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,b1gd,GYData,Clp,ka1,...
      W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WonD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb);
