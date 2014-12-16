@@ -135,7 +135,7 @@ j=0;
 Pwt=zeros(size(Pw));
 PpW=zeros(size(Uf));
 
-[CR_rc]=Pre_Crack(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
+[CR_rc]=Pre_Crack(RC,na,TM,TD,A2C,A2G,Wf,Won,WonM,nw);
 %[CR_ind]=Pre_Crack_p(RC,na,TM,Wf,Won,WonM,nw,CR_GRUP,C,G,A2C,A2G,K(:,1),WonC,WonG);
 [CR]=SS_ind(RC,na);
 

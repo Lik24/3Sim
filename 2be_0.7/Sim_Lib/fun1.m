@@ -23,6 +23,7 @@ rc_in_h=CR_rc.rc_in_h;
 T_gy=CR_rc.T_gy;
 %T_in=CR_rc.T_in;
 T_in_h=CR_rc.T_in_h;
+TD_in_h=CR_rc.D_in_h;
 
 won=CR_rc.won;    wf=CR_rc.wf;  wn1=CR_rc.wn1;   wn=CR_rc.wn;
 
@@ -108,6 +109,7 @@ i=i+1;
      [TL2,TW2]=Potok_MKT_2(T_in_h,vPa1,SCp(va),mu,rc_in_h,na,Kfw,Kfo,kms(1),dPa,L,Ro,Ke);
      [CL,CW]=Potok_Tube_2(TC,Pc,vPc1,vPc2,kfw(vca),kfo(vca),SCp(vc),PR,RC.Cr2,RC.Cc2,kms(2),dPc,Lc,nc);
      [GL,GW]=Potok_Tube_2(TG,Pg,vPg1,vPg2,kfw(vga),kfo(vga),SCp(vg),PR,RC.Gr2,RC.Gc2,kms(3),dPg,Lg,ng);
+     [DL2,DW2]=Potok_MKT_2(TD_in_h,vPd1,SCp(vd),mu,rc_in_h,nd,kfw(vda),kfo(vda),kms(4),dPd,L,Ro,Ke);
 
      Pa11=Pi(va(v1==1));
      Cp11=SCp(va(v1==1));
