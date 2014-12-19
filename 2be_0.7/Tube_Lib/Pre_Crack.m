@@ -1,9 +1,18 @@
-function [CR_rc]=Pre_Crack(RC,na,nd,TM,TD,A2C,A2G,D2C,D2G,Wf,Won,WonM,WonD)
+function [CR_rc]=Pre_Crack(RC,na,nd,TM,TD,A2C,A2G,D2C,D2G,A2D,Wf,Won,WonM,WonD)
 WonM=[Won,Wf,WonM];
 
  CR_rc(1,1)=conct2mat(na,RC.ACr,RC.AGr,RC.Arc2(:,1),RC.Arc2(:,2),TM,A2C,A2G,WonM);
  CR_rc(1,2)=conct2mat(nd,RC.DCc,RC.DGc,RC.Dr2,RC.Dc2,TD,D2C',D2G',WonD);
  
+ v1=CR_rc(1,1).v;
+ v2=CR_rc(1,2).v;
+ a2d=A2D;
+ a2d(v1==0,:)=[];
+ a2d(:,v2==0)=[];
+ [r,c,val]=find(a2d);
+ CR_rc(1,3).r=r;
+ CR_rc(1,3).c=c;
+ CR_rc(1,3).a2d=val;
 end
 
 function [CR_rc,won]=conct2mat(n,inc,ing,r,c,T,A2C,A2G,WoM)
@@ -63,5 +72,22 @@ function [CR_rc,won]=conct2mat(n,inc,ing,r,c,T,A2C,A2G,WoM)
      CR_rc.T_in_h=T_in_h;
 
      CR_rc.v=v;
+end
 
+function D2C=D_Conect(A2D,A2C)
+ [r1,c1]=find(A2D);
+ [r2,c2]=find(A2C);
+ n1=size(A2C,2);
+ n2=size(A2D,2);
+ A1=sum(A2D,2);
+ A2=sum(A2C,2);
+ A=A1.*A2;
+ r=find(A);
+ R=[];
+ C=[];
+  for i=1:size(r,1)
+      C(i)=c2(r(i)==r2);
+      R(i)=c1(r(i)==r1);
+  end
+  D2C=sparse(C,R,1,n1,n2);
 end

@@ -1,4 +1,4 @@
-function [Bc,Bg,Blc,Blg,Swc,Swg,i,Q1,Q2,Qm,dSS]=fun1(RC,Pi,SW,Cp,PR,TC,TG,A2C,A2G,A2D,D2C,D2G,WonC,...
+function [Bc,Bg,Blc,Blg,CSw,GSw,i,Q1,Q2,Qm,dSS]=fun1(RC,Pi,SW,Cp,PR,TC,TG,A2C,A2G,A2D,D2C,D2G,WonC,...
     WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke)
 
 as=PR.as;
@@ -13,9 +13,12 @@ Na=RC.na;
 nc=RC.nc;
 ng=RC.ng;
 Nd=RC.nd;
+C2G=sparse(nc,ng);     C2GL=C2G;  C2GW=C2G;
 
 [v1,wom,r1,c1,r2,c2,rc_gy,rc_in_h,T_gy,T_in]=ext_cr(CR_rc(1,1));
 [v2,wod,r1d,c1d,r2d,c2d,rc_gy_d,rc_in_hd,T_gy_d,TD_in]=ext_cr(CR_rc(1,2));
+A2D=CR_rc(1,3).a2d;
+r3=CR_rc(1,3).r;    c3=CR_rc(1,3).c;
 
 v_a=1:Na;
 v_c=Na+1:Na+nc;
@@ -47,8 +50,6 @@ vP2=Pa(RC.AGr)>=Pg(RC.AGc);
     Fl=fl1*fl2;
     
 %%
-C2G=sparse(nc,ng);
-C2GW=C2G;
 
 Bc=zeros(size(A2C,2),1);
 Bg=zeros(size(A2G,2),1);
@@ -58,8 +59,9 @@ Blg=zeros(size(A2G,2),1);
 Q1=zeros(nw,5);
 Q2=zeros(nw,5);
 Qm=zeros(nw,5);
+Qd=zeros(nw,5);
 
-Pj(:,1)=[Pi(v1==1);Pc;Pg;Pd(v2==1);];
+Pj(:,1)=[Pa(v1==1);Pc;Pg;Pd(v2==1);];
 Sw=[MSw(v1==1);SW(v_c);SW(v_g);DSw(v2==1)];
 
 Pgy=Pa(rc_gy(:,1));
@@ -113,7 +115,7 @@ i=i+1;
      
      [A2CL,A2CW]=Obmen_T2M_2(A2C,Pa1,Pc,mu,Cp1,Cp(v_c),r1,RC.ACc,KFA,KFC);
      [A2GL,A2GW]=Obmen_T2M_2(A2G,Pa1,Pg,mu,Cp1,Cp(v_g),r2,RC.AGc,KFA,KFG);
-     [A2DL,A2DW]=Obmen_T2M_2(A2D,Pa1,Pd,mu,Cp1,Cp(v_d),r2d,RC.ADc,KFA,KFD);
+     [A2DL,A2DW]=Obmen_T2M_2(A2D,Pa1,Pd1,mu,Cp1,Cp1d,r3,c3,KFA,KFD);
      
      [D2CL,D2CW]=Obmen_T2M_2(D2C,Pd1,Pc,mu,Cp1d,Cp(v_c),c1d,RC.DCr,KFD,KFC);
      [D2GL,D2GW]=Obmen_T2M_2(D2G,Pd1,Pg,mu,Cp1d,Cp(v_g),c2d,RC.DGr,KFD,KFG);
@@ -131,12 +133,16 @@ i=i+1;
 
      A2CL=sparse(r1,RC.ACc,A2CL,na,nc);
      A2GL=sparse(r2,RC.AGc,A2GL,na,ng);
-     A2DL=sparse(r2d,RC.ADc,A2DL,na,nd);
+     A2DL=sparse(r3,c3,A2DL,na,nd);
+     D2CL=sparse(r1d,RC.DCr,D2CL,nd,nc);
+     D2GL=sparse(r2d,RC.DGr,D2GL,nd,ng);
      
      A2CW=sparse(r1,RC.ACc,A2CW,na,nc);
      A2GW=sparse(r2,RC.AGc,A2GW,na,ng);
-     A2DW=sparse(r2d,RC.ADc,A2DW,na,nd);
-
+     A2DW=sparse(r3,c3,A2DW,na,nd);
+     D2CW=sparse(r1d,RC.DCr,D2CW,nd,nc);
+     D2GW=sparse(r2d,RC.DGr,D2GW,nd,ng);
+     
      C1=CL1-sparse(1:nc,1:nc,sum(CL1,1)+sum(A2CL,1),nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);
      G1=GL1-sparse(1:ng,1:ng,sum(GL1,1)+sum(A2GL,1),ng,ng)-sparse(WonG(:,1),WonG(:,1),W1G,ng,ng);
      
@@ -156,11 +162,11 @@ i=i+1;
      D1=DL2-sparse(1:nd,1:nd,sum(DL2,2)+sum(D2CL,2)+sum(D2GL,2)+sum(A2DL,2)+bDl',nd,nd)-sparse(wod(:,1),wod(:,1),W1,nd,nd);
   
      AMC1=[A1,   A2CL,  A2GL,   A2DL;
-          A2CL',  C1,   C2GL,   C2DL;
-          A2GL', C2GL',  G1,    G2DL;
-          A2DL', C2DL', G2DL',   D1];
+          A2CL',  C1,   C2GL,   D2CL';
+          A2GL', C2GL',  G1,    D2GL';
+          A2DL', D2CL, D2GL,   D1];
 
-    ba1=sparse(wom,ones(1,size(wom,1)),-W1.*Pw(wom(:,1)),Na,1);
+    ba1=sparse(wom(:,1),ones(1,size(wom,1)),-W1.*Pw(wom(:,3)),na,1);
     bc1=sparse(WonC(:,1),ones(1,size(WonC,1)),-W1C.*Pw(WonC(:,3)),nc,1);
     bg1=sparse(WonG(:,1),ones(1,size(WonG,1)),-W1G.*Pw(WonG(:,3)),ng,1);
     bd1=sparse(wod(:,1),ones(1,size(wod,1)),-W1D.*Pw(wod(:,3)),nd,1);
@@ -177,21 +183,21 @@ i=i+1;
     
     WM1=[W2M,W2C,W2G,W2D];
     WM2=WM1';
-    W3vec=sparse(wn,1,W1,nw,1)+sparse(WonC(:,3),1,W1C,nw,1)+sparse(WonG(:,3),1,W1G,nw,1)+sparse(WonD(:,3),1,W1D,nw,1);
+    W3vec=sparse(wom(:,3),1,W1,nw,1)+sparse(WonC(:,3),1,W1C,nw,1)+sparse(WonG(:,3),1,W1G,nw,1)+sparse(wod(:,3),1,W1D,nw,1);
     WM3=-sparse(1:nw,1:nw,W3vec,nw,nw); 
     %WM1(Qz~=0,:)
    % full([Qz(wn(Qf~=0)),W3vec(wn(Qf~=0)),Pw(wn(Qf~=0))])
 
-    WM1=WM1(wn1(Qf~=0),:);
-    WM2=WM2(:,wn1(Qf~=0));
-    WM3=WM3(wn1(Qf~=0),wn1(Qf~=0));
+    WM1=WM1(wom(Qf~=0,3),:);
+    WM2=WM2(:,wom(Qf~=0,3));
+    WM3=WM3(wom(Qf~=0,3),wom(Qf~=0,3));
 
-    BC1=[ba1-bl';bc1;bg1;bd1-bld]';
+    BC1=[ba1-bl';bc1;bg1;bd1-bld']';
 
-     Pt=[BC1,Qz(wn1(Qf~=0))']/[AMC1,WM2;WM1,WM3];
+     Pt=[BC1,Qz(wom(Qf~=0,3))']/[AMC1,WM2;WM1,WM3];
      Pj(:,1)=Pt(1:na+nc+ng+nd);
 
-     Pw(wn1(Qf~=0))=Pt(na+nc+ng+nd+1:end);
+     Pw(wom(Qf~=0,3))=Pt(na+nc+ng+nd+1:end);
 
      TW2=TW2(:,v1==1);
      TW2=TW2(v1==1,:);
@@ -203,11 +209,11 @@ i=i+1;
      D2=DW2-sparse(1:nd,1:nd,sum(DW2,2)+sum(D2CW,2)+sum(D2GW,2)+sum(A2DW,2)+bDw',nd,nd)-sparse(wod(:,1),wod(:,1),W6D,nd,nd);
      
      AMC2=[A2,   A2CW,  A2GW,   A2DW;
-          A2CW',  C2,   C2GW,   C2DW;
-          A2GW', C2GW',  G2,    G2DW;
-          A2DW', C2DW', G2DW',   D2];
+          A2CW',  C2,   C2GW,   D2CW';
+          A2GW', C2GW',  G2,    D2GW';
+          A2DW', D2CW, D2GW,   D2];
      
-     ba2=sparse(wom(:,1),ones(1,size(wom,1)),W6.*Pw(wn),Na,1);
+     ba2=sparse(wom(:,1),ones(1,size(wom,1)),W6.*Pw(wom(:,3)),na,1);
      bc2=sparse(WonC(:,1),ones(1,size(WonC,1)),W6C.*Pw(WonC(:,3)),nc,1);
      bg2=sparse(WonG(:,1),ones(1,size(WonG,1)),W6G.*Pw(WonG(:,3)),ng,1);
      bd2=sparse(wod(:,1),ones(1,size(wod,1)),W6D.*Pw(wod(:,3)),nd,1);
@@ -224,13 +230,13 @@ i=i+1;
      Sw=Sw.*(Sw>=0).*(Sw<=1)+(Sw>1);
 %fghgfh
      
-     SW0(na+1:end)=Sw1(Na+1:end);
-     SW(na+1:end)=Sw(Na+1:end);
+     SW0([v_c,v_g])=Sw1([vc,vg]);
+     SW([v_c,v_g])=Sw([vc,vg]);
      
       %hj(:,i)=SCw(vc);
 
-Bc=Bc+(A2CW*Pj(vc)-sum(A2CW,2).*Pj(va)+D2CW*Pj(vd)-sum(D2CW,2).*Pj(v_d))*dt/ndt;
-Blc=Blc+(A2CL*Pj(Na+1:Na+nc)-sum(A2CL,2).*Pj(1:Na)+D2CL*Pj(Na+nc+ng+1:Na+nc+ng+Nd)-sum(D2CL,2).*Pj(v_d))*dt/ndt;
+Bc=Bc+(A2CW*Pj(vc)-sum(A2CW,2).*Pj(va)+D2CW*Pj(vc)-sum(D2CW,2).*Pj(vd))*dt/ndt;
+Blc=Blc+(A2CL*Pj(vc)-sum(A2CL,2).*Pj(va)+D2CL*Pj(vc)-sum(D2CL,2).*Pj(vd))*dt/ndt;
 
 if isempty(c2)==0
     Bg=Bg+(A2GW*Pj(Na+nc+1:end)-sum(A2GW,2).*Pj(1:Na)+D2GW*Pj(Na+nc+1:end)-sum(D2GW,2).*Pj(v_d))*dt/ndt;
@@ -239,16 +245,17 @@ end;
 
 % full([Pj(won)<Pw(wn),Uf(wn)])
 % dfgh
-Pc=Pj(Na+1:Na+nc);
-Pg=Pj(Na+nc+1:Na+nc+ng);
+Pc=Pj(vc);
+Pg=Pj(vg);
 
-Pa(v1==1)=Pj(1:Na);
-Pi=[Pa;Pc;Pg];
+Pa(v1==1)=Pj(va);
+Pd(v2==1)=Pj(vd);
+Pi=[Pa;Pc;Pg;Pd];
 
-Qm(:,:)=Qm+QBild(W1,W6,W7,Pj(va),Uf(wom(:,3)),wom,dt/ndt,Pw(wom(:,3)),wom(:,1),nw);
-Q1(:,:)=Q1+QBild(W1C,W6C,W7C,Pj(vc),Uf(WonC(:,3)),WonC(:,1),dt/ndt,Pw(WonC(:,3)),WonC(:,1),nw);
-Q2(:,:)=Q2+QBild(W1G,W6G,W7G,Pj(vg),Uf(WonG(:,3)),WonG(:,1),dt/ndt,Pw(WonG(:,3)),WonG(:,1),nw);
-Qd(:,:)=Qd+QBild(W1D,W6D,W7D,Pj(vd),Uf(wod(:,3)),wod(:,1),dt/ndt,Pw(wod(:,3)),wod(:,1),nw);
+Qm(:,:)=Qm+QBild(W1,W6,W7,Pj(va),Uf(wom(:,3)),wom(:,1),dt/ndt,Pw(wom(:,3)),wom(:,3),nw);
+Q1(:,:)=Q1+QBild(W1C,W6C,W7C,Pj(vc),Uf(WonC(:,3)),WonC(:,1),dt/ndt,Pw(WonC(:,3)),WonC(:,3),nw);
+Q2(:,:)=Q2+QBild(W1G,W6G,W7G,Pj(vg),Uf(WonG(:,3)),WonG(:,1),dt/ndt,Pw(WonG(:,3)),WonG(:,3),nw);
+Qd(:,:)=Qd+QBild(W1D,W6D,W7D,Pj(vd),Uf(wod(:,3)),wod(:,1),dt/ndt,Pw(wod(:,3)),wod(:,3),nw);
 %SCwC(Na+1:Na+nc)-1
 ndtI(i)=ndt;
 end;
@@ -257,11 +264,11 @@ end;
 %Bc(r1)=Bc;
 %hj-1
 
-dSS=sum((Sw(Na+1:end)-Sw0(Na+1:end)).*[dVc;dVg])+sum(Q1(:,1))+sum(Bc);
+dSS=sum((Sw([vc,vg])-Sw0([vc,vg])).*[dVc;dVg])+sum(Q1(:,1))+sum(Bc);
 %sum((SCwC(Na+1:end)-Sw0(Na+1:end)).*[dVc;dVg])
 
-Swc=Sw(Na+1:Na+nc);
-Swg=Sw(Na+nc+1:Na+nc+ng);
+CSw=Sw(vc);
+GSw=Sw(vg);
 end
 function [v,won,r1,c1,r2,c2,rc_gy,rc_in_h,T_gy,T_in_h]=ext_cr(CR_rc)
 r1=CR_rc.r1;     c1=CR_rc.c1;

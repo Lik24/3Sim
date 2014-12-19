@@ -61,15 +61,15 @@ PwNl=repmat(Pw,Nl,1);
         A2DL',  D1,  D2BL;
         A2BL', D2BL', B1];
      
-     W2M=W2M(Qf~=0,:);
+     WM1=WM1(Qf~=0,:);
      WM2=WM2(:,Qf~=0);
      WM3=WM3(Qf~=0,Qf~=0);
-     Qzm1(CR_cr.wn)=(Qm(CR_cr.wn,1)+Qm(CR_cr.wn,2))/dt;
-     Pt=[Bl',Qzm1(Qf~=0)']/[AM,WM2;W2M,WM3];
+     Qzm1(CR_cr(1,1).won(:,3))=(Qm(CR_cr(1,1).won(:,3),1)+Qm(CR_cr(1,1).won(:,3),2))/dt;
+     Pt=[Bl',Qzm1(Qf~=0)']/[AM,WM2;WM1,WM3];
      
      Pi(va)=Pt(va)';
-     Pi(vd)=Pt(vd)';
-     Pi(vb)=Pt(vb)';
+     Pi(vd)=Pt(vd-na)';
+     Pi(vb)=Pt(vb-na-nd)';
      PwNl(Qf~=0)=Pt(na+nd+nb+1:end);
      
      %временно
