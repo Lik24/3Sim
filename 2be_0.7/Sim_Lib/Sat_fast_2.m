@@ -1,4 +1,4 @@
-function [Sw,Cp,ndt,Q1,Q2,Qm,tmp]=Sat_fast_2(Sw,Cp,RC,TC,TG,A2C,A2G,Pi,PR,...
+function [Sw,Cp,ndt,Q1,Q2,Qm,tmp]=Sat_fast_2(Sw,Cp,RC,TC,TG,A2C,A2G,A2D,D2C,D2G,Pi,PR,...
     ndt0,Won,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,Qz,Qf,Pi0,TL,W1,TW,W6,TP,...
     W7,L,Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qzm1,WonM,nw,b1gm,b1gd,GYData,...
     Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WoD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb)
@@ -28,7 +28,7 @@ PwNl=repmat(Pw,Nl,1);
 
  if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
      [Bwc,Bwg,Blc,Blg,Sw(vc),Sw(vg),ndt,Q1,Q2,Qm,~]=fun1(RC,Pi,Sw,Cp,PR,TC,TG,A2C,...
-         A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke);
+         A2G,A2D,D2C,D2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke);
      %  [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun2(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...
      %     A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke,CR,TM);
      
@@ -61,15 +61,15 @@ PwNl=repmat(Pw,Nl,1);
         A2DL',  D1,  D2BL;
         A2BL', D2BL', B1];
      
-     W2M=W2M(Qf~=0,:);
+     WM1=WM1(Qf~=0,:);
      WM2=WM2(:,Qf~=0);
      WM3=WM3(Qf~=0,Qf~=0);
-     Qzm1(CR_cr.wn)=(Qm(CR_cr.wn,1)+Qm(CR_cr.wn,2))/dt;
-     Pt=[Bl',Qzm1(Qf~=0)']/[AM,WM2;W2M,WM3];
+     Qzm1(CR_cr(1,1).won(:,3))=(Qm(CR_cr(1,1).won(:,3),1)+Qm(CR_cr(1,1).won(:,3),2))/dt;
+     Pt=[Bl',Qzm1(Qf~=0)']/[AM,WM2;WM1,WM3];
      
      Pi(va)=Pt(va)';
-     Pi(vd)=Pt(vd)';
-     Pi(vb)=Pt(vb)';
+     Pi(vd)=Pt(vd-na)';
+     Pi(vb)=Pt(vb-na-nd)';
      PwNl(Qf~=0)=Pt(na+nd+nb+1:end);
      
      %временно
