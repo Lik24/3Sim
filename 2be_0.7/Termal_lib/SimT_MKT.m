@@ -229,9 +229,9 @@ fp=1;
         [W1D,W6D,W7D]=Well_MKT(WonD(:,2),WonD(:,1),Uf(WonD(:,3),ft+1),DSw(:,1),DCp(:,1),tw,ts,mu,mup,CpW(WonD(:,3),ft+1),A(vd));
         
         A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,sum(A2CL,2)+sum(A2GL,2)+sum(A2BL,2)+sum(A2DL,2)+Clp(va)+sum(b1gm(:,1:2),2),na,na);  %Матрица коэф. для пор
-        C1=CL-sparse(1:nc,1:nc,sum(A2CL,1)+Clp(vc)',nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);                       %Матрица коэф. для вертикальных трещ.
-        G1=GL-sparse(1:ng,1:ng,sum(A2GL,1)+Clp(vg)',ng,ng)-sparse(WonG(:,1),WonG(:,1),W1G,ng,ng);                       %Матрица коэф. для гориз. трещ.
-        D1=DL-sparse(WonD(:,1),WonD(:,1),W1D,nd,nd)-sparse(1:nd,1:nd,sum(A2DL,1)+sum(D2BL,2)'+Clp(vd)'+sum(b1gd(:,1:2),2)',nd,nd);                       %Матрица коэф. для двойной пор.
+        C1=CL-sparse(1:nc,1:nc,sum(A2CL,1)+sum(C2DL,2)'+Clp(vc)',nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);                       %Матрица коэф. для вертикальных трещ.
+        G1=GL-sparse(1:ng,1:ng,sum(A2GL,1)+sum(G2DL,2)'+Clp(vg)',ng,ng)-sparse(WonG(:,1),WonG(:,1),W1G,ng,ng);                       %Матрица коэф. для гориз. трещ.
+        D1=DL-sparse(WonD(:,1),WonD(:,1),W1D,nd,nd)-sparse(1:nd,1:nd,sum(A2DL,1)+sum(D2BL,2)'+sum(C2DL,1)+sum(G2DL,1)+Clp(vd)'+sum(b1gd(:,1:2),2)',nd,nd);                       %Матрица коэф. для двойной пор.
         B1=BB-sparse(1:nb,1:nb,sum(A2BL,1)+sum(D2BL,1)+Clp(vb)'+b1gb',nb,nb);                                                             %Матрица коэф. для границ
          
         PwNl=repmat(Pw(:,ft+1),Nl,1);
