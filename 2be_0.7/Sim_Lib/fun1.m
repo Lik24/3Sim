@@ -1,4 +1,4 @@
-function [Bc,Bg,Blc,Blg,CSw,GSw,i,Q1,Q2,Qm,dSS]=fun1(RC,Pi,SW,Cp,PR,TC,TG,A2C,A2G,A2D,D2C,D2G,WonC,...
+function [Bc,Bg,Blc,Blg,CSw,GSw,i,Q1,Q2,Qm,Qd,dSS]=fun1(RC,Pi,SW,Cp,PR,TC,TG,A2C,A2G,A2D,D2C,D2G,WonC,...
     WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke)
 
 as=PR.as;
@@ -208,10 +208,10 @@ i=i+1;
      A2=TW2-sparse(1:na,1:na,sum(TW2,2)+sum(A2CW,2)+sum(A2GW,2)+sum(A2DW,2)+bAw',na,na)-sparse(wom(:,1),wom(:,1),W6,na,na);
      D2=DW2-sparse(1:nd,1:nd,sum(DW2,2)+sum(D2CW,2)+sum(D2GW,2)+sum(A2DW,2)+bDw',nd,nd)-sparse(wod(:,1),wod(:,1),W6D,nd,nd);
      
-     AMC2=[A2,   A2CW,  A2GW,   A2DW;
-          A2CW',  C2,   C2GW,   D2CW';
-          A2GW', C2GW',  G2,    D2GW';
-          A2DW', D2CW, D2GW,    D2];
+     AMC2=[A2,   A2CW,  A2GW,  A2DW;
+          A2CW',  C2,   C2GW,  D2CW';
+          A2GW', C2GW',  G2,   D2GW';
+          A2DW', D2CW,  D2GW,   D2];
      
      ba2=sparse(wom(:,1),ones(1,size(wom,1)),W6.*Pw(wom(:,3)),na,1);
      bc2=sparse(WonC(:,1),ones(1,size(WonC,1)),W6C.*Pw(WonC(:,3)),nc,1);
@@ -227,7 +227,7 @@ i=i+1;
     
      Sw1=Sw;
      Sw=Sw1+(AMC2*Pj+BC)./[dVa;dVc;dVg;dVd]*dt/ndt;
-     Sw(vc)-Sw1(vc)
+  %   Sw(vc)-Sw1(vc)
      Sw=Sw.*(Sw>=0).*(Sw<=1)+(Sw>1);
 %fghgfh
      
