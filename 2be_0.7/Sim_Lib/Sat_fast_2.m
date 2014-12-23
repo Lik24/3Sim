@@ -29,11 +29,11 @@ PwNl=repmat(Pw,Nl,1);
      r2a=find(v2a==1);
  
      v1d=zeros(nd,1);
-     v1d(RC.DCr)=1;
+     v1d(RC.DCc)=1;
      r1d=find(v1d==1);
      
      v2d=zeros(nd,1);
-     v2d(RC.DGr)=1;
+     v2d(RC.DGc)=1;
      r2d=find(v2d==1);
 % aw1=sum(SCw(vc).*dV(vc));
 
@@ -141,7 +141,8 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
      Bp=bp+sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bpc;Bpcd],na+nd,1)/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bpg;Bpgd],na+nd,1)/dt-Cp([va,vd]).*Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]));
      tmp=sum(Bw);    
 
-     AM2=[TW-sparse(1:na,1:na,sum(A2DW,2)),A2DW; A2DW',DW-sparse(1:nd,1:nd,sum(A2DW,1))];
+     AM2=[TW-sparse(1:na,1:na,sum(A2DW,2)),A2DW;
+          A2DW',DW-sparse(1:nd,1:nd,sum(A2DW,1))];
      AM3=[TP,A2DP;A2DP',DP];
      
      Sw_old=Sw([va,vd]);

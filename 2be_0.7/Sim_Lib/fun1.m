@@ -151,7 +151,7 @@ i=i+1;
      G2=GW1-sparse(1:ng,1:ng,sum(GW1,1)+sum(A2GW,1)+sum(D2GW,1),ng,ng)-sparse(WonG(:,1),WonG(:,1),W6G,ng,ng);
 
     [bAl,bAw,bl,bw]=Potok_GY(T_gy,Pgy,Pa,rc_gy,KfwM,KfoM,v1,mu,Na);
-    [bDl,bDw,bld,bwd]=Potok_GY(T_gy_d,Pgy2,Pd,rc_gy_d,KfwM,KfoM,v2,mu,Nd);
+    [bDl,bDw,bld,bwd]=Potok_GY(T_gy_d,Pgy2,Pd,rc_gy_d,KfwD,KfoD,v2,mu,Nd);
     
      TL2=TL2(:,v1==1);
      TL2=TL2(v1==1,:);
@@ -160,7 +160,7 @@ i=i+1;
      DL2=DL2(v2==1,:);
      
      A1=TL2-sparse(1:na,1:na,sum(TL2,2)+sum(A2CL,2)+sum(A2GL,2)+sum(A2DL,2)+bAl',na,na)-sparse(wom(:,1),wom(:,1),W1,na,na);
-     D1=DL2-sparse(1:nd,1:nd,sum(DL2,2)+sum(D2CL,2)+sum(D2GL,2)+sum(A2DL,1)'+bDl',nd,nd)-sparse(wod(:,1),wod(:,1),W1D,nd,nd);
+     D1=DL2-sparse(1:nd,1:nd,sum(DL2,2)+sum(D2CL,1)'+sum(D2GL,2)+sum(A2DL,1)'+bDl',nd,nd)-sparse(wod(:,1),wod(:,1),W1D,nd,nd);
   
      AMC1=[A1,   A2CL,  A2GL,   A2DL;
           A2CL',  C1,   C2GL,   D2CL';
@@ -207,7 +207,7 @@ i=i+1;
      DW2=DW2(v2==1,:);
      
      A2=TW2-sparse(1:na,1:na,sum(TW2,2)+sum(A2CW,2)+sum(A2GW,2)+sum(A2DW,2)+bAw',na,na)-sparse(wom(:,1),wom(:,1),W6,na,na);
-     D2=DW2-sparse(1:nd,1:nd,sum(DW2,2)+sum(D2CW,2)+sum(D2GW,2)+sum(A2DW,1)'+bDw',nd,nd)-sparse(wod(:,1),wod(:,1),W6D,nd,nd);
+     D2=DW2-sparse(1:nd,1:nd,sum(DW2,2)+sum(D2CW,1)'+sum(D2GW,2)+sum(A2DW,1)'+bDw',nd,nd)-sparse(wod(:,1),wod(:,1),W6D,nd,nd);
      
      AMC2=[A2,   A2CW,  A2GW,  A2DW;
           A2CW',  C2,   C2GW,  D2CW';
@@ -237,11 +237,11 @@ i=i+1;
      
       %hj(:,i)=SCw(vc);
 
-[Bwc,Blc]=crack_bond(Bwc,Blc,Pj(vc),Pj(va),A2CL,A2CW,dt,ndt,c1);
-[Bwg,Blg]=crack_bond(Bwg,Blg,Pj(vg),Pj(va),A2GL,A2GW,dt,ndt,c2);
+[Blc,Bwc]=crack_bond(Blc,Bwc,Pj(vc),Pj(va),A2CL,A2CW,dt,ndt,c1);
+[Blg,Bwg]=crack_bond(Blg,Bwg,Pj(vg),Pj(va),A2GL,A2GW,dt,ndt,c2);
 
-[Bwcd,Blcd]=crack_bond(Bwcd,Blcd,Pj(vc),Pj(vd),D2CL,D2CW,dt,ndt,c1d);
-[Bwgd,Blgd]=crack_bond(Bwgd,Blgd,Pj(vg),Pj(vd),D2GL,D2GW,dt,ndt,c2d);
+[Blcd,Bwcd]=crack_bond(Blcd,Bwcd,Pj(vc),Pj(vd),D2CL,D2CW,dt,ndt,r1d);
+[Blgd,Bwgd]=crack_bond(Blgd,Bwgd,Pj(vg),Pj(vd),D2GL,D2GW,dt,ndt,r2d);
 
 % full([Pj(won)<Pw(wn),Uf(wn)])
 % dfgh
