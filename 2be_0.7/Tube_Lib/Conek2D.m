@@ -184,7 +184,7 @@ end;
     A2D=A2D(:,p);
     A2D=A2D(ka==1,:);
     dVd=dVd(p);
-    Kd=Kd(p);
+    Kd=Kd(p,1);
     CR_GRUP=CR_GRUP(p,:);
     for i=1:size(WonV,1)
         WonV(i,1)=find(WonV(i,1)==p);
@@ -213,9 +213,9 @@ DData.Won=WonV;
 DData.Ld=L;
 DData.gMp_d=Mp_d;
 
-DData.Kd(:,1)=DATA.gKX(ka==1)*Xk;
-DData.Kd(:,2)=DATA.gKY(ka==1)*Xk;
-DData.Kd(:,3)=DATA.gKZ(ka==1)*Xk;
+DData.Kd(:,1)=DATA.gKX(ka(Kd~=0)==1)*Xk;
+DData.Kd(:,2)=DATA.gKY(ka(Kd~=0)==1)*Xk;
+DData.Kd(:,3)=DATA.gKZ(ka(Kd~=0)==1)*Xk;
 end
 
 function C=Mat_Constr(c)

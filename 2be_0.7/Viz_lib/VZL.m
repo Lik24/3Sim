@@ -86,7 +86,7 @@ plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
 hold off
 
 figure(98),subplot(2,4,2);
-plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность',XYgy,a0,'nearest') % 
+plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность',XYgy,a0,'linear') % 
 hold on
 plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
 hold off

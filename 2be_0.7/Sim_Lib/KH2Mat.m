@@ -29,13 +29,13 @@ Ke_gy(isnan(Ke_gy(:,1))==1,1)=0;
 Ke_gy(:,1)=Ke_gy(:,1).*BndXY;
 
 
-Kd=DData.Kd;
-Kz_gy=Kz_gy.*Kd(:,1)./K(:,1);
-Kxy_gy=Kxy_gy.*Kd(:,3)./K(:,3);
-
-Ke_gy(:,4)=2*Kd(:,3).*Kz_gy./(Kd(:,3)+Kz_gy);
-Ke_gy(isnan(Ke_gy(:,2))==1,4)=0;
-
-Ke_gy(:,3)=2*Kd(:,1).*Kxy_gy./(Kd(:,1)+Kxy_gy);
-Ke_gy(isnan(Ke_gy(:,1))==1,3)=0;
-Ke_gy(:,1)=Ke_gy(:,1).*BndXY;
+% Kd=DData.Kd;
+% Kz_gy=Kz_gy.*Kd(:,1)./K(:,1);
+% Kxy_gy=Kxy_gy.*Kd(:,3)./K(:,3);
+% 
+% Ke_gy(:,4)=2*Kd(:,3).*Kz_gy./(Kd(:,3)+Kz_gy);
+% Ke_gy(isnan(Ke_gy(:,2))==1,4)=0;
+% 
+% Ke_gy(:,3)=2*Kd(:,1).*Kxy_gy./(Kd(:,1)+Kxy_gy);
+% Ke_gy(isnan(Ke_gy(:,1))==1,3)=0;
+% Ke_gy(:,1)=Ke_gy(:,1).*BndXY;

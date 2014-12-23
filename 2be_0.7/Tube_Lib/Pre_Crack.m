@@ -30,8 +30,8 @@ function [CR_rc,won]=conct2mat(n,inc,ing,r,c,T,A2C,A2G,WoM)
         de=[de;find(rcm(i)==r1)];
     end;
 
-    r_gy=r1;      r_gy(de)=[];     r_in=r1(de);
-    c_gy=c1;      c_gy(de)=[];     c_in=c1(de);
+    r_gy=r1;      r_gy(de,:)=[];     r_in=r1(de,:);
+    c_gy=c1;      c_gy(de,:)=[];     c_in=c1(de,:);
 
     de=[];
     for i=1:size(rcm,1)
