@@ -125,7 +125,7 @@ for l=1:Nl
                 
         DB(i)={D};
         LB(i)={LL};
-        KB(i)={K};
+       % KB(i)={K};
     end;
 
     nc1=nc1+sntl;
@@ -154,7 +154,7 @@ end;
     if size(D,1)~=0
         D=D(ka==1,ka==1);
         L=L(ka==1,ka==1);
-        K=K(ka==1,ka==1);
+       % K=K(ka==1,ka==1);
         A2D=A2D(:,ka==1);
         dVd=dVd(ka==1);
         Kd=Kd(ka==1);
@@ -180,7 +180,7 @@ end;
     p=symrcm(D);
     D=D(p,p);
     L=L(p,p);
-    K=K(p,p);
+    %K=K(p,p);
     A2D=A2D(:,p);
     A2D=A2D(ka==1,:);
     dVd=dVd(p);

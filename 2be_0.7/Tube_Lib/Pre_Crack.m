@@ -16,6 +16,7 @@ WonM=[Won,Wf,WonM];
 end
 
 function [CR_rc,won]=conct2mat(n,inc,ing,r,c,T,A2C,A2G,WoM)
+ if isempty(r)==0
     rcm=unique([inc;ing]);
     v=zeros(n,1);
     v(rcm)=1;
@@ -30,7 +31,9 @@ function [CR_rc,won]=conct2mat(n,inc,ing,r,c,T,A2C,A2G,WoM)
         de=[de;find(rcm(i)==r1)];
     end;
 
-    r_gy=r1;      r_gy(de,:)=[];     r_in=r1(de,:);
+    r_gy=r1;  
+    r_gy(de,:)=[];    
+    r_in=r1(de,:);
     c_gy=c1;      c_gy(de,:)=[];     c_in=c1(de,:);
 
     de=[];
@@ -77,8 +80,20 @@ function [CR_rc,won]=conct2mat(n,inc,ing,r,c,T,A2C,A2G,WoM)
      CR_rc.rc_in_h=rc_in_h;
      CR_rc.T_gy=T_gy;
      CR_rc.T_in_h=T_in_h;
-
      CR_rc.v=v;
+ else
+     won=zeros(0,3);
+     CR_rc.won=won;
+     CR_rc.r1=zeros(0,1);
+     CR_rc.c1=zeros(0,1);
+     CR_rc.r2=zeros(0,1);
+     CR_rc.c2=zeros(0,1);
+     CR_rc.rc_gy=zeros(0,2);
+     CR_rc.rc_in_h=zeros(0,2);
+     CR_rc.T_gy=zeros(0,1);
+     CR_rc.T_in_h=zeros(0,1);
+     CR_rc.v=zeros(0,1);
+ end
 end
 
 function D2C=D_Conect(A2D,A2C)

@@ -1,4 +1,4 @@
-function [Bc,Bg,Blc,Blg,CSw,GSw,i,Q1,Q2,Qm,Qd,dSS]=fun1(RC,Pi,SW,Cp,PR,TC,TG,A2C,A2G,A2D,D2C,D2G,WonC,...
+function [Bwc,Bwg,Blc,Blg,Bwcd,Bwgd,Blcd,Blgd,CSw,GSw,i,Q1,Q2,Qm,Qd,dSS]=fun1(RC,Pi,SW,Cp,PR,TC,TG,A2C,A2G,A2D,D2C,D2G,WonC,...
     WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke)
 
 as=PR.as;
@@ -51,10 +51,11 @@ vP2=Pa(RC.AGr)>=Pg(RC.AGc);
     
 %%
 
-Bc=zeros(size(A2C,2),1);
-Bg=zeros(size(A2G,2),1);
-Blc=zeros(size(A2C,2),1);
-Blg=zeros(size(A2G,2),1);
+Bwc=zeros(size(A2C,1),1);   Blc=Bwc;
+Bwg=zeros(size(A2G,1),1);   Blg=Bwg;
+
+Bwcd=zeros(size(D2C,1),1);   Blcd=Bwcd;
+Bwgd=zeros(size(D2G,1),1);   Blgd=Bwgd;
 
 Q1=zeros(nw,5);
 Q2=zeros(nw,5);
@@ -159,7 +160,7 @@ i=i+1;
      DL2=DL2(v2==1,:);
      
      A1=TL2-sparse(1:na,1:na,sum(TL2,2)+sum(A2CL,2)+sum(A2GL,2)+sum(A2DL,2)+bAl',na,na)-sparse(wom(:,1),wom(:,1),W1,na,na);
-     D1=DL2-sparse(1:nd,1:nd,sum(DL2,2)+sum(D2CL,2)+sum(D2GL,2)+sum(A2DL,2)+bDl',nd,nd)-sparse(wod(:,1),wod(:,1),W1D,nd,nd);
+     D1=DL2-sparse(1:nd,1:nd,sum(DL2,2)+sum(D2CL,2)+sum(D2GL,2)+sum(A2DL,1)'+bDl',nd,nd)-sparse(wod(:,1),wod(:,1),W1D,nd,nd);
   
      AMC1=[A1,   A2CL,  A2GL,   A2DL;
           A2CL',  C1,   C2GL,   D2CL';
@@ -206,7 +207,7 @@ i=i+1;
      DW2=DW2(v2==1,:);
      
      A2=TW2-sparse(1:na,1:na,sum(TW2,2)+sum(A2CW,2)+sum(A2GW,2)+sum(A2DW,2)+bAw',na,na)-sparse(wom(:,1),wom(:,1),W6,na,na);
-     D2=DW2-sparse(1:nd,1:nd,sum(DW2,2)+sum(D2CW,2)+sum(D2GW,2)+sum(A2DW,2)+bDw',nd,nd)-sparse(wod(:,1),wod(:,1),W6D,nd,nd);
+     D2=DW2-sparse(1:nd,1:nd,sum(DW2,2)+sum(D2CW,2)+sum(D2GW,2)+sum(A2DW,1)'+bDw',nd,nd)-sparse(wod(:,1),wod(:,1),W6D,nd,nd);
      
      AMC2=[A2,   A2CW,  A2GW,  A2DW;
           A2CW',  C2,   C2GW,  D2CW';
@@ -236,13 +237,11 @@ i=i+1;
      
       %hj(:,i)=SCw(vc);
 
-Bc=Bc+(A2CW*Pj(vc)-sum(A2CW,2).*Pj(va)+D2CW*Pj(vc)-sum(D2CW,2).*Pj(vd))*dt/ndt;
-Blc=Blc+(A2CL*Pj(vc)-sum(A2CL,2).*Pj(va)+D2CL*Pj(vc)-sum(D2CL,2).*Pj(vd))*dt/ndt;
+[Bwc,Blc]=crack_bond(Bwc,Blc,Pj(vc),Pj(va),A2CL,A2CW,dt,ndt,c1);
+[Bwg,Blg]=crack_bond(Bwg,Blg,Pj(vg),Pj(va),A2GL,A2GW,dt,ndt,c2);
 
-if isempty(c2)==0
-    Bg=Bg+(A2GW*Pj(vg)-sum(A2GW,2).*Pj(va)+D2GW*Pj(vc)-sum(D2GW,2).*Pj(vd))*dt/ndt;
-    Blg=Blg+(A2GL*Pj(vg)-sum(A2GL,2).*Pj(va)+D2GL*Pj(vg)-sum(D2GL,2).*Pj(va))*dt/ndt;
-end;
+[Bwcd,Blcd]=crack_bond(Bwcd,Blcd,Pj(vc),Pj(vd),D2CL,D2CW,dt,ndt,c1d);
+[Bwgd,Blgd]=crack_bond(Bwgd,Blgd,Pj(vg),Pj(vd),D2GL,D2GW,dt,ndt,c2d);
 
 % full([Pj(won)<Pw(wn),Uf(wn)])
 % dfgh
@@ -267,7 +266,7 @@ end;
 %Bc(r1)=Bc;
 %hj-1
 
-dSS=sum((Sw([vc,vg])-Sw0([vc,vg])).*[dVc;dVg])+sum(Q1(:,1))+sum(Bc);
+dSS=sum((Sw([vc,vg])-Sw0([vc,vg])).*[dVc;dVg])+sum(Q1(:,1))+sum(Bwc);
 %sum((SCwC(Na+1:end)-Sw0(Na+1:end)).*[dVc;dVg])
 
 CSw=Sw(vc);
@@ -285,5 +284,10 @@ T_in_h=CR_rc.T_in_h;
 won=CR_rc.won;
 v=CR_rc.v;
 end
-
+function [Bl,Bw]=crack_bond(Bl,Bw,P1,P2,A2CL,A2CW,dt,ndt,c)
+ if isempty(c)==0
+    Bw=Bw+(A2CW*P1-sum(A2CW,2).*P2)*dt/ndt;
+    Bl=Bl+(A2CL*P1-sum(A2CL,2).*P2)*dt/ndt;
+ end
+end
 
