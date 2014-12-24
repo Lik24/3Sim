@@ -118,8 +118,8 @@ i=i+1;
      [A2GL,A2GW]=Obmen_T2M_2(A2G,Pa1,Pg,mu,Cp1,Cp(v_g),r2,RC.AGc,KFA,KFG);
      [A2DL,A2DW]=Obmen_T2M_2(A2D,Pa1,Pd1,mu,Cp1,Cp1d,r3,c3,KFA,KFD);
      
-     [D2CL,D2CW]=Obmen_T2M_2(D2C,Pd1,Pc,mu,Cp1d,Cp(v_c),c1d,RC.DCr,KFD,KFC);
-     [D2GL,D2GW]=Obmen_T2M_2(D2G,Pd1,Pg,mu,Cp1d,Cp(v_g),c2d,RC.DGr,KFD,KFG);
+     [D2CL,D2CW]=Obmen_T2M_2(D2C,Pd1,Pc,mu,Cp1d,Cp(v_c),r1d,RC.DCc,KFD,KFC);
+     [D2GL,D2GW]=Obmen_T2M_2(D2G,Pd1,Pg,mu,Cp1d,Cp(v_g),r2d,RC.DGc,KFD,KFG);
 
      [W1,W6,W7]=Well_MKT_2(wom(:,2),wom(:,1),Uf(wom(:,3)),Cp(v_a(v1==1)),mu,CpW(wom(:,3)),kfw(va),kfo(va));
      [W1C,W6C,W7C]=Well_MKT_2(WonC(:,2),WonC(:,1),Uf(WonC(:,3)),Cp(v_c),mu,CpW(WonC(:,3)),kfw(vc),kfo(vc));
@@ -135,14 +135,14 @@ i=i+1;
      A2CL=sparse(r1,RC.ACc,A2CL,na,nc);
      A2GL=sparse(r2,RC.AGc,A2GL,na,ng);
      A2DL=sparse(r3,c3,A2DL,na,nd);
-     D2CL=sparse(c1d,RC.DCr,D2CL,nd,nc);
-     D2GL=sparse(c2d,RC.DGr,D2GL,nd,ng);
+     D2CL=sparse(r1d,RC.DCc,D2CL,nd,nc);
+     D2GL=sparse(r2d,RC.DGc,D2GL,nd,ng);
      
      A2CW=sparse(r1,RC.ACc,A2CW,na,nc);
      A2GW=sparse(r2,RC.AGc,A2GW,na,ng);
      A2DW=sparse(r3,c3,A2DW,na,nd);
-     D2CW=sparse(c1d,RC.DCr,D2CW,nd,nc);
-     D2GW=sparse(c2d,RC.DGr,D2GW,nd,ng);
+     D2CW=sparse(r1d,RC.DCc,D2CW,nd,nc);
+     D2GW=sparse(r2d,RC.DGc,D2GW,nd,ng);
      
      C1=CL1-sparse(1:nc,1:nc,sum(CL1,1)+sum(A2CL,1)+sum(D2CL,1),nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);
      G1=GL1-sparse(1:ng,1:ng,sum(GL1,1)+sum(A2GL,1)+sum(D2GL,1),ng,ng)-sparse(WonG(:,1),WonG(:,1),W1G,ng,ng);
@@ -160,12 +160,12 @@ i=i+1;
      DL2=DL2(v2==1,:);
      
      A1=TL2-sparse(1:na,1:na,sum(TL2,2)+sum(A2CL,2)+sum(A2GL,2)+sum(A2DL,2)+bAl',na,na)-sparse(wom(:,1),wom(:,1),W1,na,na);
-     D1=DL2-sparse(1:nd,1:nd,sum(DL2,2)+sum(D2CL,1)'+sum(D2GL,2)+sum(A2DL,1)'+bDl',nd,nd)-sparse(wod(:,1),wod(:,1),W1D,nd,nd);
+     D1=DL2-sparse(1:nd,1:nd,sum(DL2,2)+sum(D2CL,2)+sum(D2GL,2)+sum(A2DL,1)'+bDl',nd,nd)-sparse(wod(:,1),wod(:,1),W1D,nd,nd);
   
-     AMC1=[A1,   A2CL,  A2GL,   A2DL;
-          A2CL',  C1,   C2GL,   D2CL';
-          A2GL', C2GL',  G1,    D2GL';
-          A2DL', D2CL,  D2GL,    D1];
+     AMC1=[A1,   A2CL,  A2GL,  A2DL;
+          A2CL',  C1,   C2GL,  D2CL';
+          A2GL', C2GL',  G1,   D2GL';
+          A2DL', D2CL,  D2GL,   D1];
 
     ba1=sparse(wom(:,1),ones(1,size(wom,1)),-W1.*Pw(wom(:,3)),na,1);
     bc1=sparse(WonC(:,1),ones(1,size(WonC,1)),-W1C.*Pw(WonC(:,3)),nc,1);
@@ -207,7 +207,7 @@ i=i+1;
      DW2=DW2(v2==1,:);
      
      A2=TW2-sparse(1:na,1:na,sum(TW2,2)+sum(A2CW,2)+sum(A2GW,2)+sum(A2DW,2)+bAw',na,na)-sparse(wom(:,1),wom(:,1),W6,na,na);
-     D2=DW2-sparse(1:nd,1:nd,sum(DW2,2)+sum(D2CW,1)'+sum(D2GW,2)+sum(A2DW,1)'+bDw',nd,nd)-sparse(wod(:,1),wod(:,1),W6D,nd,nd);
+     D2=DW2-sparse(1:nd,1:nd,sum(DW2,2)+sum(D2CW,2)+sum(D2GW,2)+sum(A2DW,1)'+bDw',nd,nd)-sparse(wod(:,1),wod(:,1),W6D,nd,nd);
      
      AMC2=[A2,   A2CW,  A2GW,  A2DW;
           A2CW',  C2,   C2GW,  D2CW';
@@ -240,8 +240,8 @@ i=i+1;
 [Blc,Bwc]=crack_bond(Blc,Bwc,Pj(vc),Pj(va),A2CL,A2CW,dt,ndt,c1);
 [Blg,Bwg]=crack_bond(Blg,Bwg,Pj(vg),Pj(va),A2GL,A2GW,dt,ndt,c2);
 
-[Blcd,Bwcd]=crack_bond(Blcd,Bwcd,Pj(vc),Pj(vd),D2CL,D2CW,dt,ndt,r1d);
-[Blgd,Bwgd]=crack_bond(Blgd,Bwgd,Pj(vg),Pj(vd),D2GL,D2GW,dt,ndt,r2d);
+[Blcd,Bwcd]=crack_bond(Blcd,Bwcd,Pj(vc),Pj(vd),D2CL,D2CW,dt,ndt,c1d);
+[Blgd,Bwgd]=crack_bond(Blgd,Bwgd,Pj(vg),Pj(vd),D2GL,D2GW,dt,ndt,c2d);
 
 % full([Pj(won)<Pw(wn),Uf(wn)])
 % dfgh
@@ -257,7 +257,7 @@ Q1(:,:)=Q1+QBild(W1C,W6C,W7C,Pj(vc),Uf(WonC(:,3)),WonC(:,1),dt/ndt,Pw(WonC(:,3))
 Q2(:,:)=Q2+QBild(W1G,W6G,W7G,Pj(vg),Uf(WonG(:,3)),WonG(:,1),dt/ndt,Pw(WonG(:,3)),WonG(:,3),nw);
 Qd(:,:)=Qd+QBild(W1D,W6D,W7D,Pj(vd),Uf(wod(:,3)),wod(:,1),dt/ndt,Pw(wod(:,3)),wod(:,3),nw);
 %SCwC(Na+1:Na+nc)-1
-%ndtI(i)=ndt;
+ndtI(i)=ndt;
 % Sw(vc)'
 % [Pj(va),Pj(vc(end:-1:1)),Pj(vd)]
 end;

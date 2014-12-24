@@ -82,11 +82,11 @@ RC.CGc=c7;
 RC.ADr=r8;
 RC.ADc=c8;
 
-TD2C=D2C(r9+(c9-1)*nc).*Kd(r9);
+TD2C=D2C(r9+(c9-1)*nd).*Kd(r9);
 RC.DCr=r9;
 RC.DCc=c9;
 
-TD2G=D2G(r10+(c10-1)*ng).*Kd(r10);
+TD2G=D2G(r10+(c10-1)*nd).*Kd(r10);
 RC.DGr=r10;
 RC.DGc=c10;
 

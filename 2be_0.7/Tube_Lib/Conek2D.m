@@ -249,5 +249,5 @@ function D2C=D_Conect(A2D,A2C)
       C(i)=c2(r(i)==r2);
       R(i)=c1(r(i)==r1);
   end
-  D2C=sparse(C,R,A2(r),n1,n2);
+  D2C=sparse(R,C,A2(r),n2,n1);
 end
