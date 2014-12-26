@@ -223,6 +223,8 @@ i=i+1;
      bd2=bd2+bwd';
      BC=[ba2;bc2;bg2;bd2];
      
+     Pc=Pj(vc);
+     Pg=Pj(vg);
      [ndt,j_ndt,fl]=vibor_t(ndt,Fl,Pc,Pg,Pw,PR,RC,dt,SW0([v_c,v_g]),SW([v_c,v_g]),CL,GL,dVc,dVg,W1C,W1G,...
          WonC,WonG,i,j_ndt);
     
@@ -245,8 +247,6 @@ i=i+1;
 
 % full([Pj(won)<Pw(wn),Uf(wn)])
 % dfgh
-Pc=Pj(vc);
-Pg=Pj(vg);
 
 Pa(v1==1)=Pj(va);
 Pd(v2==1)=Pj(vd);

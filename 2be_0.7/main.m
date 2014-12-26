@@ -46,9 +46,9 @@ VZL(DATA,WXY,Pi,DSw(:,end),Ti,MCp,PR.Nl,DData.pd,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,
 
 c=1-Qo./Ql;
 %plot(c)
-dV0([p,size(p,2)+DData.pd])=dV0([1:size(p,2),size(p,2)+size(pc,2)+1:size(pc,2)+size(p,2)+size(DData.pd,2)]);
+dV1([p,size(p,2)+DData.pd])=dV0([1:size(p,2),size(p,2)+size(pc,2)+1:size(pc,2)+size(p,2)+size(DData.pd,2)]);
 Sw0=Sw0(DATA.ka==1); Sw0=[Sw0;Sw0(1:size(DData.D,1))];
-V0=sum(dV0.*(1-Sw0));
+V0=sum(dV1'.*(1-Sw0));
 sQo(end,:)/V0
 
 TBL=table(single(Ql),single(Qo),single(Qz),single(c),'VariableNames',{'Ql','Qo','Qz','c'});
