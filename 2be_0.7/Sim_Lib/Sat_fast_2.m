@@ -29,11 +29,11 @@ PwNl=repmat(Pw,Nl,1);
      r2a=find(v2a==1);
  
      v1d=zeros(nd,1);
-     v1d(RC.DCc)=1;
+     v1d(RC.DCr)=1;
      r1d=find(v1d==1);
      
      v2d=zeros(nd,1);
-     v2d(RC.DGc)=1;
+     v2d(RC.DGr)=1;
      r2d=find(v2d==1);
 % aw1=sum(SCw(vc).*dV(vc));
 
@@ -90,8 +90,8 @@ PwNl=repmat(Pw,Nl,1);
      Pt=[Bl',Qzm1(Qf~=0)']/[AM,WM2;WM1,WM3];
      
      Pi(va)=Pt(va)';
-     Pi(vd)=Pt(vd-na)';
-     Pi(vb)=Pt(vb-na-nd)';
+     Pi(vd)=Pt(vd-na-nc-ng)';
+     Pi(vb)=Pt(vb-na-nc-ng-nd)';
      PwNl(Qf~=0)=Pt(na+nd+nb+1:end);
      
      %временно
