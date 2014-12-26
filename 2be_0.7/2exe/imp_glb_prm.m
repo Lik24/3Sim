@@ -87,10 +87,10 @@ mup(2)=DTA{6}(1);
 Z.mup=[mup(1:2);mup(3:4)];
 Z.kms=DTA{22};
 
-[Z.Fc,Z.Sc]=sum2bol(Z.aw,Z.as,Z.mu);
-[Z.Fc2,Z.Sc2]=sum2bol(Z.tw,Z.ts,Z.mu);
+[Z.Fc,Z.Sc]=sum2bol(Z.aw,Z.as);
+[Z.Fc2,Z.Sc2]=sum2bol(Z.tw,Z.ts);
 end
-function [Fc,Sc]=sum2bol(AW,as,mu)
+function [Sc,Fc]=sum2bol(AW,as)
 Swr=AW(4);
 Sor=AW(5);
 aw=AW(1:3);
@@ -106,7 +106,7 @@ f=kw/(gam*ko+kw);
 F=diff(f,Sw);
 
 dS=Swr:0.001:(1-Sor);
-fn=(subs(f,dS)-subs(f,Swr))./(dS-Swr);
+fn=(subs(f,dS)-subs(f,0))./(dS-0);
 
 fm=max(eval(fn));%
 fn=eval(fn);

@@ -1,0 +1,5 @@
+WN	Pw_min	Pw_max	Qp_min	Qp_max	Qi_min	Qi_max	WCT	Qoil_min
+W1	1	3000	0	200	-200	0	0.98	1
+W2	1	70	1	200	-200	0	0.98	1
+W3	1	70	1	200	-200	0	0.98	1
+W4	1	70	1	200	-200	0	0.98	1

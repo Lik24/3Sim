@@ -201,8 +201,7 @@ fp=1;
     flag_gim=1;
     flag_pwq=1;
 
-    while flag_gim==1 && kj<10 && flag_pwq==1
-        flag_pwq=0; 
+    while flag_gim==1 && kj<10
         kj=kj+1;
 
         [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dVCG./Mp(:,1),Sw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd,vb,dt);
@@ -234,6 +233,10 @@ fp=1;
         D1=DL-sparse(WonD(:,1),WonD(:,1),W1D,nd,nd)-sparse(1:nd,1:nd,sum(A2DL,1)'+sum(D2BL,2)+sum(D2CL,2)+sum(D2GL,2)+Clp(vd)+sum(b1gd(:,1:2),2),nd,nd);                       %Матрица коэф. для двойной пор.
         B1=BB-sparse(1:nb,1:nb,sum(A2BL,1)+sum(D2BL,1)+Clp(vb)'+b1gb',nb,nb);                                                             %Матрица коэф. для границ
          
+        while  flag_pwq==1
+            
+            flag_pwq=0;
+            
         PwNl=repmat(Pw(:,ft+1),Nl,1);
        % PwNl=PwNl(ka1==1);
         
@@ -285,8 +288,9 @@ fp=1;
         pw(Qf~=0)=Pt(na+nc+ng+nd+nb+1:end);
         
         %[flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond(pw,Pt(Won),W1,Uf(WonM,ft+1),Qf,PwQC_bnd);
+        [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),W1,W6,Uf(WonM,ft+1),Qf,PwQC_bnd);
         Pt0=Pt;
-        
+        end
     end
  
     Pi0=Pi;
@@ -371,16 +375,20 @@ fp=1;
     %sum(sQo(:))
    % dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
     
+       %%prob.progress;
+    c_lik=1-Qm(:,3,t+1)./Qm(:,2,t+1);
+    c_lik(isnan(c_lik)==1)=0;
+        Uf(:,ft+1:end)=Uf(:,ft+1:end).*repmat(c_lik<PwQC_bnd(:,7),1,size(Uf(:,ft+1:end),2));
+    qin=-Qm(:,1,t+1)/dt;
+    qo=Qm(:,3,t+1)/dt;
+    qo(Uf(:,ft+1)==-1)=inf;
+    Qmin=repmat(PwQC_bnd(:,8),1,1);
+        Uf(:,ft+1:end)=Uf(:,ft+1:end).*repmat(qo>Qmin,1,size(Uf(:,ft+1:end),2));
+        
     dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2);
     st=st+dt;
     t_flag=st~=Ta;
-%prob.progress;
-%     c_lik=1-Qm(:,3,t+1)./Qm(:,2,t+1);
-%     c_lik(isnan(c_lik)==1)=0;
-%     Uf(WonM,ft+1:end)=Uf(WonM,ft+1:end).*repmat(c_lik<PwQC_bnd(4,1),1,size(Uf(:,ft+1:end),2));
-%     qo=Qm(:,3,t+1)/dt;
-%     qo(Uf(WonM,ft+1)==-1)=inf;
-%     Uf(WonM,ft+1:end)=Uf(WonM,ft+1:end).*repmat(qo>PwQC_bnd(5,1),1,size(Uf(:,ft+1:end),2));
+
 end;
         
 j=j+1;

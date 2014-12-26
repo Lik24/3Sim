@@ -1,4 +1,4 @@
-function [GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop
+function [GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl,Pw,Qw,Uf,Cpw,PwQC_bnd]=read_mr_prop
 ff=pwd;
 cd('2exe');
 D=dir;
@@ -11,9 +11,10 @@ end;
     mark(1)={'Bond_coord'};  mark(2)={'GY_sub'};     mark(3)={'Ha'};
     mark(4)={'Hk'}; mark(5)={'K'};   mark(6)={'Mp'};
     mark(7)={'Sw'};  mark(8)={'Well_coord'};   mark(9)={'Z1'}; 
-    mark(10)={'Z3'};
+    mark(10)={'Z3'}; 
+    mark(11)={'Pw'}; mark(12)={'Qw'}; mark(13)={'well_type'}; mark(14)={'Cpw'};
     
-    for i=1:10
+    for i=1:14
         for j=1:size(TT,2)
             k=findstr(mark{i},TT{j});
             if isempty(k)==0
@@ -42,6 +43,14 @@ end;
     Sw=ChekFull(WXY,A{7});
     Z1=ChekFull(WXY,A{9});
     Z3=ChekFull(WXY,A{10});
+    Pw1=A{11};Pw=time_data(Pw1);
+    Qw1=A{12};Qw=time_data(Qw1);
+    Uf1=A{13}; Uf=time_data(Uf1);
+    Cpw1=A{13}; Cpw=time_data(Cpw1);
+    
+    B=importdata('Chek_bond.txt'); PwQC_bnd=B.data;
+    
+
 end
 function A=ChekFull(WXY,B)
 nb=size(B);
@@ -53,4 +62,14 @@ if nb(1)<n
 else
     A=B{:};
 end
+end
+
+function A=time_data(B)
+N=size(B,1);
+A=[];
+for i=1:N
+    A1=repmat(B(i,2:end)',1,B(i,1));
+    A=[A,A1];
+end;
+
 end
