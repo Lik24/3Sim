@@ -1,10 +1,11 @@
-function [fl_out,Pw,Q,qf]=Chek_bond2(Pw,Ppl,W1,W6,uf,qf,PQ)
+function [fl_out,Pw,Q,qf]=Chek_bond2(Pw,Ppl,uf,qf,PQ,q)
 
 n=size(Ppl,2)/size(Pw,1); %число слоев
 Pw1=repmat(Pw,n,1);
 % PQ=repmat(PQ,n,1);
-Q=W1.*(Ppl'-Pw1); 
-Q=sum(reshape(Q,size(Q,1)/n,n),2);
+Q=q(:,2);
+% Q=W1.*(Ppl'-Pw1); 
+% Q=sum(reshape(Q,size(Q,1)/n,n),2);
 uf=sum(reshape(uf,size(uf,1)/n,n),2); uf(uf<0)=-1;uf(uf>0)=1;
 PQ(:,3)=0;
 % % % % % % % % % % % % % % % % % % % % % % % % Qo=(W1-W6).*(Ppl'-Pw);
