@@ -272,11 +272,11 @@ while t_flag==1
             BLGY_GIM=[[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy];[-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];...
                 -b1gb.*GY_Pxy2]-(Clp([va,vd,vb]).*Pi([va,vd,vb]));
             
-            WM1=WM1(Qf~=0,:);
-            WM2=WM2(:,Qf~=0);
-            WM3=WM3(Qf~=0,Qf~=0);
+            W2M1=WM1(Qf~=0,:);
+            W2M2=WM2(:,Qf~=0);
+            W2M3=WM3(Qf~=0,Qf~=0);
             
-            Pt=[BM',Qz(Qf~=0,ft+1)']/[AM,WM2;WM1,WM3];
+            Pt=[BM',Qz(Qf~=0,ft+1)']/[AM,W2M2;W2M1,W2M3];
             
             flag_gim=sum(abs(Pt(1:na+nc+ng+nd+nb)-Pt0(1:na+nc+ng+nd+nb))./Pt(1:na+nc+ng+nd+nb)>=1e-6)~=0;
             flag_gim=flag_gim*(sum(zc==0)==0);
@@ -286,13 +286,13 @@ while t_flag==1
             
             %[flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond(pw,Pt(Won),W1,Uf(WonM,ft+1),Qf,PwQC_bnd);
             
-            qm=QBild(W1,W6,W7,Pi(1:na,1),Uf(WonM,ft+1),Won,dt,Pw(WonM,ft+1),WonM,nw);
-            qc=QBild(W1C,W6C,W7C,Pi(vc,1),Uf(WonC(:,3),ft+1),WonC(:,1),dt,Pw(WonC(:,3),ft+1),WonC(:,3),nw);
-            qg=QBild(W1G,W6G,W7G,Pi(vg,1),Uf(WNG,ft+1),WonG(:,1),dt,Pw(WNG,ft+1),WNG,nw);
-            qd=QBild(W1D,W6D,W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,Pw(WonD(:,3),ft+1),WonD(:,3),nw);
+            qm=QBild(W1,W6,W7,Pt(va)',Uf(WonM,ft+1),Won,dt,pw(WonM),WonM,nw);
+            qc=QBild(W1C,W6C,W7C,Pt(vc)',Uf(WonC(:,3),ft+1),WonC(:,1),dt,pw(WonC(:,3)),WonC(:,3),nw);
+            qg=QBild(W1G,W6G,W7G,Pt(vg)',Uf(WNG,ft+1),WonG(:,1),dt,pw(WNG),WNG,nw);
+            qd=QBild(W1D,W6D,W7D,Pt(vd)',Uf(WonD(:,3),ft+1),WonD(:,1),dt,pw(WonD(:,3)),WonD(:,3),nw);
             q=qm+qc+qg+qd;
             
-            [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q);
+            [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
             Pt0=Pt;
         end
     end

@@ -21,7 +21,7 @@ Sw0=DATA.gSw;
 %[WData.Doly,DATA,GYData]=Load_adp_prm(DATA,GYData,tXY);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
 
-nt=elka(0,PR.Nl,DATA.XY,6,10,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, флаг к скважине
+%nt=elka(0,PR.Nl,DATA.XY,6,10,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, флаг к скважине
 [CrDATA]=CrackProp(DATA,PR,nt);
 %[nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
 [C,A2C,dVc,pc,DATA.WonV,DATA.Lc,CR_GRUP]=Conek2(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,WData.r0,DATA.ka);
@@ -29,7 +29,7 @@ nt=elka(0,PR.Nl,DATA.XY,6,10,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, фл
 gt=Tresh_Gor(0,DATA.XY,PR.Nl);  % 0/1 - выкл/вкл. горизонтальные трещ.
 [GData]=Conek2G(DATA,gt,PR.Nl,CrDATA,WData);
 
-nd=DPorist(1,DATA.XY,PR.Nl); % 0/1 - выкл/вкл. двойная пористость
+nd=DPorist(0,DATA.XY,PR.Nl); % 0/1 - выкл/вкл. двойная пористость
 [DData,~,DATA.gMp]=Conek2D(DATA,nd,PR.Nl,CrDATA,WData,A2C,GData.A2G);
 
 [Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz,DSw]=SimT_MKT(PR,C,A2C,GData,B,A2B,DData,dVc,dVb,DATA,WData,GYData,1,CR_GRUP);
