@@ -1,5 +1,5 @@
 function [Bwc,Bwg,Blc,Blg,Bwcd,Bwgd,Blcd,Blgd,CSw,GSw,i,Q1,Q2,Qm,Qd,dSS]=fun1(RC,Pi,SW,Cp,PR,TC,TG,A2C,A2G,A2D,D2C,D2G,WonC,...
-    WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke)
+    WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke,dZ,Mp,Bwo,P0)
 
 as=PR.as;
 aw=PR.aw;
@@ -8,6 +8,7 @@ tw=PR.tw;
 mu=PR.mu;
 kms=PR.kms;
 Ro=PR.Ro;
+zc=PR.zc;
 
 Na=RC.na;
 nc=RC.nc;
@@ -19,6 +20,7 @@ C2G=sparse(nc,ng);     C2GL=C2G;  C2GW=C2G;
 [v2,wod,r1d,c1d,r2d,c2d,rc_gy_d,rc_in_hd,T_gy_d,TD_in]=ext_cr(CR_rc(1,2));
 A2D=CR_rc(1,3).a2d;
 r3=CR_rc(1,3).r;    c3=CR_rc(1,3).c;
+dZ=CR_rc(1,4).dZ;
 
 v_a=1:Na;
 v_c=Na+1:Na+nc;
@@ -36,6 +38,9 @@ vd=na+nc+ng+1:na+nc+ng+nd;
 Pa=Pi(v_a);    Pc=Pi(v_c);    Pg=Pi(v_g);      Pd=Pi(v_d);
 dVa=dV(v_a);   dVc=dV(v_c);   dVg=dV(v_g);     dVd=dV(v_d);
 MSw=SW(v_a);                                   DSw=SW(v_d); 
+MMp=Mp(v_a,:);                                 DMp=Mp(v_d,:); 
+MBwo=Bwo(v_a,:);                               DBwo=Bwo(v_d,:); 
+
 dVa(v1~=1)=[];   dVd(v2~=1)=[];
  
 Qz=Qz/dt;
@@ -64,6 +69,8 @@ Qd=zeros(nw,5);
 
 Pj(:,1)=[Pa(v1==1);Pc;Pg;Pd(v2==1);];
 Sw=[MSw(v1==1);SW(v_c);SW(v_g);DSw(v2==1)];
+Mp=[MMp(v1==1,:);Mp(v_c,:);Mp(v_g,:);DMp(v2==1,:)];
+Bwo=[MBwo(v1==1,:);Bwo(v_c,:);Bwo(v_g,:);DBwo(v2==1,:)];
 
 Pgy=Pa(rc_gy(:,1));
 Pgy2=Pd(rc_gy_d(:,1));
@@ -97,12 +104,13 @@ i=i+1;
      KfwD(v2==1)=kfw(vd);      KfoD(v2==1)=kfo(vd);
      
      [vPa1,vPc1,vPc2,vPg1,vPg2,vPd1,dPa,dPc,dPg,dPd]=pre_potok_2(Pi,Pj,RC,rc_in_h,rc_in_hd,Na,Nd,na,nd);
+     [Clp,Cwp,Cws,A,Bwo,Mp]=SGim([dVa;dVc;dVg;dVd],Sw,Mp,zc,Bwo,Pi,1,P0([v_a(v1==1),v_c,v_g,v_d(v2==1)]),va,vc,vg,vd,zeros(1,0),dt/ndt);
      
      [TL2,TW2]=Potok_MKT_2(T_in,vPa1,Cp(v_a),mu,rc_in_h,Na,KfwM,KfoM,kms(1),dPa,L,Ro,Ke);
      [CL,CW]=Potok_Tube_2(TC,Pc,vPc1,vPc2,kfw(vc),kfo(vc),Cp(v_c),PR,RC.Cr2,RC.Cc2,kms(2),dPc,Lc,nc);
      [GL,GW]=Potok_Tube_2(TG,Pg,vPg1,vPg2,kfw(vg),kfo(vg),Cp(v_g),PR,RC.Gr2,RC.Gc2,kms(3),dPg,Lg,ng);
      [DL2,DW2]=Potok_MKT_2(TD_in,vPd1,Cp(v_d),mu,rc_in_hd,Nd,KfwD,KfoD,kms(4),dPd,L,Ro,Ke);
-
+  
      Pa1=Pi(v_a(v1==1));
      Cp1=Cp(v_a(v1==1));
      
@@ -159,6 +167,14 @@ i=i+1;
      DL2=DL2(:,v2==1);
      DL2=DL2(v2==1,:);
      
+     TW2=TW2(:,v1==1);
+     TW2=TW2(v1==1,:);
+          
+     DW2=DW2(:,v2==1);
+     DW2=DW2(v2==1,:);
+     
+     [Gr,Grw]=Gravity(TL2,TW2,CL1,CW1,GL1,GW1,DL2,DW2,[],A,dZ);
+        
      A1=TL2-sparse(1:na,1:na,sum(TL2,2)+sum(A2CL,2)+sum(A2GL,2)+sum(A2DL,2)+bAl',na,na)-sparse(wom(:,1),wom(:,1),W1,na,na);
      D1=DL2-sparse(1:nd,1:nd,sum(DL2,2)+sum(D2CL,2)+sum(D2GL,2)+sum(A2DL,1)'+bDl',nd,nd)-sparse(wod(:,1),wod(:,1),W1D,nd,nd);
   
@@ -193,19 +209,13 @@ i=i+1;
     WM2=WM2(:,wom(Qf~=0,3));
     WM3=WM3(wom(Qf~=0,3),wom(Qf~=0,3));
 
-    BC1=[ba1-bl';bc1;bg1;bd1-bld']';
+    BC1=[ba1-bl';bc1;bg1;bd1-bld']'-Gr';
 
      Pt=[BC1,Qz(wom(Qf~=0,3))']/[AMC1,WM2;WM1,WM3];
      Pj(:,1)=Pt(1:na+nc+ng+nd);
 
      Pw(wom(Qf~=0,3))=Pt(na+nc+ng+nd+1:end);
 
-     TW2=TW2(:,v1==1);
-     TW2=TW2(v1==1,:);
-          
-     DW2=DW2(:,v2==1);
-     DW2=DW2(v2==1,:);
-     
      A2=TW2-sparse(1:na,1:na,sum(TW2,2)+sum(A2CW,2)+sum(A2GW,2)+sum(A2DW,2)+bAw',na,na)-sparse(wom(:,1),wom(:,1),W6,na,na);
      D2=DW2-sparse(1:nd,1:nd,sum(DW2,2)+sum(D2CW,2)+sum(D2GW,2)+sum(A2DW,1)'+bDw',nd,nd)-sparse(wod(:,1),wod(:,1),W6D,nd,nd);
      
@@ -221,7 +231,7 @@ i=i+1;
 
      ba2=ba2+bw';
      bd2=bd2+bwd';
-     BC=[ba2;bc2;bg2;bd2];
+     BC=[ba2;bc2;bg2;bd2]+Grw;
      
      Pc=Pj(vc);
      Pg=Pj(vg);

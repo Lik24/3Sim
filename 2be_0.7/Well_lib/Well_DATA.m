@@ -47,7 +47,7 @@ TeW(Uf(1:n(1))==-1,1)=100;
 
 
 WData.Pw=Pw;
-WData.Uf=Uf;
+WData.Uf=Uf*0;
 WData.Qz=Qz;
 WData.CpW=CpW;
 

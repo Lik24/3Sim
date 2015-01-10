@@ -1,16 +1,16 @@
-function [TL,TW,TP,TG]=Potok_MKT(T,P,Kfw,Kfo,Cp,mu,rc,mup,fp,kms,L,Ke,Ro,A)
+function [TL,TW,TP,TG]=Potok_MKT(T,P,Kfw,Kfo,Cp,mu,rc,mup,fp,kms,L,Ke,Ro,A,DZ)
 n=size(P,1);
 
 r=rc(:,1);
 c=rc(:,2);
-% Kfw=Sat_cal(Sw,1,1,as,aw); %water
-% Kfo=Sat_cal(Sw,2,1,as,aw); %oil
+
+dZW=DZ{1};  dZO=DZ{2};  dZG=DZ{3};
 
 dP=P(c)-P(r);
 vP=dP>0;
-%vP0=dP~=0;
-% Swc=Sw(r);
-% Swl=Sw(c);
+vPW=dP+dZW(r+(c-1)*n)>0;
+vPO=dP+dZO(r+(c-1)*n)>0;
+vPG=dP+dZG(r+(c-1)*n)>0;
 
 Kwc=Kfw(c);
 Kwl=Kfw(r);
@@ -22,9 +22,9 @@ Cpc=Cp(c);
 Cpl=Cp(r);
 
 %Swe=Swc.*vP+Swl.*(vP==0);
-Cpe=Cpc.*vP+Cpl.*(vP==0);
-Kfw1=Kwc.*vP+Kwl.*(vP==0);
-Kfo1=Koc.*vP+Kol.*(vP==0);
+Cpe=Cpc.*vPW+Cpl.*(vPW==0);
+Kfw1=Kwc.*vPW+Kwl.*(vPW==0);
+Kfo1=Koc.*vPO+Kol.*(vPO==0);
 
 % Kfw=Sat_cal(Swe,1,1,as,aw); %water
 % Kfo=Sat_cal(Swe,2,1,as,aw); %oil

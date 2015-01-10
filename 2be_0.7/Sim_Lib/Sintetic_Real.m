@@ -87,8 +87,7 @@ Mp=SD.Mp;
 KX=SD.K/1000*8.64;
 KY=SD.K/1000*8.64;
 KZ=SD.K/1000*8.64*0.1;
-Sor=0;%SD.Sor;
-Swr=0;%SD.Swr;
+
 Sw=SD.Sw;
 Z=SD.Z3;
 
@@ -113,5 +112,5 @@ NTG=reshape(NTG,n1,n2);
 Cp=0*ones(size(KX));
 T=40*ones(size(KX));
 %P=100*ones(size(KX))+0.001*rand(size(KX));
-P=9.81*1000*Z*1e-5;
+P=9.81*1000*Z*1e-5*0;
 z=1:Nl;

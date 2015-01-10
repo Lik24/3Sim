@@ -1,16 +1,21 @@
-function [CL,CW,CP,CG]=Potok_Tube(C,P,Sw,Cp,PR,mup,fp,kms,L,r,c,n,A)
+function [CL,CW,CP,CG]=Potok_Tube(C,P,Sw,Cp,PR,mup,fp,kms,L,r,c,n,A,DZ)
 
 ts=PR.ts;
 tw=PR.tw;
 mu=PR.mu;
 Ro=PR.Ro;
 Kc=PR.Kc;
+dZW=DZ{1};  dZO=DZ{2};  dZG=DZ{3};
 
 Kfw=Sat_tube(Sw,1,1,ts,tw); %water
 Kfo=Sat_tube(Sw,2,1,ts,tw); %oil
 
 dP=P(c)-P(r);
 vP=dP>0;
+
+vPW=dP+dZW(r+(c-1)*n)>0;
+vPO=dP+dZO(r+(c-1)*n)>0;
+vPG=dP+dZG(r+(c-1)*n)>0;
 
 Kwc=Kfw(c);
 Kwl=Kfw(r);
@@ -21,9 +26,9 @@ Kol=Kfo(r);
 Cpc=Cp(c);
 Cpl=Cp(r);
 
-Cpe=Cpc.*vP+Cpl.*(vP==0);
-Kfw=Kwc.*vP+Kwl.*(vP==0);
-Kfo=Koc.*vP+Kol.*(vP==0);
+Cpe=Cpc.*vPW+Cpl.*(vPW==0);
+Kfw=Kwc.*vPW+Kwl.*(vPW==0);
+Kfo=Koc.*vPO+Kol.*(vPO==0);
 
 [CP,wmu]=poly_vis(Cpe,mup,fp,Kfw,C,n,r,c,mu(1));
 

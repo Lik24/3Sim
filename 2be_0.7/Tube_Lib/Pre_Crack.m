@@ -1,4 +1,4 @@
-function [CR_rc]=Pre_Crack(RC,na,nd,TM,TD,A2C,A2G,D2C,D2G,A2D,Wf,Won,WonM,WonD)
+function [CR_rc]=Pre_Crack(RC,na,nd,TM,TD,A2C,A2G,D2C,D2G,A2D,Wf,Won,WonM,WonD,dZ)
 WonM=[Won,Wf,WonM];
 
  CR_rc(1,1)=conct2mat(na,RC.ACr,RC.AGr,RC.Arc2(:,2),RC.Arc2(:,1),TM,A2C,A2G,WonM);
@@ -13,6 +13,23 @@ WonM=[Won,Wf,WonM];
  CR_rc(1,3).r=r;
  CR_rc(1,3).c=c;
  CR_rc(1,3).a2d=val;
+ 
+ dz=dZ(1,:);  dzw=dz{1};     dzo=dz{2};  dzg=dz{3};
+ 
+ dzw=dzw(:,v1==1);   dzw=dzw(v1==1,:);
+ dzo=dzo(:,v1==1);   dzo=dzo(v1==1,:);
+ dzg=dzg(:,v1==1);   dzg=dzg(v1==1,:);
+ 
+ dz(1)={dzw};  dz(2)={dzo};  dz(3)={dzg};  dZ(1,:)=dz;
+   
+ dz=dZ(4,:);  dzw=dz{1};     dzo=dz{2};  dzg=dz{3};
+ 
+ dzw=dzw(:,v2==1);   dzw=dzw(v2==1,:);
+ dzo=dzo(:,v2==1);   dzo=dzo(v2==1,:);
+ dzg=dzg(:,v2==1);   dzg=dzg(v2==1,:);
+ 
+ dz(1)={dzw};  dz(2)={dzo};  dz(3)={dzg};  dZ(4,:)=dz;
+ CR_rc(1,4).dZ=dZ;
 end
 
 function [CR_rc,won]=conct2mat(n,inc,ing,r,c,T,A2C,A2G,WoM)

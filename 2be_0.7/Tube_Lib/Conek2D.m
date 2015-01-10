@@ -191,7 +191,7 @@ end;
     end;
     
     if size(D,1)~=0
-        ddol=0.5;
+        ddol=0.1;
     else
         ddol=0;
     end

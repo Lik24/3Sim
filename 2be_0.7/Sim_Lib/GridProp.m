@@ -194,7 +194,7 @@ DATA.XYgy=XYgy;
 end
 
 function B=razmaz(A,WXY,XY)
- F=scatteredInterpolant(WXY(:,1),WXY(:,2),A,'nearest','nearest');
+ F=scatteredInterpolant(WXY(:,1),WXY(:,2),A,'linear','nearest');
  B=F(XY(:,1),XY(:,2));
   
 % mx(1)=min(WXY(:,1));

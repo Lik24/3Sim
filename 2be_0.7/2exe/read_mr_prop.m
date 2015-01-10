@@ -60,7 +60,7 @@ if nb(1)<n
     A(:,j)=B(1,j)*ones(n,1);
   end;
 else
-    A=B{:};
+    A=B;
 end
 end
 

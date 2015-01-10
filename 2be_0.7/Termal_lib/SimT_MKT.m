@@ -58,8 +58,8 @@ Won1=Won;
 [A,L,B,S,H1,HV,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,HV,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf,ka);
 [A,L,S,B,H1,HV,K,XY,Mp,MSw,H,Z,P,MCp,T,NTG,p,rz,cz,BXY,BZ,dH,NL,NamXY,GYData]=PereYpor(A,L,S,B,H1,HV,KX,KY,KZ,Mp,MSw,...
     XY,H,Z,P,MCp,DATA,GYData,ka);
-[r,c]=find(L);
 
+[r,c]=find(L);
 nw1=size(p,2);
 nwc=size(A2C,1);
 raz=nw1-nwc;
@@ -115,6 +115,8 @@ dV0=[dV;dVC;dVG;dVD.*Mp_d];
 
 [TM,TC,TG,TD,TA2C,TA2G,TA2D,TD2C,TD2G,RC,Txyz_GY_A,Txyz_GY_D,dV1,dV2,TTM]=Pre_fast(A,C,G,D,A2C,A2G,A2D,C2G,C2D,G2D,...
     Ke,L,B,S,H1,K(:,1),DData.Kd,Ke_gy,BndXY(p),BndZ(p),nb,dVCG);
+[dZ]=dZ_bild(Z,RC,PR.g,PR.Ro);
+
 vad=RC.ADr;
 CSw(:,1)=MSw(RC.ACr,1);
 GSw(:,1)=MSw(RC.AGr,1);
@@ -138,7 +140,7 @@ Pwt=zeros(size(Pw));
 PpW=zeros(size(Uf));
 
 % [CR_rc]=Pre_Crack1(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
-[CR_rc]=Pre_Crack(RC,na,nd,TTM,TD,A2C,A2G,C2D,G2D,A2D,Wf,Won,WonM,WonD);
+[CR_rc]=Pre_Crack(RC,na,nd,TTM,TD,A2C,A2G,C2D,G2D,A2D,Wf,Won,WonM,WonD,dZ);
 %[CR_ind]=Pre_Crack_p(RC,na,TM,Wf,Won,WonM,nw,CR_GRUP,C,G,A2C,A2G,K(:,1),WonC,WonG);
 [CR]=SS_ind(RC,na);
 
@@ -206,10 +208,12 @@ while t_flag==1
         
         [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dVCG./Mp(:,1),Sw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd,vb,dt);
         
-        [TL,TW,TP]=Potok_MKT(TTM,Pi(va,1),kfw(va),kfo(va),MCp(:,1),mu,RC.Arc2,mup,fp,kms(1),L,Ke,Ro,A(va));
-        [CL,~,~]=Potok_Tube(TC,Pi(vc,1),CSw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc));
-        [GL,~,~]=Potok_Tube(TG,Pi(vg,1),GSw(:,t),GCp(:,t),PR,mup,fp,kms(3),Lg,RC.Gr2,RC.Gc2,ng,A(vg));
-        [DL,DW,DP]=Potok_Tube(TD,Pi(vd,1),DSw(:,1),DCp(:,1),PR,mup,fp,kms(4),Ld,RC.Dr2,RC.Dc2,nd,A(vd));
+        [TL,TW,TP]=Potok_MKT(TTM,Pi(va,1),kfw(va),kfo(va),MCp(:,1),mu,RC.Arc2,mup,fp,kms(1),L,Ke,Ro,A(va),dZ(1,:));
+        [CL,CW,~]=Potok_Tube(TC,Pi(vc,1),CSw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc),dZ(2,:));
+        [GL,GW,~]=Potok_Tube(TG,Pi(vg,1),GSw(:,t),GCp(:,t),PR,mup,fp,kms(3),Lg,RC.Gr2,RC.Gc2,ng,A(vg),dZ(3,:));
+        [DL,DW,DP]=Potok_Tube(TD,Pi(vd,1),DSw(:,1),DCp(:,1),PR,mup,fp,kms(4),Ld,RC.Dr2,RC.Dc2,nd,A(vd),dZ(4,:));
+        
+        [Gr,Grw]=Gravity(TL,TW,CL,CW,GL,GW,DL,DW,[],A,dZ);
         
         [A2CL,~,~]=Obmen_T2M(A2C,Pi(va,1),Pi(vc,1),MSw(:,1),CSw(:,t),K(:,1),PR,MCp(:,1),CCp(:,t));
         [A2GL,~,~]=Obmen_T2M(A2G,Pi(va,1),Pi(vg,1),MSw(:,1),GSw(:,t),K(:,1),PR,MCp(:,1),GCp(:,t));
@@ -267,38 +271,38 @@ while t_flag==1
             %  b1wm
 
             BM=[b1wm;b1wc;b1wg;b1wd;b1wb]+[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy;b1gc;b1gg;...
-                [-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];-b1gb.*GY_Pxy2]-(Clp.*Pi);
+                [-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];-b1gb.*GY_Pxy2]-(Clp.*Pi)-Gr;
             
             BLGY_GIM=[[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy];[-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];...
-                -b1gb.*GY_Pxy2]-(Clp([va,vd,vb]).*Pi([va,vd,vb]));
+                -b1gb.*GY_Pxy2]-(Clp([va,vd,vb]).*Pi([va,vd,vb]))-Gr([va,vd,vb]);
             
-%             WM1=WM1(Qf~=0,:);
-%             WM2=WM2(:,Qf~=0);
-%             WM3=WM3(Qf~=0,Qf~=0);
+            W2M1=WM1(Qf~=0,:);
+            W2M2=WM2(:,Qf~=0);
+            W2M3=WM3(Qf~=0,Qf~=0);
             
-            Pt=[BM',Qz(Qf~=0,ft+1)']/[AM,WM2(:,Qf~=0);WM1(Qf~=0,:),WM3(Qf~=0,Qf~=0)];
+            Pt=[BM',Qz(Qf~=0,ft+1)']/[AM,W2M2;W2M1,W2M3];
             
             flag_gim=sum(abs(Pt(1:na+nc+ng+nd+nb)-Pt0(1:na+nc+ng+nd+nb))./Pt(1:na+nc+ng+nd+nb)>=1e-6)~=0;
             flag_gim=flag_gim*(sum(zc==0)==0);
             
             pw=Pw(:,ft+1);
             pw(Qf~=0)=Pt(na+nc+ng+nd+nb+1:end);
-            Pi0=Pi;
-            Pi(:,1)=Pt(1:na+nc+ng+nd+nb);
+            
             %[flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond(pw,Pt(Won),W1,Uf(WonM,ft+1),Qf,PwQC_bnd);
             
-            qm=QBild(W1,W6,W7,Pi(1:na,1),Uf(WonM,ft+1),Won,dt,pw(WonM),WonM,nw);
-            qc=QBild(W1C,W6C,W7C,Pi(vc,1),Uf(WonC(:,3),ft+1),WonC(:,1),dt,pw(WonC(:,3)),WonC(:,3),nw);
-            qg=QBild(W1G,W6G,W7G,Pi(vg,1),Uf(WNG,ft+1),WonG(:,1),dt,pw(WNG),WNG,nw);
-            qd=QBild(W1D,W6D,W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,pw(WonD(:,3)),WonD(:,3),nw);
+            qm=QBild(W1,W6,W7,Pt(va)',Uf(WonM,ft+1),Won,dt,pw(WonM),WonM,nw);
+            qc=QBild(W1C,W6C,W7C,Pt(vc)',Uf(WonC(:,3),ft+1),WonC(:,1),dt,pw(WonC(:,3)),WonC(:,3),nw);
+            qg=QBild(W1G,W6G,W7G,Pt(vg)',Uf(WNG,ft+1),WonG(:,1),dt,pw(WNG),WNG,nw);
+            qd=QBild(W1D,W6D,W7D,Pt(vd)',Uf(WonD(:,3),ft+1),WonD(:,1),dt,pw(WonD(:,3)),WonD(:,3),nw);
             q=qm+qc+qg+qd;
             
-            [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q);
+            [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
             Pt0=Pt;
         end
     end
     
-
+    Pi0=Pi;
+    Pi(:,1)=Pt(1:na+nc+ng+nd+nb);
     
     Pw(Qf~=0,ft+1)=Pt(na+nc+ng+nd+nb+1:end);
     Pwt(:,t+1)=Pw(:,ft+1);
@@ -322,7 +326,7 @@ while t_flag==1
     [Sw,Cp,NDT(t),Q1,Q2,Qm1,Qd1,dSS(t)]=Sat_fast_2(Sw,Cp,RC,TC,TG,TA2C,TA2G,TA2D,TD2C,TD2G,Pi(:,1),PR,ndt,Won,...
         Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
         W7,L,DATA.Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,b1gd,GYData,Clp,ka1,...
-        W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WonD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb);
+        W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WonD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb,Grw,dZ,Mp,Bwo,P0);
     %
     %  [SCw,SCp,NDT(:,t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_1(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...
     %      Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_ind,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...

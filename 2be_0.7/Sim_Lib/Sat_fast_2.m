@@ -1,7 +1,7 @@
 function [Sw,Cp,ndt,Q1,Q2,Qm,Qd,tmp]=Sat_fast_2(Sw,Cp,RC,TC,TG,A2C,A2G,A2D,D2C,D2G,Pi,PR,...
     ndt0,Won,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,Qz,Qf,Pi0,TL,W1,TW,W6,TP,...
     W7,L,Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qzm1,WonM,nw,b1gm,b1gd,GYData,...
-    Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WoD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb)
+    Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WoD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb,Grw,dZ,Mp,Bwo,P0)
 
 na=RC.na;
 nc=RC.nc;
@@ -39,7 +39,7 @@ PwNl=repmat(Pw,Nl,1);
 
  if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
      [Bwc,Bwg,Blc,Blg,Bwcd,Bwgd,Blcd,Blgd,Sw(vc),Sw(vg),ndt,Q1,Q2,Qm,Qd,~]=fun1(RC,Pi,Sw,Cp,PR,TC,TG,A2C,...
-         A2G,A2D,D2C,D2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke);
+         A2G,A2D,D2C,D2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke,dZ,Mp,Bwo,P0);
      %  [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun2(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...
      %     A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke,CR,TM);
      
@@ -137,8 +137,10 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
      bw=[bwm;bwd];
      bp=[bpm;bpd];
 
-     Bw=bw+sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bwc;Bwcd],na+nd,1)/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bwg;Bwgd],na+nd,1)/dt-Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]));
-     Bp=bp+sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bpc;Bpcd],na+nd,1)/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bpg;Bpgd],na+nd,1)/dt-Cp([va,vd]).*Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]));
+     Bw=bw+sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bwc;Bwcd],na+nd,1)/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bwg;Bwgd],na+nd,1)/dt...
+         -Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]))+Grw([va,vd]);
+     Bp=bp+sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bpc;Bpcd],na+nd,1)/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bpg;Bpgd],na+nd,1)/dt...
+         -Cp([va,vd]).*Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]))+Cp([va,vd]).*Grw([va,vd]);
      tmp=sum(Bw);    
 
      AM2=[TW-sparse(1:na,1:na,sum(A2DW,2)),A2DW;
