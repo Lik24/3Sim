@@ -177,7 +177,7 @@ while t_flag==1
     else
         dtt=dtt1;
     end;
-    dt1(t+1)=dt;
+    
     ft=floor(st);
     % if ~isempty(find(CpW(:,t)~=0)) fp=1; else fp=0; end;
     fp=1;
@@ -396,7 +396,7 @@ while t_flag==1
     dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2);
     st=st+dt;
     t_flag=st~=Ta;
-    
+    dt1(t)=dt;
 end;
 
 j=j+1;

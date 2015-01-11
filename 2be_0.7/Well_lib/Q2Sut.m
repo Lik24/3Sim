@@ -62,5 +62,5 @@ Q(:,3,:)=Qo';
 Q(:,4,:)=Qgaz';
 Q(:,5,:)=Qp';
 
-ppl=interp1(st,PpW',dtz:dtz:Ta,'linear','extrap')';
-pw=interp1(st,Pw',dtz:dtz:Ta,'linear','extrap')';
+ppl=interp1(st,PpW(:,2:end)',dtz:dtz:Ta,'linear','extrap')';
+pw=interp1(st,Pw(:,2:end)',dtz:dtz:Ta,'linear','extrap')';
