@@ -23,7 +23,7 @@ Kfo=Koc.*vP1+Kol.*vP2;
 
 %Kf=Sat_tube(Swe,1,1,ts,tw); %water
 
-CO=TC.*Kfo./mu(1);
+CO=TC.*Kfo./mu(2);
 CW=TC.*Kf.*((1-Cpe)./mu(1)+Cpe./mu(4));
 CP=TC.*Kf.*Cpe./mu(4);
 

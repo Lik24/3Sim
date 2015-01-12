@@ -5,7 +5,7 @@ CO=CL-CW;
 GO=GL-GW;
 DO=DL-DW;
 [grw_A,gro_A]=degrav(dZ(1,:),TW,TO);
-[grw_C,gro_C]=degrav(dZ(2,:),CW,CO);
+[grw_C,gro_C]=degrav(dZ(2,:),CW',CO');
 [grw_G,gro_G]=degrav(dZ(3,:),GW,GO);
 [grw_D,gro_D]=degrav(dZ(4,:),DW,DO);
 

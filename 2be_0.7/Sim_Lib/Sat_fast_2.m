@@ -143,8 +143,8 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
          -Cp([va,vd]).*Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]))+Cp([va,vd]).*Grw([va,vd]);
      tmp=sum(Bw);    
 
-     AM2=[TW-sparse(1:na,1:na,sum(A2DW,2)),A2DW;
-          A2DW',DW-sparse(1:nd,1:nd,sum(A2DW,1))];
+     AM2=[TW-sparse(1:na,1:na,sum(A2DW,2)+Cwp(va)),A2DW;
+          A2DW',DW-sparse(1:nd,1:nd,sum(A2DW,1)+Cwp(vd)')];
      AM3=[TP,A2DP;A2DP',DP];
      
      Sw_old=Sw([va,vd]);

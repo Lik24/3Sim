@@ -3,7 +3,6 @@ function [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dV,SCw,Mp,zc,Bwo,P,Patm,P0,va,vc,vg,vd,vb,d
 Bw=Bwo(:,1:2);
 Bo=Bwo(:,3:4);
 
-
 [dVa,Sw,A_mp,BwA,BoA]=Narez(dV,SCw,Mp,Bw,Bo,va);
 [dVc,Cw,C_mp,BwC,BoC]=Narez(dV,SCw,Mp,Bw,Bo,vc);
 [dVg,Gw,G_mp,BwG,BoG]=Narez(dV,SCw,Mp,Bw,Bo,vg);
@@ -22,14 +21,12 @@ Bwo(:,3:4)=[BoA;BoC;BoG;BoD;BoB];
 Cwp=[CwpA;CwpC;CwpG;CwpD;CwpB];
 Cop=[CopA;CopC;CopG;CopD;CopB];
 
-
 Cws=[CwsA;CwsC;CwsG;CwsD;CwsB];
 A=[AA;AC;AG;AD;AB];
 Clp=A.*Cwp+Cop;
 Clp=Clp/dt;
 
 Mp=[MpA;MpC;MpG;MpD;MpB];
-
 end
 
 function [Cwp,Cop,Bw,Bo,Cws,A,Mp]=ZaSgim(dV,Sw,mp,zc,P,Patm,P0,Bw,Bo)

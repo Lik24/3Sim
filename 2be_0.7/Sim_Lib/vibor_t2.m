@@ -29,7 +29,7 @@ else
     fl_sw=(min(Sw(va))>Sc);
 end
 
-if dt==0
+%if dt==0
     if fl_sw==1
         MdS=abs((Sw2-Sw));
         nf=(isnan(MdS)==0);
@@ -55,7 +55,7 @@ if dt==0
     
 
     %kjhjkhj
-end;
+%end;
 
     if st+dt>Ta
         dt=Ta-st;

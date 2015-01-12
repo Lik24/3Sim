@@ -322,7 +322,11 @@ while t_flag==1
     
     Qf=Qz1;
     Sw0=Sw;
-    
+  if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
+    [ndt,~,~]=vibor_t(ndt,0,Pi(vc),Pi(vg),Pw(:,ft+1),PR,RC,dt,Sw0([vc,vg]),Sw([vc,vg]),...
+        CL(RC.Cr2+(RC.Cc2-1)*nc),GL(RC.Gr2+(RC.Gc2-1)*ng),dVCG(vc),dVCG(vg),W1C,W1G,WonC,WonG,1,0);
+  end;
+  
     [Sw,Cp,NDT(t),Q1,Q2,Qm1,Qd1,dSS(t)]=Sat_fast_2(Sw,Cp,RC,TC,TG,TA2C,TA2G,TA2D,TD2C,TD2G,Pi(:,1),PR,ndt,Won,...
         Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
         W7,L,DATA.Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,b1gd,GYData,Clp,ka1,...
@@ -393,10 +397,11 @@ while t_flag==1
     Qmin=repmat(PwQC_bnd(:,8),1,1);
     Uf(:,ft+1:end)=Uf(:,ft+1:end).*repmat(qo>Qmin,1,size(Uf(:,ft+1:end),2));
     
-    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2);
     st=st+dt;
-    t_flag=st~=Ta;
     dt1(t)=dt;
+    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2);
+    t_flag=st~=Ta;
+    
 end;
 
 j=j+1;
