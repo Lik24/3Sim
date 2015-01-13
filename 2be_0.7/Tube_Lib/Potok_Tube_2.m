@@ -1,4 +1,4 @@
-function [CL,CW,CP,CG]=Potok_Tube_2(TC,P,vP1,vP2,Kfw,Kfo,Cp,PR,r,c,kms,dP,L,n)
+function [CL,CW,CP,CG]=Potok_Tube_2(TC,P,vP1,Kfw,Kfo,Cp,PR,r,c,kms,dP,L,n,A,DZ)
 
 if isempty(TC)==0
 mu=PR.mu;
@@ -17,9 +17,9 @@ Cpl=Cp(c);
 %Swe=Swc.*vP+Swl.*(vP==0);
 %sum([Cpc,Cpl].*[vP1,vP2]);
 
-Cpe=Cpc.*vP1+Cpl.*vP2;
-Kf=Kwc.*vP1+Kwl.*vP2;
-Kfo=Koc.*vP1+Kol.*vP2;
+Cpe=Cpc.*vP1(:,1)+Cpl.*vP1(:,2);
+Kf=Kwc.*vP1(:,1)+Kwl.*vP1(:,2);
+Kfo=Koc.*vP1(:,3)+Kol.*vP1(:,4);
 
 %Kf=Sat_tube(Swe,1,1,ts,tw); %water
 
@@ -34,10 +34,8 @@ if kms~=0
     [CO] = Forh(CO,kms, Ro(2), Kfo, Kc, mu(2), dPL);
 end;
 
-CL=CO+CW;
+CL=CO+A(c).*CW;
 CG=1;
-
-
 
 else
   CL=[];

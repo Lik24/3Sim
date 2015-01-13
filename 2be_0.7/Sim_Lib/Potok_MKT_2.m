@@ -1,4 +1,4 @@
-function [TL,TW,TP,TG]=Potok_MKT_2(T,vP,Cp,mu,sd,na,kfw,kfo,kms,dP,L,Ro,Ke)
+function [TL,TW,TP,TG]=Potok_MKT_2(T,vP,Cp,mu,sd,na,kfw,kfo,kms,dP,L,Ro,Ke,A,DZ,v1)
 
 Kwl=kfw(sd(:,1)); %water
 Kwc=kfw(sd(:,2)); %water
@@ -27,10 +27,17 @@ TG=1;
     [TO] = Forh(TO,kms, Ro(2), Kfo, K, mu(2), dPL);
 end;
 
-TL=sparse(sd(:,1),sd(:,2),TW+TO,na,na);
+TO=sparse(sd(:,1),sd(:,2),TO,na,na);
 TW=sparse(sd(:,1),sd(:,2),TW,na,na);
 
-TL=TL+TL';
+TO=TO+TO';
 TW=TW+TW';
 
- 
+TO=TO(:,v1==1);
+TO=TO(v1==1,:);
+
+TW=TW(:,v1==1);
+TW=TW(v1==1,:);
+
+[r,c]=find(TO);
+TL=TO+sparse(r,c,A(c)).*TW;
