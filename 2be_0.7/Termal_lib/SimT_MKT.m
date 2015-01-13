@@ -295,8 +295,8 @@ while t_flag==1
             qg=QBild(W1G,W6G,W7G,Pt(vg)',Uf(WNG,ft+1),WonG(:,1),dt,pw(WNG),WNG,nw);
             qd=QBild(W1D,W6D,W7D,Pt(vd)',Uf(WonD(:,3),ft+1),WonD(:,1),dt,pw(WonD(:,3)),WonD(:,3),nw);
             q=qm+qc+qg+qd;
-            
-            [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
+            flag_pwq=0;
+           % [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
             Pt0=Pt;
         end
     end
@@ -398,7 +398,7 @@ while t_flag==1
     Uf(:,ft+1:end)=Uf(:,ft+1:end).*repmat(qo>Qmin,1,size(Uf(:,ft+1:end),2));
     
     st=st+dt;
-    dt1(t)=dt;
+    dt1(t+1)=dt;
     dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2);
     t_flag=st~=Ta;
     

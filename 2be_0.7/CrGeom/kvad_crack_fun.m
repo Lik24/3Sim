@@ -1,6 +1,6 @@
 function [NLT,PXY,gXY,dl,tXY,XY_GY]=kvad_crack_fun(XY_GY,NL,WXY)
 %dh=16;
-dh=8;
+dh=4;
 
 rad=6.5*dh*0.5;         % Радиус очистки вокруг скважины
 drob=6.5*dh;        % Густота сетки
