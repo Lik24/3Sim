@@ -89,10 +89,10 @@ Z.mup=[mup(1:2);mup(3:4)];
 Z.kms=DTA{22};
 Z.g=DTA{31};
 
-[Z.Fc,Z.Sc]=sum2bol(Z.aw,Z.as);
-[Z.Fc2,Z.Sc2]=sum2bol(Z.tw,Z.ts);
+[Z.Sc,Z.Fc]=sum2bol(Z.aw,Z.as,Z.mu);
+[Z.Sc2,Z.Fc2]=sum2bol(Z.tw,Z.ts,Z.mu);
 end
-function [Sc,Fc]=sum2bol(AW,as)
+function [Sc,Fc]=sum2bol(AW,as,mu)
 Swr=AW(4);
 Sor=AW(5);
 aw=AW(1:3);
