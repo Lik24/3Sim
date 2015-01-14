@@ -84,14 +84,18 @@ hold on
 %ay=[XY_GY2(GYData.BND(:,1),2),XY_GY2(GYData.BND(:,2),2)];
 %plot(ax,ay,'k','LineWidth',2)
 PCC=(abs(min(PC(:,end)))+PC(:,end))/max(abs(min(PC(:,end)))+PC(:,end));
+if numel(PCC)~=0
 plot_crack_color(Nl,NT,PCC,CR_GRUP,XY,z);
+end
 %set(s1,'CLim',[min([pgy;p]) max([pgy;p])])
 hold off
 
 figure(98),subplot(2,4,2);
 plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность',XYgy,a0,'linear') % 
 hold on
+if numel(SwC)~=0
 plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
+end
 hold off
 
 
