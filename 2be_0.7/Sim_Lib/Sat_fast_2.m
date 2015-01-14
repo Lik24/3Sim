@@ -50,7 +50,7 @@ PwNl=repmat(Pw,Nl,1);
      W2M=sparse(WonM,Won,W1,nw,na);
      W2D=sparse(WoD(:,3),WoD(:,1),W1D,nw,nd);
      W2B=sparse(nw,nb);
-
+ Qf=Qzm1<0;
      b1wm=b1wm.*(sum(W2M(Qf==0,:),1)~=0)';
      b1wd=b1wd.*(sum(W2D(Qf==0,:),1)~=0)';
      
@@ -59,7 +59,7 @@ PwNl=repmat(Pw,Nl,1);
      W3vec=sparse(WonM,1,W1,nw,1)+sparse(WoD(:,3),1,W1D,nw,1);
      WM3=-sparse(1:nw,1:nw,W3vec,nw,nw);
   
-     Qf=Qzm1<0;
+    
             
      bl=[b1wm;b1wd;b1wb]+BLGY_GIM;
      blm=bl(va)-sparse(r1a,ones(sum(v1a),1),Blc,na,1)/dt-sparse(r2a,ones(sum(v2a),1),Blg,na,1)/dt;
