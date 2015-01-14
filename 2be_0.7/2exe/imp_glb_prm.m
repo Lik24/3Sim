@@ -89,31 +89,76 @@ Z.mup=[mup(1:2);mup(3:4)];
 Z.kms=DTA{22};
 Z.g=DTA{31};
 
-[Z.Fc,Z.Sc]=sum2bol(Z.aw,Z.as);
-[Z.Fc2,Z.Sc2]=sum2bol(Z.tw,Z.ts);
+% [Z.Sc,Z.Fc]=sum2bol(Z.aw,Z.as,Z.mu);
+% [Z.Sc2,Z.Fc2]=sum2bol(Z.tw,Z.ts,Z.mu);
+
+
+[Z.Sc,Z.Fc]=sum2bol_Dima(Z.aw,Z.as,Z.mu);
+[Z.Sc2,Z.Fc2]=sum2bol_Dima(Z.tw,Z.ts,Z.mu);
+
+
 end
-function [Sc,Fc]=sum2bol(AW,as)
+% function [Sc,Fc]=sum2bol(AW,as,mu)
+% Swr=AW(4);
+% Sor=AW(5);
+% aw=AW(1:3);
+% 
+% syms Sw
+% SW=(Sw-Swr)./(1-Sor-Swr);
+% ko=(1-SW).^as(2);
+% kw=aw(1)*SW.^as(1);
+% 
+% gam=mu(1)/mu(2);
+% 
+% f=kw/(gam*ko+kw);
+% F=diff(f,Sw);
+% 
+% dS=Swr:0.001:(1-Sor);
+% 
+% F1=eval(subs(F,dS));
+% figure(101);plot(dS,F1);hold on
+% 
+% 
+% fn=(subs(f,dS)-subs(f,Swr))./(dS-Swr);
+% % fn=(subs(f,dS)-subs(f,0))./(dS-0);
+% 
+% fm=max(eval(fn));%
+% fn=eval(fn);
+% [r,c]=find(fm==fn);
+% 
+% Sc=dS(c);
+% Fc=eval(subs(F,Sc));
+% end
+
+function [Sc,Fc]=sum2bol_Dima(AW,as,mu)
 Swr=AW(4);
 Sor=AW(5);
 aw=AW(1:3);
 
-syms Sw
+Sw=Swr:0.001:(1-Sor);
+
 SW=(Sw-Swr)./(1-Sor-Swr);
 ko=(1-SW).^as(2);
 kw=aw(1)*SW.^as(1);
 
 gam=mu(1)/mu(2);
 
-f=kw/(gam*ko+kw);
-F=diff(f,Sw);
+f=kw./(gam*ko+kw);
+F=diff(f)./diff(Sw);
+% figure(101);plot(Sw(2:end),F);
+v=find(F==max(F));
 
-dS=Swr:0.001:(1-Sor);
-fn=(subs(f,dS)-subs(f,0))./(dS-0);
+Sc=Sw(v(1));
+Fc=F(v(1));
+% F=(f(2:end)-f(1:end-1))./(Sw(2:end)-Sw(1:end-1));
 
-fm=max(eval(fn));%
-fn=eval(fn);
-[r,c]=find(fm==fn);
-
-Sc=dS(c);
-Fc=eval(subs(F,Sc));
+% dS=Swr:0.001:(1-Sor);
+% fn=(subs(f,dS)-subs(f,Swr))./(dS-Swr);
+% 
+% fm=max(eval(fn));%
+% fn=eval(fn);
+% [r,c]=find(fm==fn);
+% 
+% Sc=dS(c);
+% Fc=eval(subs(F,Sc));
 end

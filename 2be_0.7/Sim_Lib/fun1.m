@@ -1,5 +1,5 @@
 function [Bwc,Bwg,Blc,Blg,Bwcd,Bwgd,Blcd,Blgd,CSw,GSw,i,Q1,Q2,Qm,Qd,dSS]=fun1(RC,Pi,SW,Cp,PR,TC,TG,A2C,A2G,A2D,D2C,D2G,WonC,...
-    WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke,dZ,Mp,Bwo,P0)
+    WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke,dZA,Mp,Bwo,P0)
 
 as=PR.as;
 aw=PR.aw;
@@ -103,13 +103,13 @@ i=i+1;
      KfwM(v1==1)=kfw(va);      KfoM(v1==1)=kfo(va);
      KfwD(v2==1)=kfw(vd);      KfoD(v2==1)=kfo(vd);
      
-     [vPa1,vPc1,vPc2,vPg1,vPg2,vPd1,dPa,dPc,dPg,dPd]=pre_potok_2(Pi,Pj,RC,rc_in_h,rc_in_hd,Na,Nd,na,nd);
+     [vPa1,vPc1,vPg1,vPd1,dPa,dPc,dPg,dPd]=pre_potok_2(Pi,Pj,RC,rc_in_h,rc_in_hd,Na,Nd,na,nd,dZA);
      [Clp,Cwp,Cws,A,Bwo,Mp]=SGim([dVa;dVc;dVg;dVd],Sw,Mp,zc,Bwo,Pi,1,P0([v_a(v1==1),v_c,v_g,v_d(v2==1)]),va,vc,vg,vd,zeros(1,0),dt/ndt);
      
-     [TL2,TW2]=Potok_MKT_2(T_in,vPa1,Cp(v_a),mu,rc_in_h,Na,KfwM,KfoM,kms(1),dPa,L,Ro,Ke);
-     [CL,CW]=Potok_Tube_2(TC,Pc,vPc1,vPc2,kfw(vc),kfo(vc),Cp(v_c),PR,RC.Cr2,RC.Cc2,kms(2),dPc,Lc,nc);
-     [GL,GW]=Potok_Tube_2(TG,Pg,vPg1,vPg2,kfw(vg),kfo(vg),Cp(v_g),PR,RC.Gr2,RC.Gc2,kms(3),dPg,Lg,ng);
-     [DL2,DW2]=Potok_MKT_2(TD_in,vPd1,Cp(v_d),mu,rc_in_hd,Nd,KfwD,KfoD,kms(4),dPd,L,Ro,Ke);
+     [TL2,TW2]=Potok_MKT_2(T_in,vPa1,Cp(v_a),mu,rc_in_h,Na,KfwM,KfoM,kms(1),dPa,L,Ro,Ke,A(va),dZ(1,:),v1);
+     [CL,CW]=Potok_Tube_2(TC,Pc,vPc1,kfw(vc),kfo(vc),Cp(v_c),PR,RC.Cr2,RC.Cc2,kms(2),dPc,Lc,nc,A(vc),dZ(2,:));
+     [GL,GW]=Potok_Tube_2(TG,Pg,vPg1,kfw(vg),kfo(vg),Cp(v_g),PR,RC.Gr2,RC.Gc2,kms(3),dPg,Lg,ng,A(vg),dZ(3,:));
+     [DL2,DW2]=Potok_MKT_2(TD_in,vPd1,Cp(v_d),mu,rc_in_hd,Nd,KfwD,KfoD,kms(4),dPd,L,Ro,Ke,A(vd),dZ(4,:),v2);
   
      Pa1=Pi(v_a(v1==1));
      Cp1=Cp(v_a(v1==1));
@@ -160,20 +160,8 @@ i=i+1;
 
     [bAl,bAw,bl,bw]=Potok_GY(T_gy,Pgy,Pa,rc_gy,KfwM,KfoM,v1,mu,Na);
     [bDl,bDw,bld,bwd]=Potok_GY(T_gy_d,Pgy2,Pd,rc_gy_d,KfwD,KfoD,v2,mu,Nd);
-    
-     TL2=TL2(:,v1==1);
-     TL2=TL2(v1==1,:);
-
-     DL2=DL2(:,v2==1);
-     DL2=DL2(v2==1,:);
-     
-     TW2=TW2(:,v1==1);
-     TW2=TW2(v1==1,:);
-          
-     DW2=DW2(:,v2==1);
-     DW2=DW2(v2==1,:);
-     
-     [Gr,Grw]=Gravity(TL2,TW2,CL1,CW1,GL1,GW1,DL2,DW2,[],A,dZ);
+       
+    [Gr,Grw]=Gravity(TL2,TW2,CL1,CW1,GL1,GW1,DL2,DW2,[],A,dZ);
         
      A1=TL2-sparse(1:na,1:na,sum(TL2,2)+sum(A2CL,2)+sum(A2GL,2)+sum(A2DL,2)+Clp(va)+bAl',na,na)-sparse(wom(:,1),wom(:,1),W1,na,na);
      D1=DL2-sparse(1:nd,1:nd,sum(DL2,2)+sum(D2CL,2)+sum(D2GL,2)+sum(A2DL,1)'+Clp(vd)+bDl',nd,nd)-sparse(wod(:,1),wod(:,1),W1D,nd,nd);

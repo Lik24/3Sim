@@ -9,12 +9,14 @@ K=DATA.gKX;
 XY=repmat(XY,Nl,1);
 
 P1=P(1:size(pp,2),:);
+PC=P(size(pp,2)+1:size(pp,2)+size(pc,2),:);
 T1=T(1:size(pp,2),:);
 %K(pp)=K;
 P1(pp,:)=P1;
 Sw1(pp,:)=Sw;
 Cp1(pp,:)=Cp;
 T1(pp,:)=T1;
+PC(pc,:)=PC;
 SwC(pc,:)=SwC;
 
 %P1GY=P(size(pp,2)+1:end,:);
@@ -81,14 +83,19 @@ hold on
 %ax=[XY_GY2(GYData.BND(:,1),1),XY_GY2(GYData.BND(:,2),1)];
 %ay=[XY_GY2(GYData.BND(:,1),2),XY_GY2(GYData.BND(:,2),2)];
 %plot(ax,ay,'k','LineWidth',2)
-plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
+PCC=(abs(min(PC(:,end)))+PC(:,end))/max(abs(min(PC(:,end)))+PC(:,end));
+if numel(PCC)~=0
+plot_crack_color(Nl,NT,PCC,CR_GRUP,XY,z);
+end
 %set(s1,'CLim',[min([pgy;p]) max([pgy;p])])
 hold off
 
 figure(98),subplot(2,4,2);
 plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность',XYgy,a0,'linear') % 
 hold on
+if numel(SwC)~=0
 plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
+end
 hold off
 
 
