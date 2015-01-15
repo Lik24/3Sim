@@ -171,6 +171,7 @@ while t_flag==1
     %for t=1:Ta-1
     t=t+1;
     
+    
     if t==1 && dtt==0
         dt=1;
         dtt=1;
@@ -253,9 +254,9 @@ while t_flag==1
             A2GL', C2GL', G1,  D2GL', G2BL;
             A2DL', D2CL, D2GL,  D1,  D2BL;
             A2BL', C2BL',G2BL',D2BL', B1];
-            
+
         while  flag_pwq==1
-           
+
             PwNl=repmat(Pw(:,ft+1),Nl,1);
             % PwNl=PwNl(ka1==1);
             
@@ -296,8 +297,9 @@ while t_flag==1
             qd=QBild(W1D,W6D,W7D,Pt(vd)',Uf(WonD(:,3),ft+1),WonD(:,1),dt,pw(WonD(:,3)),WonD(:,3),nw);
             q=qm+qc+qg+qd;
             flag_pwq=0;
-           % [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
+%            [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
             Pt0=Pt;
+
         end
     end
     

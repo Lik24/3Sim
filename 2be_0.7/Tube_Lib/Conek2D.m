@@ -1,4 +1,4 @@
-function [DData,CR_GRUP,Mp]=Conek2D(DATA,NLT,Nl,CrDATA,WData,A2C,A2G)
+function [DData,CR_GRUP,Mp]=Conek2D(DATA,NLT,Nl,CrDATA,WData,A2C,A2G,ddol)
 
 XY=DATA.XY;
 Won=DATA.Won;
@@ -190,11 +190,7 @@ end;
         WonV(i,1)=find(WonV(i,1)==p);
     end;
     
-    if size(D,1)~=0
-        ddol=0.1;
-    else
-        ddol=0;
-    end
+    if size(D,1)==0 ddol=0; end
     
     Mp=DATA.gMp;
     Mp_d=ddol.*Mp(ka==1);
