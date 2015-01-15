@@ -1,6 +1,6 @@
 function [GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl,Pw,Qw,Uf,Cpw,PwQC_bnd]=read_mr_prop
 ff=pwd;
-cd('2exe');
+cd('Data_in');
 D=dir;
 cd(ff);
     
