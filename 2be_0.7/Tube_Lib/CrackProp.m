@@ -9,7 +9,7 @@ kd=PR.Kd;
 kg=PR.Kg;
 hg=PR.Hg;
 
-alp_C=PR.alp_C;
+alp_C=PR.Alp_C;
 
 for l=1:PR.Nl
   nt=NT{l};

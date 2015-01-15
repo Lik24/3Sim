@@ -190,7 +190,9 @@ end;
         WonV(i,1)=find(WonV(i,1)==p);
     end;
     
-    if size(D,1)==0 ddol=0; end
+    if size(D,1)==0 
+        ddol=0;
+    end
     
     Mp=DATA.gMp;
     Mp_d=ddol.*Mp(ka==1);
