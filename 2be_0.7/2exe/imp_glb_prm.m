@@ -54,9 +54,9 @@ Let(19)={'zc'};    Let(20)={'Bo'};    Let(21)={'mup'};
 Let(22)={'kms'};   Let(23)={'Fc'};    Let(24)={'Sc'};
 Let(25)={'Fc2'};   Let(26)={'Sc2'};   Let(27)={'Swr'};
 Let(28)={'Sor'};   Let(29)={'SwrC'};   Let(30)={'SorC'};
-Let(31)={'g'};
+Let(31)={'g'};     Let(32)={'alp_c'};
 
-for i=1:31
+for i=1:32
  a=strcmp(Let(i),Glprm(:,1));
  if sum(a)>0
  DTA(i,1)={str2num(Glprm{a==1,2})};
@@ -88,6 +88,7 @@ mup(2)=DTA{6}(1);
 Z.mup=[mup(1:2);mup(3:4)];
 Z.kms=DTA{22};
 Z.g=DTA{31};
+Z.alp_C=DTA{32};
 
 % [Z.Sc,Z.Fc]=sum2bol(Z.aw,Z.as,Z.mu);
 % [Z.Sc2,Z.Fc2]=sum2bol(Z.tw,Z.ts,Z.mu);
