@@ -6,6 +6,7 @@ HH=CrDATA.H;
 dC=CrDATA.dC;
 KC=CrDATA.KC;
 DH=CrDATA.DH;
+alp_C=CrDATA.alp_C;
 
 WonV(1,1:3)=1;
 WonV(1,:)=[];
@@ -78,7 +79,7 @@ for l=1:Nl
         C=H2(r+(c-1)*n)*dh./L2(r+(c-1)*n)*kc*8.34;
         C=sparse(r,c,C,n,n);
         
-        a2c=sum(H2.*L2,2);
+        a2c=sum(H2.*L2,2)*alp_C;
         A2C=sparse(unt+(l-1)*np,1:n,a2c,np*Nl,n);
         dVc=sum(H2.*L2.*dh,2);
         dVB(i)={dVc};

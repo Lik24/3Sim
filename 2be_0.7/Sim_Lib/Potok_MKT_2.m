@@ -39,5 +39,5 @@ TO=TO(v1==1,:);
 TW=TW(:,v1==1);
 TW=TW(v1==1,:);
 
-[r,c]=find(TO);
+[r,c]=find(TO+TW);
 TL=TO+sparse(r,c,A(c)).*TW;

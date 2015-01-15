@@ -50,7 +50,7 @@ PwNl=repmat(Pw,Nl,1);
      W2M=sparse(WonM,Won,W1,nw,na);
      W2D=sparse(WoD(:,3),WoD(:,1),W1D,nw,nd);
      W2B=sparse(nw,nb);
-
+ Qf=Qzm1<0;
      b1wm=b1wm.*(sum(W2M(Qf==0,:),1)~=0)';
      b1wd=b1wd.*(sum(W2D(Qf==0,:),1)~=0)';
      
@@ -59,7 +59,7 @@ PwNl=repmat(Pw,Nl,1);
      W3vec=sparse(WonM,1,W1,nw,1)+sparse(WoD(:,3),1,W1D,nw,1);
      WM3=-sparse(1:nw,1:nw,W3vec,nw,nw);
   
-     Qf=Qzm1<0;
+    
             
      bl=[b1wm;b1wd;b1wb]+BLGY_GIM;
      blm=bl(va)-sparse(r1a,ones(sum(v1a),1),Blc,na,1)/dt-sparse(r2a,ones(sum(v2a),1),Blg,na,1)/dt;
@@ -143,8 +143,8 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
          -Cp([va,vd]).*Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]))+Cp([va,vd]).*Grw([va,vd]);
      tmp=sum(Bw);    
 
-     AM2=[TW-sparse(1:na,1:na,sum(A2DW,2)+Cwp(va)),A2DW;
-          A2DW',DW-sparse(1:nd,1:nd,sum(A2DW,1)+Cwp(vd)')];
+     AM2=[TW-sparse(1:na,1:na,sum(A2DW,2)),A2DW;
+          A2DW',DW-sparse(1:nd,1:nd,sum(A2DW,1))];
      AM3=[TP,A2DP;A2DP',DP];
      
      Sw_old=Sw([va,vd]);

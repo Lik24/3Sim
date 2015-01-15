@@ -171,7 +171,9 @@ while t_flag==1
     %for t=1:Ta-1
     t=t+1;
     
-    
+%     if t==43
+%         123
+%     end
     if t==1 && dtt==0
         dt=1;
         dtt=1;
@@ -254,9 +256,9 @@ while t_flag==1
             A2GL', C2GL', G1,  D2GL', G2BL;
             A2DL', D2CL, D2GL,  D1,  D2BL;
             A2BL', C2BL',G2BL',D2BL', B1];
-
+            
         while  flag_pwq==1
-
+           
             PwNl=repmat(Pw(:,ft+1),Nl,1);
             % PwNl=PwNl(ka1==1);
             
@@ -280,9 +282,9 @@ while t_flag==1
             W2M1=WM1(Qf~=0,:);
             W2M2=WM2(:,Qf~=0);
             W2M3=WM3(Qf~=0,Qf~=0);
-            
+
             Pt=[BM',Qz(Qf~=0,ft+1)']/[AM,W2M2;W2M1,W2M3];
-            
+           
             flag_gim=sum(abs(Pt(1:na+nc+ng+nd+nb)-Pt0(1:na+nc+ng+nd+nb))./Pt(1:na+nc+ng+nd+nb)>=1e-6)~=0;
             flag_gim=flag_gim*(sum(zc==0)==0);
             
@@ -297,9 +299,8 @@ while t_flag==1
             qd=QBild(W1D,W6D,W7D,Pt(vd)',Uf(WonD(:,3),ft+1),WonD(:,1),dt,pw(WonD(:,3)),WonD(:,3),nw);
             q=qm+qc+qg+qd;
             flag_pwq=0;
-%            [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
+           % [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
             Pt0=Pt;
-
         end
     end
     
@@ -388,7 +389,8 @@ while t_flag==1
         +sum(Qg(:,2,t+1)-Qg(:,3,t+1)+Qg(:,1,t+1))+sum(Qd(:,2,t+1)-Qd(:,3,t+1)+Qd(:,1,t+1));
     %sum(sQo(:))
     % dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
-    
+    if t==68
+    end
     %%prob.progress;
     c_lik=1-Qm(:,3,t+1)./Qm(:,2,t+1);
     c_lik(isnan(c_lik)==1)=0;
