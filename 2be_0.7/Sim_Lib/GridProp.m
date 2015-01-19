@@ -1,4 +1,4 @@
-function [DATA]=GridProp(wKx,wKy,wKz,wMp,wP,wSw,wCp,wT,wNTG,CXY,wH,wZ,gXY,nl,WXY,XYgy,GY_subl)
+function [DATA]=GridProp(wKx,wKy,wKz,wMp,wP,wSw,wCp,wT,wNTG,CXY,wH,wZ,gXY,nl,WXY,XYgy,GY_subl,Won3)
 [nw]=size(wKx,1);
 A=zeros(nw,nl*6);
 XY=[gXY];
@@ -102,9 +102,9 @@ end;
 % gK=gK.*(gK>0)+0.1*(gK<0)+10;
 % gK=gK/10;
 v1=0:nl-1;
-Won=repmat(1:size(WXY,1),nl,1)+repmat(v1'*size(XY,1),1,size(WXY,1)); 
-Won=Won';
-Won=Won(:);
+Won(:,1)=repmat(1:size(Won3,1),nl,1)+repmat(v1'*size(XY,1),1,size(WXY,1)); 
+Won(:,3)=repmat(Won3(:,1),nl,1);
+
 
 BndZ=zeros(size(gKX(:),1),1);
 BndZ(1:ncg)=1;

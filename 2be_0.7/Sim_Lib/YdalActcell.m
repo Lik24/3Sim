@@ -19,10 +19,14 @@ Z=Z(ka==1);
 P=P(ka==1);
 MCp=MCp(ka==1);
 
-ka1=ka(Won);
+ka1=ka(Won(:,1));
 Wf=Wf(ka1==1);
 
 im=zeros(size(ka));
-im(Won)=1;
+im2=zeros(size(ka,1),2);
+im(Won(:,1),:)=1;
+im2(Won(:,1),:)=Won(:,2:3);
 im=im(ka==1);
-Won=find(im(:));
+im2=im2(ka==1,:);
+Won(:,1)=find(im(:));
+Won(:,2:3)=im2(im~=0,:);

@@ -38,9 +38,9 @@ g2(5,1:s2-1)=GR2(2:s2,2);
 g=[g1,g2];
 [p,e,t]= initmesh(g,'Hmax', drob); %Создание сетки
 p=p';
-%TRI=delaunayTriangulation(p(:,1),p(:,2));
-
-%pdemesh(p',e,t) , axis equal % Вывод полученной сетки
+% TRI=delaunayTriangulation(p(:,1),p(:,2));
+% 
+% pdemesh(p',e,t) , axis equal % Вывод полученной сетки
 
 
 end

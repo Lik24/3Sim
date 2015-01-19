@@ -2,10 +2,10 @@ function [NLT,PXY,gXY,dl,tXY,XY_GY]=kvad_crack_fun(XY_GY,NL,WXY,dh)
 %dh=16;
 % dh=4;
 
-rad=6.5*dh*0.5;         % Радиус очистки вокруг скважины
-drob=6.5*dh;        % Густота сетки
-dl=6.5*dh;          % Шаг трещины
-dl2=6.5*dh;         % Очитска вокруг трещины
+rad=dh;         % Радиус очистки вокруг скважины
+drob=dh;        % Густота сетки
+dl=dh;          % Шаг трещины
+dl2=dh;         % Очитска вокруг трещины
 
 ws=size(WXY,1);
 NT=cell(NL,1);

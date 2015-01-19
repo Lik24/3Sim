@@ -44,10 +44,10 @@ PwNl=repmat(Pw,Nl,1);
      %     A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke,CR,TM);
      
      
-     b1wm=sparse(Won,ones(1,size(Won,1)),-W1.*PwNl,na,1);
+     b1wm=sparse(Won(:,1),ones(1,size(Won,1)),-W1.*PwNl,na,1);
      b1wd=sparse(WoD(:,1),ones(1,size(WoD,1)),-W1D.*PwNl(WoD(:,3)),nd,1);
      
-     W2M=sparse(WonM,Won,W1,nw,na);
+     W2M=sparse(WonM,Won(:,1),W1,nw,na);
      W2D=sparse(WoD(:,3),WoD(:,1),W1D,nw,nd);
      W2B=sparse(nw,nb);
  Qf=Qzm1<0;
@@ -66,7 +66,7 @@ PwNl=repmat(Pw,Nl,1);
      bld=bl(vd-nc-ng)-sparse(r1d,ones(sum(v1d),1),Blcd,nd,1)/dt-sparse(r2d,ones(sum(v2d),1),Blgd,nd,1)/dt;
      Bl=[blm;bld;bl(vb-na-nd)];
      
-     A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,Clp(va)+sum(b1gm(:,1:2),2)+sum(A2DL,2),na,na);
+     A1=TL-sparse(Won(:,1),Won(:,1),W1,na,na)-sparse(1:na,1:na,Clp(va)+sum(b1gm(:,1:2),2)+sum(A2DL,2),na,na);
      D1=DL-sparse(WoD(:,1),WoD(:,1),W1D,nd,nd)-sparse(1:nd,1:nd,Clp(vd)+sum(b1gd(:,1:2),2)+sum(A2DL,1)',nd,nd);                       %Матрица коэф. для двойной пор.
      B1=BB-sparse(1:nb,1:nb,sum(A2BL,1)+sum(D2BL,1)+Clp(vb)'+b1gb',nb,nb);
         
@@ -122,13 +122,13 @@ PwNl=repmat(Pw,Nl,1);
 b_A2B=Soed2B(A2BW,A2BP,Pi,na,nb,va,vb);     % Связь пор с граничной областью
 b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
 
-     bwm=sparse(Won,ones(1,size(Won,1)),-W6.*(Pi(Won)-PwNl(WonM)),na,1)...
+     bwm=sparse(Won(:,1),ones(1,size(Won,1)),-W6.*(Pi(Won(:,1))-PwNl(WonM)),na,1)...
          -b1gm(:,3).*(Pi(va)-GYData.GY_Pxy)-b1gm(:,4).*(Pi(va)-GYData.GY_Pz)-b_A2B(:,1);
      
      bwd=sparse(WoD(:,1),ones(1,size(WoD,1)),-W6D.*(Pi(vd(WoD(:,1)))-PwNl(WoD(:,3))),nd,1)...
          -b1gd(:,3).*(Pi(vd)-GYData.GY_Pxy(vad))-b1gd(:,4).*(Pi(vd)-GYData.GY_Pz(vad))-b_D2B(:,1);
     
-     bpm=sparse(Won,ones(1,size(Won,1)),-W7.*(Pi(Won)-PwNl(WonM)),na,1)...
+     bpm=sparse(Won(:,1),ones(1,size(Won,1)),-W7.*(Pi(Won(:,1))-PwNl(WonM)),na,1)...
          -b1gm(:,5).*(Pi(va)-GYData.GY_Pxy)-b1gm(:,6).*(Pi(va)-GYData.GY_Pz)-b_A2B(:,2);
      
      bpd=sparse(WoD(:,1),ones(1,size(WoD,1)),-W7D.*(Pi(vd(WoD(:,1)))-PwNl(WoD(:,3))),nd,1)...

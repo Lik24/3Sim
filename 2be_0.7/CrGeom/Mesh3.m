@@ -28,10 +28,10 @@ g1(5,1:s-1)=GR(2:s,2);
 
 [p1,e,t]= initmesh(g1,'Hmax', drob); %Создание сетки
 p1=p1';
-%TRI=delaunayTriangulation(p(:,1),p(:,2));
-
-%pdemesh(p1',e,t) , axis equal % Вывод полученной сетки
-%hold on
+% TRI=delaunayTriangulation(p1(:,1),p1(:,2));
+% 
+% pdemesh(p1',e,t) , axis equal % Вывод полученной сетки
+% hold on
 end
 
 
