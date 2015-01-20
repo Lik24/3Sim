@@ -52,9 +52,11 @@ qd=zeros(size(Uf,1),5);
 [r,c]=find(A(1:size(XY,1),1:size(XY,1))==1);
 
 Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,nw,Nl);
+Wf=KWell_Horiz(Wf,KX,KY,KZ,H,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,nw,Nl);
+
 XY=repmat(XY,Nl,1);
-ka1=ka(Won);
-Won1=Won;
+ka1=ka(Won(:,1));
+
 [A,L,B,S,H1,HV,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf]=YdalActcell(A,L,B,S,H1,HV,XY,KX,KY,KZ,Mp,MSw,H,Z,P,MCp,Won,Wf,ka);
 [A,L,S,B,H1,HV,K,XY,Mp,MSw,H,Z,P,MCp,T,NTG,p,rz,cz,BXY,BZ,dH,NL,NamXY,GYData]=PereYpor(A,L,S,B,H1,HV,KX,KY,KZ,Mp,MSw,...
     XY,H,Z,P,MCp,DATA,GYData,ka);
@@ -72,7 +74,7 @@ A2D=A2D(p,:);
 A2B=A2B(p,:);
 
 for i=1:size(Won,1)
-    Won(i)=find(Won(i)==p);
+    Won(i,1)=find(Won(i,1)==p);
 end;
 
 na=size(XY,1);  nc=size(C,1);  ng=size(G,1);  nd=size(D,1); nb=size(BB,1); nw=size(Qz,1);
@@ -91,12 +93,12 @@ b1wb=sparse(nb,1);
 C2D=DData.C2D;     D2CL=C2D;
 G2D=DData.G2D;     D2GL=G2D;
 
-WonM=repmat(1:nw,1,Nl)';
-WW=WonM~=0;
+WonM=Won(:,3);
+%WW=WonM~=0;
 WonM=WonM(ka1==1);
-WW(ka1==0)=0;
-WW=reshape(WW,Nl,nw);
-WW=sum(WW,1)~=0;
+% WW(ka1==0)=0;
+% WW=reshape(WW,Nl,nw);
+% WW=sum(WW,1)~=0;
 
 %figure(98),subplot(2,4,7),spy([A,A2C,A2G;A2C',C,C2G;A2G',C2G',G]);
 
@@ -140,7 +142,7 @@ Pwt=zeros(size(Pw));
 PpW=zeros(size(Uf));
 
 % [CR_rc]=Pre_Crack1(RC,na,TM,A2C,A2G,Wf,Won,WonM,nw);
-[CR_rc]=Pre_Crack(RC,na,nd,TTM,TD,A2C,A2G,C2D,G2D,A2D,Wf,Won,WonM,WonD,dZ);
+[CR_rc]=Pre_Crack(RC,na,nd,TTM,TD,A2C,A2G,C2D,G2D,A2D,Wf,Won(:,1),WonM,WonD,dZ);
 %[CR_ind]=Pre_Crack_p(RC,na,TM,Wf,Won,WonM,nw,CR_GRUP,C,G,A2C,A2G,K(:,1),WonC,WonG);
 [CR]=SS_ind(RC,na);
 
@@ -186,7 +188,7 @@ while t_flag==1
     fp=1;
     
     Qf=Qz(:,ft+1);
-    Qf(WW==0)=0;
+    %Qf(WW==0)=0;
     
     %     [C,G,A2C,A2G,WonC(:,2),WonG(:,2)]=temp_CG(fll,C2,G2,A2C2,A2G2,WonC1,WonG1,t);
     %     [TC,TG,TA2C,TA2G,WonC(:,2),WonG(:,2)]=temp_CG(fll,TC1,TG1,TA2C1,TA2G1,WonC1,WonG1,t);
@@ -229,18 +231,18 @@ while t_flag==1
         [D2GL,~,~]=Obmen_T2M(G2D,Pi(vd,1),Pi(vg,1),DSw(:,1),GSw(:,t),K(:,1),PR,DCp(:,1),GCp(:,t));
         
         %Wf=Wf0.*(1-0.0001*(P0(Won)-Pi(Won))).^3;
-        [W1,W6,W7]=Well_MKT(Wf,Won,Uf(WonM,ft+1),MSw(:,1),MCp(:,1),aw,as,mu,mup,CpW(WonM,ft+1),A(va));
+        [W1,W6,W7]=Well_MKT(Wf,Won(:,1),Uf(WonM,ft+1),MSw(:,1),MCp(:,1),aw,as,mu,mup,CpW(WonM,ft+1),A(va));
         [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),CSw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1),A(vc));
         [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),GSw(:,t),GCp(:,t),tw,ts,mu,mup,CpW(WNG,ft+1),A(vg));
         [W1D,W6D,W7D]=Well_MKT(WonD(:,2),WonD(:,1),Uf(WonD(:,3),ft+1),DSw(:,1),DCp(:,1),tw,ts,mu,mup,CpW(WonD(:,3),ft+1),A(vd));
         
-        A1=TL-sparse(Won,Won,W1,na,na)-sparse(1:na,1:na,sum(A2CL,2)+sum(A2GL,2)+sum(A2BL,2)+sum(A2DL,2)+Clp(va)+sum(b1gm(:,1:2),2),na,na);  %Матрица коэф. для пор
+        A1=TL-sparse(Won(:,1),Won(:,1),W1,na,na)-sparse(1:na,1:na,sum(A2CL,2)+sum(A2GL,2)+sum(A2BL,2)+sum(A2DL,2)+Clp(va)+sum(b1gm(:,1:2),2),na,na);  %Матрица коэф. для пор
         C1=CL-sparse(1:nc,1:nc,sum(A2CL,1)+sum(D2CL,1)+Clp(vc)',nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);                       %Матрица коэф. для вертикальных трещ.
         G1=GL-sparse(1:ng,1:ng,sum(A2GL,1)+sum(D2GL,1)+Clp(vg)',ng,ng)-sparse(WonG(:,1),WonG(:,1),W1G,ng,ng);                       %Матрица коэф. для гориз. трещ.
         D1=DL-sparse(WonD(:,1),WonD(:,1),W1D,nd,nd)-sparse(1:nd,1:nd,sum(A2DL,1)'+sum(D2BL,2)+sum(D2CL,2)+sum(D2GL,2)+Clp(vd)+sum(b1gd(:,1:2),2),nd,nd);                       %Матрица коэф. для двойной пор.
         B1=BB-sparse(1:nb,1:nb,sum(A2BL,1)+sum(D2BL,1)+Clp(vb)'+b1gb',nb,nb);                                                             %Матрица коэф. для границ
         
-        W2M=sparse(WonM,Won,W1,nw,na);
+        W2M=sparse(WonM,Won(:,1),W1,nw,na);
         W2C=sparse(WonC(:,3),WonC(:,1),W1C,nw,nc);
         W2G=sparse(WNG,WonG(:,1),W1G,nw,ng);
         W2D=sparse(WonD(:,3),WonD(:,1),W1D,nw,nd);
@@ -262,7 +264,7 @@ while t_flag==1
             PwNl=repmat(Pw(:,ft+1),Nl,1);
             % PwNl=PwNl(ka1==1);
             
-            b1wm=sparse(Won,ones(1,size(Won,1)),-W1.*PwNl(WonM),na,1);
+            b1wm=sparse(Won(:,1),ones(1,size(Won,1)),-W1.*PwNl(WonM),na,1);
             b1wc=sparse(WonC(:,1),ones(1,size(WonC,1)),-W1C.*Pw(WonC(:,3),ft+1),nc,1);
             b1wg=sparse(WonG(:,1),ones(1,size(WonG,1)),-W1G.*Pw(WNG,ft+1),ng,1);
             b1wd=sparse(WonD(:,1),ones(1,size(WonD,1)),-W1D.*PwNl(WonD(:,3)),nd,1);
@@ -293,7 +295,7 @@ while t_flag==1
             
             %[flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond(pw,Pt(Won),W1,Uf(WonM,ft+1),Qf,PwQC_bnd);
             
-            qm=QBild(W1,W6,W7,Pt(va)',Uf(WonM,ft+1),Won,dt,pw(WonM),WonM,nw);
+            qm=QBild(W1,W6,W7,Pt(va)',Uf(WonM,ft+1),Won(:,1),dt,pw(WonM),WonM,nw);
             qc=QBild(W1C,W6C,W7C,Pt(vc)',Uf(WonC(:,3),ft+1),WonC(:,1),dt,pw(WonC(:,3)),WonC(:,3),nw);
             qg=QBild(W1G,W6G,W7G,Pt(vg)',Uf(WNG,ft+1),WonG(:,1),dt,pw(WNG),WNG,nw);
             qd=QBild(W1D,W6D,W7D,Pt(vd)',Uf(WonD(:,3),ft+1),WonD(:,1),dt,pw(WonD(:,3)),WonD(:,3),nw);
@@ -351,7 +353,7 @@ while t_flag==1
     
     %% Дебиты
     
-    Qm(:,:,t+1)=QBild(W1,W6.*A(Won),W7,Pi(va,1),Uf(WonM,ft+1),Won,dt,Pw(WonM,ft+1),WonM,nw);
+    Qm(:,:,t+1)=QBild(W1,W6.*A(Won(:,1)),W7,Pi(va,1),Uf(WonM,ft+1),Won(:,1),dt,Pw(WonM,ft+1),WonM,nw);
     %Qm(CR_rc.wn,:,t+1)=Qm1(CR_rc.wn,:);
     Qm(CR_rc(1,1).won(:,3),:,t+1)=Qm1(CR_rc(1,1).won(:,3),:);
     Qc(:,:,t+1)=Q1;%QBild(W1C,W6C,W7C,Pi(na+1:na+nc,1),Uf(WonC(:,3),t+1),WonC(:,1),dt,Pw(WonC(:,3),t+1));
@@ -359,7 +361,7 @@ while t_flag==1
     Qd(:,:,t+1)=QBild(W1D,W6D.*A(WonD(:,1)),W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,Pw(WonD(:,3),ft+1),WonD(:,3),nw);
     Qd(CR_rc(1,2).won(:,3),:,t+1)=Qd1(CR_rc(1,2).won(:,3),:);
     
-    PpW(WonM,t+1)=Pi(Won);
+    PpW(WonM,t+1)=Pi(Won(:,1));
     %% пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
     %    Ti(:,t+1)=Termal(Ti(:,t),Pi(:,t+1),SCw,Mp,Mc,Mg,NTG,LM,LC,LG,LA2C,LA2G,PR,RC,dVCG,dt,Won,WonM,WonV,WonG,...
     %       TeW(:,t+1),Qm(:,:,t+1),Qc(:,:,t+1),Qg(:,:,t+1),C2GL,TL,CL,GL,TW,CW,GW,A2CL,A2CW,A2GL,A2GW,Wf,NDT(t),t,T,S,BZ);
@@ -403,7 +405,7 @@ while t_flag==1
     
     st=st+dt;
     dt1(t+1)=dt;
-    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won,Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2);
+    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won(:,1),Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2);
     t_flag=st~=Ta;
     
 end;

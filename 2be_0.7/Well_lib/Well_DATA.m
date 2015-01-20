@@ -1,15 +1,49 @@
-function [WData]=Well_DATA(WXY,Z,Ta,Nl)
+function [WData,W_N,WXY]=Well_DATA(WXY,Z,Ta,Nl,dh)
 r0=0.084;
 
-[~,WXY,~,~,~,~,~,~,~,~,Pw1,Qz1,Uf1,CpW1,Pw_Q_C_bnd]=read_mr_prop;
+[~,WXY,~,~,~,~,~,~,~,~,Pw1,Qz1,Uf1,CpW1,Pw_Q_C_bnd,Won3]=read_mr_prop;
 Pw=rep(Pw1,Ta);
 Qz=rep(Qz1,Ta);
 Uf=rep(Uf1,Ta);
 CpW=rep(CpW1,Ta);
 
+np2=[];
+wn2=[];
+g_flag1=[];
+wxy3=zeros(0,2);
+
+WonH=Won3(Won3(:,2)==1,:);
+uB=unique(WonH(:,1));
+
+for j=1:size(uB,1)
+    wxy2=[];
+    wxy=WXY(Won3(:,1)==uB(j),:);
+    R=((wxy(2,1)-wxy(1,1))^2+(wxy(2,2)-wxy(1,2))^2)^0.5;
+    segm=ceil(R/dh);
+    dXY=[wxy(2,1)-wxy(1,1),wxy(2,2)-wxy(1,2)]/segm;
+    dXY=repmat(dXY,segm-1,1);
+    dx=cumsum(dXY,1);
+    wxy2(:,1)=wxy(1,1)+dx(:,1);
+    wxy2(:,2)=wxy(1,2)+dx(:,2);
+    np=2:size(wxy2,1)+1;
+    wn1=uB(j)*ones(size(wxy2,1),1);
+    g_flag=ones(size(wxy2,1),1);
+    Won3(Won3(:,3)==2,3)=size(wxy2,1)+2;   
+    wn2=[wn2;wn1];
+    g_flag1=[g_flag1;g_flag];
+    np2=[np2,np];
+    wxy3=[wxy3;wxy2];
+end
+W_N=[Won3;[wn2,g_flag1,np2']];
+WXY=[WXY;wxy3];
+[B,I]=sort(W_N(:,1));
+W_N=W_N(I,:);
+WXY=WXY(I,:);
+
 n=size(WXY);
 n1=size(Z);
 n1(2)=Nl;
+
 %load('history_deb_day_ura','a0','dob_lik2','zak_lik2');
 
 %   %a=rand(n(1),1);
@@ -63,7 +97,8 @@ WData.r0=r0;
 WData.WXY=WXY;
 WData.PwQC_bnd=Pw_Q_C_bnd;
 % WData.Uf=repmat(Uf,1,Ta);
-%WData.Qz=dob_lik2-zak_lik2;
+WData.Doly(1:7,1)=0;
+WData.Doly(8:end,2)=0;
 end
 % for i=1:Ta
 %  if mod(i,8*280)<8*140

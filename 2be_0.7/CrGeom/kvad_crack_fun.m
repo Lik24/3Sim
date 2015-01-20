@@ -1,11 +1,11 @@
-function [NLT,PXY,gXY,dl,tXY,XY_GY]=kvad_crack_fun(XY_GY,NL,WXY)
+function [NLT,PXY,gXY,dl,tXY,XY_GY]=kvad_crack_fun(XY_GY,NL,WXY,dh)
 %dh=16;
-dh=8;
+% dh=4;
 
-rad=6.5*dh*0.5;         % Радиус очистки вокруг скважины
-drob=6.5*dh;        % Густота сетки
-dl=6.5*dh;          % Шаг трещины
-dl2=6.5*dh;         % Очитска вокруг трещины
+rad=dh;         % Радиус очистки вокруг скважины
+drob=dh;        % Густота сетки
+dl=dh;          % Шаг трещины
+dl2=dh;         % Очитска вокруг трещины
 
 ws=size(WXY,1);
 NT=cell(NL,1);
@@ -14,7 +14,7 @@ PXY=cell(NL,1);
 g_cr{1,1}=[];
    % Nt l    X  Y
 g_cr{1,1}=[0,0;
-           300,300]; %пїЅпїЅпїЅпїЅ
+           400,400]; %пїЅпїЅпїЅпїЅ
 
 %g_cr{2,1}=[220,210;
 %           100,120]; %пїЅпїЅпїЅпїЅ
@@ -48,8 +48,8 @@ if isempty(g_cr{1,1})==0;
        crk(r(i),c(i))=crk2(i);
     end;
 
-    [IN,ON]=inpolygon(p(:,1),p(:,2),XY_GY(:,1),XY_GY(:,2));
-    gXY=[cr;pm2;p(ON==1,:)];
+    [IN,ON]=inpolygon(pm2(:,1),pm2(:,2),XY_GY(:,1),XY_GY(:,2));
+    gXY=[cr;pm2;pm2(ON==1,:)];
     gXY=NODuble2(gXY);
     XY_GY=p(ON==1,:);
     sr=[];

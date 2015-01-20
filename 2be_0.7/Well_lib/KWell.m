@@ -1,6 +1,6 @@
 function Wf=KWell(K,H,S,L,B,Won_all,r,c,Perf,SDoly,r0,XY,Nw,Nl)
 
-Won=Won_all(1:Nw);
+Won=Won_all(1:size(Won_all,1)/Nl,1);
 WXY=XY(Won,:);
 
 tet=2*pi*ones(size(WXY,1),1);
@@ -64,8 +64,6 @@ for l=1:Nl
 end;
 
 Wf=2*pi*Wcof(:);
-
-
 end
 
 

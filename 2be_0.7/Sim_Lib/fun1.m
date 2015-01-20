@@ -219,7 +219,7 @@ i=i+1;
 
      ba2=ba2+bw';
      bd2=bd2+bwd';
-     BC=[ba2;bc2;bg2;bd2]+Grw;
+     BC=[ba2;bc2;bg2;bd2]+(Cwp.*Pj)+Grw;
      
      Pc=Pj(vc);
      Pg=Pj(vg);

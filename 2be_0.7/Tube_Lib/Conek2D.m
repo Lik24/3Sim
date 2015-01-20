@@ -1,4 +1,4 @@
-function [DData,CR_GRUP,Mp]=Conek2D(DATA,NLT,Nl,CrDATA,WData,A2C,A2G)
+function [DData,CR_GRUP,Mp]=Conek2D(DATA,NLT,Nl,CrDATA,WData,A2C,A2G,ddol)
 
 XY=DATA.XY;
 Won=DATA.Won;
@@ -13,7 +13,7 @@ DH=CrDATA.DH;
 Xk=CrDATA.Xk;
 
 Nw=size(WData.Doly,1);
-uj=repmat(1:Nw,1,Nl);
+uj=repmat(Won(:,3),1,Nl);
 
 WonV(1,1:3)=1;
 WonV(1,:)=[];
@@ -43,6 +43,7 @@ Ke=2*K1(r1).*K1(c1)./KcKl;
 KK=sparse(r1,c1,Ke);
 
 Wf=KWell(K1,Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
+Wf=KWell_Horiz(Wf,K1,K1,K1,Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
 
 for l=1:Nl
     Nt=NLT{l};
@@ -190,9 +191,7 @@ end;
         WonV(i,1)=find(WonV(i,1)==p);
     end;
     
-    if size(D,1)~=0
-        ddol=0.1;
-    else
+    if size(D,1)==0 
         ddol=0;
     end
     

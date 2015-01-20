@@ -1,6 +1,6 @@
-function [GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl,Pw,Qw,Uf,Cpw,PwQC_bnd]=read_mr_prop
+function [GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl,Pw,Qw,Uf,Cpw,PwQC_bnd,Won3]=read_mr_prop
 ff=pwd;
-cd('2exe');
+cd('Data_in');
 D=dir;
 cd(ff);
     
@@ -10,7 +10,7 @@ end;
 
     mark(1)={'Bond_coord'};  mark(2)={'GY_sub'};     mark(3)={'Ha'};
     mark(4)={'Hk'}; mark(5)={'K'};   mark(6)={'Mp'};
-    mark(7)={'Sw'};  mark(8)={'Well_coord'};   mark(9)={'Z1'}; 
+    mark(7)={'Sw'};  mark(8)={'Well_coord2'};   mark(9)={'Z1'}; 
     mark(10)={'Z3'}; 
     mark(11)={'Pw'}; mark(12)={'Qw'}; mark(13)={'well_type'}; mark(14)={'Cpw'};
     
@@ -27,6 +27,39 @@ end;
         if i==8
             T=readtable(TT{N(i)},'Delimiter','tab');
             A(i)={table2array(T(:,2:3))};
+            WXY=table2array(T(:,2:3));
+            A2=table2array(T(:,4:5));
+            WN=table2array(T(:,1));
+            Prd=ones(size(WN));
+            
+            v1=isnan(sum(A2,2))==0;
+            if sum(v1)>0
+                A2=A2(v1,:);
+                wn=WN(v1,:);
+                A1=table2array(T(:,2:3));
+                WXY=[A1;A2];
+                WN=[WN;wn];
+                Prd=[Prd;2*ones(size(wn))];
+            end
+            [B,I]=sort(WN);
+            WXY=WXY(I,:);
+            Prd=Prd(I);
+            WN(:,1)=B;
+            uB=unique(B);
+            g_flag=zeros(size(uB));
+
+            for j=1:size(uB,1)
+                if sum(WN(:,1)==uB(j))>1
+                    g_flag(j)=1;
+                end;
+            end
+
+            for j=1:size(uB,1)
+                WN(WN(:,1)==uB(j),2)=g_flag(j);
+            end
+            WN(:,3)=Prd;
+            A(i)={WXY};
+            
         else
             T=readtable(TT{N(i)},'FileType','text','Delimiter','tab');
             A(i)={table2array(T)};
@@ -35,6 +68,7 @@ end;
     
     GY=A{1};
     WXY=A{8};
+    Won3=WN;
     GY_subl=A{2};
     H=ChekFull(WXY,A{3});
     Hk=ChekFull(WXY,A{4});

@@ -39,12 +39,12 @@ Hi=repmat(Hi,size(XY,1),1);
 Wf=KWell(K,Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
 
 im=zeros(size(ka));
-im(Won)=uj;
+im(Won(:,1))=uj;
 im=im(ka==1);
 uj=im(im~=0);
 
 im=zeros(size(ka));
-im(Won)=1;
+im(Won(:,1))=1;
 im=im(ka==1);
 Won=find(im(:));
 
