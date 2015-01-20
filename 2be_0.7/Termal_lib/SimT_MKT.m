@@ -185,7 +185,7 @@ while t_flag==1
     
     ft=floor(st);
     % if ~isempty(find(CpW(:,t)~=0)) fp=1; else fp=0; end;
-    fp=1;
+    fp=0;
     
     Qf=Qz(:,ft+1);
     %Qf(WW==0)=0;

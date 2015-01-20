@@ -71,7 +71,7 @@ for l=1:Nl
         HV1=HV(unt);   
         B1=B(unt,:);     B2=B1(:,unt);
         S2=S(unt);
-        K2=K1(unt);
+        K2(:,1)=K1(unt);
         KK1=KK(unt,:);  KK2=KK1(:,unt);
     
         A2A=A(unt,:);   A2A(:,unt)=0;

@@ -97,8 +97,8 @@ WData.r0=r0;
 WData.WXY=WXY;
 WData.PwQC_bnd=Pw_Q_C_bnd;
 % WData.Uf=repmat(Uf,1,Ta);
-WData.Doly(1:7,1)=0;
-WData.Doly(8:end,2)=0;
+% WData.Doly(1:7,1)=0;
+% WData.Doly(8:end,2)=0;
 end
 % for i=1:Ta
 %  if mod(i,8*280)<8*140

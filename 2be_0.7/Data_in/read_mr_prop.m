@@ -80,7 +80,7 @@ end;
     Pw1=A{11};Pw=time_data(Pw1);
     Qw1=A{12};Qw=time_data(Qw1);
     Uf1=A{13}; Uf=time_data(Uf1);
-    Cpw1=A{13}; Cpw=time_data(Cpw1);
+    Cpw1=A{14}; Cpw=time_data(Cpw1);
     
     B=importdata('Chek_bond.txt'); PwQC_bnd=B.data;
     
