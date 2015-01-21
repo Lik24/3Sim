@@ -1,6 +1,7 @@
-function [NLT,PXY,gXY,dl,tXY,XY_GY]=kvad_crack_fun(XY_GY,NL,WXY,dh)
-%dh=16;
-% dh=4;
+function [NLT,PXY,gXY,dl,tXY,XY_GY,Won,WData]=kvad_crack_fun(XY_GY,NL,WData,dh,Won)
+
+WXY=WData.WXY;
+Won_s=Won;
 
 rad=dh;         % Радиус очистки вокруг скважины
 drob=dh;        % Густота сетки
@@ -13,11 +14,11 @@ PXY=cell(NL,1);
 
 g_cr{1,1}=[];
    % Nt l    X  Y
-g_cr{1,1}=[0,0;
-           400,400]; %пїЅпїЅпїЅпїЅ
+g_cr{1,1}=[100,40;
+           40,100]; %пїЅпїЅпїЅпїЅ
 
-%g_cr{2,1}=[220,210;
-%           100,120]; %пїЅпїЅпїЅпїЅ
+g_cr{2,1}=[400,460;
+           460,400]; %пїЅпїЅпїЅпїЅ
        
 %g_cr{1,2}=[110,110;
 %           140,170]; %пїЅпїЅпїЅпїЅ
@@ -25,6 +26,7 @@ g_cr{1,1}=[0,0;
 ImA=zeros(size(g_cr,1),NL);
 
 if isempty(g_cr{1,1})==0; 
+        
     [p,GR] = Mesh3(XY_GY,drob);
 %plot(p(:,1),p(:,2),'*')
     for i=1:size(g_cr,1)
@@ -34,6 +36,8 @@ if isempty(g_cr{1,1})==0;
         end;
     end;
 
+    [WXY,Won,g_cr]=crack2horwell(g_cr,WXY,Won);
+    
     [r,c]=find(ImA);
     for i=1:size(r,1)
         gcr(i,1)=g_cr(r(i),c(i));
@@ -62,6 +66,7 @@ if isempty(g_cr{1,1})==0;
         gXY(sr,:)=[];
     end;
      tXY=[WXY;gXY];
+     tXY=NODuble2(tXY);
 
 for l=1:NL
 rl=find(ImA(:,l)); 
@@ -106,6 +111,20 @@ else
    tXY=[WXY;gXY];
 end;
    
+WData.WXY=WXY;
+doly=WData.Doly;
+Sdoly=WData.SDoly;
+
+won_s=Won_s(Won_s(:,2)==1,:);
+doly_s=doly(Won_s(:,2)==1);
+Sdoly_s=Sdoly(Won_s(:,2)==1);
+
+wn=unique(won_s(:,1));
+ for i=1:size(wn,1)
+     
+ end
+Doly=interp1(st,sQz',dtz:dtz:Ta,'linear','extrap');
+
 end
 
 function XY=NODuble(XY)
@@ -119,7 +138,6 @@ while i<size(XY,2)
     end;
 end;
 end
-
 
 function XY=NODuble2(XY)
 i=0;

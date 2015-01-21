@@ -8,8 +8,7 @@ KC=CrDATA.KC;
 DH=CrDATA.DH;
 alp_C=CrDATA.alp_C;
 
-WonV(1,1:3)=1;
-WonV(1,:)=[];
+WonV=zeros(0,3);
 
 k=0;
 nc1=0;
