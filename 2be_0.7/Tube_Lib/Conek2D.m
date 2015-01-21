@@ -13,7 +13,7 @@ DH=CrDATA.DH;
 Xk=CrDATA.Xk;
 
 Nw=size(WData.Doly,1);
-uj=repmat(1:Nw,1,Nl);
+uj=repmat(Won(:,3),1,Nl);
 
 WonV(1,1:3)=1;
 WonV(1,:)=[];
@@ -43,6 +43,7 @@ Ke=2*K1(r1).*K1(c1)./KcKl;
 KK=sparse(r1,c1,Ke);
 
 Wf=KWell(K1,Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
+Wf=KWell_Horiz(Wf,K1,K1,K1,Hi,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,Nw,Nl);
 
 for l=1:Nl
     Nt=NLT{l};
@@ -70,7 +71,7 @@ for l=1:Nl
         HV1=HV(unt);   
         B1=B(unt,:);     B2=B1(:,unt);
         S2=S(unt);
-        K2=K1(unt);
+        K2(:,1)=K1(unt);
         KK1=KK(unt,:);  KK2=KK1(:,unt);
     
         A2A=A(unt,:);   A2A(:,unt)=0;

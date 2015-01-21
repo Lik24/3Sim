@@ -1,10 +1,10 @@
-function VZL(DATA,WXY,P,Sw,T,Cp,Nl,pp,Q,SwC,CR_GRUP,pc,NT,XYgy,a0,pb,GYData,XYgy2,dtz)
+function VZL(DATA,WXY,P,Sw,T,Cp,Nl,pp,Q,SwC,CR_GRUP,pc,NT,XYgy,a0,pb,GYData,XYgy2,dtz,Won3)
 
 XY=DATA.XY;
 WZ=DATA.gZ(:);
 ka=DATA.ka;
 K=DATA.gKX;
-
+a0=a0(Won3(:,1));
 
 XY=repmat(XY,Nl,1);
 
@@ -67,7 +67,7 @@ mx(1)=min(XY(:,1));
 mx(2)=max(XY(:,1));
 my(1)=min(XY(:,2));
 my(2)=max(XY(:,2));
-[X,Y]=meshgrid(mx(1):50:mx(2),my(1):50:my(2));
+[X,Y]=meshgrid(mx(1):20:mx(2),my(1):20:my(2));
 
 % mx(1)=min(XY_GY2(:,1));
 % mx(2)=max(XY_GY2(:,1));

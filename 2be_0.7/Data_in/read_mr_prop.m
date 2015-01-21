@@ -30,7 +30,8 @@ end;
             WXY=table2array(T(:,2:3));
             A2=table2array(T(:,4:5));
             WN=table2array(T(:,1));
-          
+            Prd=ones(size(WN));
+            
             v1=isnan(sum(A2,2))==0;
             if sum(v1)>0
                 A2=A2(v1,:);
@@ -38,9 +39,11 @@ end;
                 A1=table2array(T(:,2:3));
                 WXY=[A1;A2];
                 WN=[WN;wn];
+                Prd=[Prd;2*ones(size(wn))];
             end
             [B,I]=sort(WN);
             WXY=WXY(I,:);
+            Prd=Prd(I);
             WN(:,1)=B;
             uB=unique(B);
             g_flag=zeros(size(uB));
@@ -54,7 +57,7 @@ end;
             for j=1:size(uB,1)
                 WN(WN(:,1)==uB(j),2)=g_flag(j);
             end
-
+            WN(:,3)=Prd;
             A(i)={WXY};
             
         else
@@ -77,7 +80,7 @@ end;
     Pw1=A{11};Pw=time_data(Pw1);
     Qw1=A{12};Qw=time_data(Qw1);
     Uf1=A{13}; Uf=time_data(Uf1);
-    Cpw1=A{13}; Cpw=time_data(Cpw1);
+    Cpw1=A{14}; Cpw=time_data(Cpw1);
     
     B=importdata('Chek_bond.txt'); PwQC_bnd=B.data;
     

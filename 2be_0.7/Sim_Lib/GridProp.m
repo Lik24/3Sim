@@ -102,9 +102,10 @@ end;
 % gK=gK.*(gK>0)+0.1*(gK<0)+10;
 % gK=gK/10;
 v1=0:nl-1;
-Won(:,1)=repmat(1:size(Won3,1),nl,1)+repmat(v1'*size(XY,1),1,size(WXY,1)); 
+Won(:,1)=repmat(1:size(Won3,1),1,nl)+reshape(repmat(v1'*size(XY,1),1,size(WXY,1))',1,size(Won3,1)*nl); 
+Won(:,2)=repmat(Won3(:,2),nl,1);
 Won(:,3)=repmat(Won3(:,1),nl,1);
-
+Won(:,4)=repmat(Won3(:,3),nl,1);
 
 BndZ=zeros(size(gKX(:),1),1);
 BndZ(1:ncg)=1;

@@ -1,5 +1,5 @@
 Well_name	X_coord	Y_coord	X_coord_hor	Y_coord_hor
 1	0	0		
-2	0	500	80	460
-3	500	0		
-4	500	500		
+2	0	500		
+3	500	0	 	
+4	500	500 300 500 	

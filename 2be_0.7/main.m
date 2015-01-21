@@ -9,11 +9,11 @@ PR=imp_glb_prm;%Gl_PRM;
 %KX(:)=mean(KX(:));
 XY_GYs=XY_GY;
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z]=Sintetic(PR.Ns,PR.Nl);
-[WData,Won3]=Well_DATA(WXY,Z,PR.Ta,PR.Nl,PR.drob);
+[WData,Won3,~]=Well_DATA(WXY,Z,PR.Ta,PR.Nl,PR.drob);
 %[WData,Ppwf,Pw_d,Pw_z]=Well_DATA_Adap(WXY,Z,PR.Ta);
 
-[nt,PXY,gXY,PR.dl,tXY,XY_GY]=kvad_crack_fun(XY_GY,PR.Nl,WXY,PR.drob);
-[DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY(:,:),H,Z,tXY,PR.Nl,WXY,XY_GY,GY_subl,Won3);
+[nt,PXY,gXY,PR.dl,tXY,XY_GY]=kvad_crack_fun(XY_GY,PR.Nl,WData.WXY,PR.drob);
+[DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY(:,:),H,Z,tXY,PR.Nl,WData.WXY,XY_GY,GY_subl,Won3);
 Sw0=DATA.gSw;
 [GYData,DATA.gKX,DATA.gSw,B,A2B,dVb,pb]=GY_DATA(0,DATA,XY_GY_new,PR); %0/1 - выкл/вкл. аквифер
 
@@ -34,7 +34,7 @@ nd=DPorist(PR.fC(3),DATA.XY,PR.Nl); % 0/1 - выкл/вкл. двойная пористость
 
 [Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz,DSw]=SimT_MKT(PR,C,A2C,GData,B,A2B,DData,dVc,dVb,DATA,WData,GYData,1,CR_GRUP);
 
-VZL(DATA,WXY,Pi,Sw(:,end),Ti,MCp,PR.Nl,p,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,end),pb,GYData,XY_GY_new,dtz);
+VZL(DATA,WData.WXY,Pi,Sw(:,end),Ti,MCp,PR.Nl,p,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,end),pb,GYData,XY_GY_new,dtz,Won3);
 %VZL_VORONOI(DATA,Pi(:,end),p,WXY,WData.Uf(:,end))
 
   Qo(:,1)=sum(Q(:,3,:));

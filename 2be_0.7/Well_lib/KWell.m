@@ -64,8 +64,6 @@ for l=1:Nl
 end;
 
 Wf=2*pi*Wcof(:);
-
-
 end
 
 

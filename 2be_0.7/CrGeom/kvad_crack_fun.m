@@ -14,7 +14,7 @@ PXY=cell(NL,1);
 g_cr{1,1}=[];
    % Nt l    X  Y
 g_cr{1,1}=[0,0;
-           500,500]; %����
+           400,400]; %����
 
 %g_cr{2,1}=[220,210;
 %           100,120]; %����
@@ -48,8 +48,8 @@ if isempty(g_cr{1,1})==0;
        crk(r(i),c(i))=crk2(i);
     end;
 
-    [IN,ON]=inpolygon(p(:,1),p(:,2),XY_GY(:,1),XY_GY(:,2));
-    gXY=[cr;pm2;p(ON==1,:)];
+    [IN,ON]=inpolygon(pm2(:,1),pm2(:,2),XY_GY(:,1),XY_GY(:,2));
+    gXY=[cr;pm2;pm2(ON==1,:)];
     gXY=NODuble2(gXY);
     XY_GY=p(ON==1,:);
     sr=[];

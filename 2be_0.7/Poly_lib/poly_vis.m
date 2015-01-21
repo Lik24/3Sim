@@ -14,7 +14,7 @@ end;
 
 if fp==0
     wmu=mu;
-    TP=sparce(n,n);
+    TP=sparse(n,n);
 end;
 
 
