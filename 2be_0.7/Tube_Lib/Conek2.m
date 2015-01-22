@@ -64,12 +64,12 @@ for l=1:Nl
 %             unt'
 %             Won'     
         for j=1:size(Won,1)
-            ty=find(Won(j)==unt);
+            ty=find(Won(j,1)==unt);
             if isempty(ty)==0
                 k=k+1;
                 WonV(k,1)=ty(1)+sntl;
-                WonV(k,2)=HH(Won(j),l)*dh*kc*8.64/r0;%dC*100;
-                WonV(k,3)=Won(j);
+                WonV(k,2)=HH(Won(j,1),l)*dh*kc*8.64/r0;%dC*100;
+                WonV(k,3)=Won(j,3);
             end;
         end;
 %         WonV

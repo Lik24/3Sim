@@ -14,11 +14,11 @@ PXY=cell(NL,1);
 
 g_cr{1,1}=[];
    % Nt l    X  Y
-g_cr{1,1}=[100,40;
-           40,100]; %����
+g_cr{1,1}=[230,40;
+           40,230]; %����
 
-g_cr{2,1}=[400,460;
-           460,400]; %����
+% g_cr{2,1}=[400,460;
+%            460,400]; %����
        
 %g_cr{1,2}=[110,110;
 %           140,170]; %����
@@ -116,15 +116,22 @@ doly=WData.Doly;
 Sdoly=WData.SDoly;
 
 won_s=Won_s(Won_s(:,2)==1,:);
-doly_s=doly(Won_s(:,2)==1);
+doly_s=doly(Won_s(:,2)==1,:);
 Sdoly_s=Sdoly(Won_s(:,2)==1);
+do1y=doly;
+Sdo1y=Sdoly;
 
 wn=unique(won_s(:,1));
  for i=1:size(wn,1)
-     
+     df=won_s(won_s(:,1)==wn(i),3);
+     nf=Won(Won(:,1)==wn(i),3);
+     do1y(Won(:,1)==wn(i),:)=interp1(df,doly_s(won_s(:,1)==wn(i),:),nf,'linear','extrap');
+     Sdo1y(Won(:,1)==wn(i))=interp1(df,Sdoly_s(won_s(:,1)==wn(i)),nf,'linear','extrap');
  end
-Doly=interp1(st,sQz',dtz:dtz:Ta,'linear','extrap');
 
+WData.WXY=WXY;
+WData.Doly=do1y;
+WData.SDoly=Sdo1y;
 end
 
 function XY=NODuble(XY)

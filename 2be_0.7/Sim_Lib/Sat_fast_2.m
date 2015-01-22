@@ -44,8 +44,8 @@ PwNl=repmat(Pw,Nl,1);
      %     A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke,CR,TM);
      
      
-     b1wm=sparse(Won(:,1),ones(1,size(Won,1)),-W1.*PwNl,na,1);
-     b1wd=sparse(WoD(:,1),ones(1,size(WoD,1)),-W1D.*PwNl(WoD(:,3)),nd,1);
+     b1wm=sparse(Won(:,1),ones(1,size(Won,1)),-W1.*Pw(Won(:,3)),na,1);
+     b1wd=sparse(WoD(:,1),ones(1,size(WoD,1)),-W1D.*Pw(WoD(:,3)),nd,1);
      
      W2M=sparse(WonM,Won(:,1),W1,nw,na);
      W2D=sparse(WoD(:,3),WoD(:,1),W1D,nw,nd);
@@ -59,8 +59,6 @@ PwNl=repmat(Pw,Nl,1);
      W3vec=sparse(WonM,1,W1,nw,1)+sparse(WoD(:,3),1,W1D,nw,1);
      WM3=-sparse(1:nw,1:nw,W3vec,nw,nw);
   
-    
-            
      bl=[b1wm;b1wd;b1wb]+BLGY_GIM;
      blm=bl(va)-sparse(r1a,ones(sum(v1a),1),Blc,na,1)/dt-sparse(r2a,ones(sum(v2a),1),Blg,na,1)/dt;
      bld=bl(vd-nc-ng)-sparse(r1d,ones(sum(v1d),1),Blcd,nd,1)/dt-sparse(r2d,ones(sum(v2d),1),Blgd,nd,1)/dt;
