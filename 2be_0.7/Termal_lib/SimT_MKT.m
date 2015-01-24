@@ -93,6 +93,10 @@ b1wb=sparse(nb,1);
 C2D=DData.C2D;     D2CL=C2D;
 G2D=DData.G2D;     D2GL=G2D;
 
+Swr(va,1)=PR.aw(4); Swr([vc,vg,vd],1)=PR.tw(4);
+Sor(va,1)=PR.aw(5); Sor([vc,vg,vd],1)=PR.tw(5);
+PR.Swr=Swr; PR.Sor=Sor;
+
 WonM=Won(:,3);
 %WW=WonM~=0;
 WonM=WonM(ka1==1);
@@ -168,6 +172,7 @@ GY_Pxy=GYData.GY_Pxy;
 GY_Pz=GYData.GY_Pz;
 GY_Pxy2=GYData.P0;
 zapt=1;
+Sw0=Sw;
 
 while t_flag==1
     %for t=1:Ta-1
@@ -322,17 +327,16 @@ while t_flag==1
 % %     qd=QBild(W1D,W6D,W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,Pw(WonD(:,3),ft+1),WonD(:,3),nw);
 % %     q=qm+qc+qg+qd;
     Qz1=q(:,1)+q(:,2);
-    
-    Qzm1=qm(:,1)+qm(:,2);
+    % Qzm1=qm(:,1)+qm(:,2);
     
     Qf=Qz1;
-    Sw0=Sw;
-  if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
+    
+  if (isempty(RC.Cr)==0 || isempty(RC.Gr)==0) && ft==0
     [ndt,~,~]=vibor_t(ndt,0,Pi(vc),Pi(vg),Pw(:,ft+1),PR,RC,dt,Sw0([vc,vg]),Sw([vc,vg]),...
-        CL(RC.Cr2+(RC.Cc2-1)*nc),GL(RC.Gr2+(RC.Gc2-1)*ng),dVCG(vc),dVCG(vg),W1C,W1G,WonC,WonG,1,0);
+        CL(RC.Cr2+(RC.Cc2-1)*nc),GL(RC.Gr2+(RC.Gc2-1)*ng),dVCG(vc),dVCG(vg),W1C,W1G,WonC,WonG,ft+1,0);
   end;
-  
-    [Sw,Cp,NDT(t),Q1,Q2,Qm1,Qd1,dSS(t)]=Sat_fast_2(Sw,Cp,RC,TC,TG,TA2C,TA2G,TA2D,TD2C,TD2G,Pi(:,1),PR,ndt,Won,...
+    Sw0=Sw;
+    [Sw,Cp,NDT(t),Q1,Q2,Qm1,Qd1,dSS(t),ndt]=Sat_fast_2(Sw,Cp,RC,TC,TG,TA2C,TA2G,TA2D,TD2C,TD2G,Pi(:,1),PR,ndt,Won,...
         Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
         W7,L,DATA.Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,b1gd,GYData,Clp,ka1,...
         W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WonD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb,Grw,dZ,Mp,Bwo,P0);
