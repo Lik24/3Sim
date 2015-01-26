@@ -35,6 +35,17 @@ end
 function [CR_rc,won]=conct2mat(n,inc,ing,r,c,T,A2C,A2G,WoM)
  if isempty(r)==0
     rcm=unique([inc;ing]);
+    
+    [C,ai,bi]=intersect(rcm,WoM(:,1));
+    if isempty(C)==0
+        coWi=WoM(bi,3);
+        uCow=unique(coWi);
+        inw=[];
+        for i=uCow'
+            inw=[inw;WoM(i==WoM(:,3),1)];
+        end
+        rcm=unique([rcm;inw]);
+    end
     v=zeros(n,1);
     v(rcm)=1;
     gh=ones(n,1);

@@ -1,4 +1,4 @@
-function [Bwc,Bwg,Blc,Blg,Bwcd,Bwgd,Blcd,Blgd,CSw,GSw,i,Q1,Q2,Qm,Qd,dSS]=fun1(RC,Pi,SW,Cp,PR,TC,TG,A2C,A2G,A2D,D2C,D2G,WonC,...
+function [Bwc,Bwg,Blc,Blg,Bwcd,Bwgd,Blcd,Blgd,CSw,GSw,i,Q1,Q2,Qm,Qd,dSS,ndt]=fun1(RC,Pi,SW,Cp,PR,TC,TG,A2C,A2G,A2D,D2C,D2G,WonC,...
     WonG,Uf,CpW,Pw,dt,dV,CR_rc,Qz,Qf,ndt,Pi0,L,Lc,Lg,Ke,dZA,Mp,Bwo,P0)
 
 as=PR.as;
@@ -45,7 +45,7 @@ dVa(v1~=1)=[];   dVd(v2~=1)=[];
  
 Qz=Qz/dt;
 nw=size(Qz,1);
-Qf=Qf(wom(:,3));
+Qf=Qf(unique(wom(:,3)));
 
 %%
 vP1=Pa(RC.ACr)>=Pc(RC.ACc);
@@ -56,11 +56,11 @@ vP2=Pa(RC.AGr)>=Pg(RC.AGc);
     
 %%
 
-Bwc=zeros(size(A2C,1),1);   Blc=Bwc;
-Bwg=zeros(size(A2G,1),1);   Blg=Bwg;
+Bwc=zeros(size(RC.ACr,1),1);   Blc=Bwc;
+Bwg=zeros(size(RC.AGr,1),1);   Blg=Bwg;
 
-Bwcd=zeros(size(D2C,1),1);   Blcd=Bwcd;
-Bwgd=zeros(size(D2G,1),1);   Blgd=Bwgd;
+Bwcd=zeros(size(RC.DCr,1),1);   Blcd=Bwcd;
+Bwgd=zeros(size(RC.DGr,1),1);   Blgd=Bwgd;
 
 Q1=zeros(nw,5);
 Q2=zeros(nw,5);
@@ -192,17 +192,17 @@ i=i+1;
     WM3=-sparse(1:nw,1:nw,W3vec,nw,nw); 
     %WM1(Qz~=0,:)
    % full([Qz(wn(Qf~=0)),W3vec(wn(Qf~=0)),Pw(wn(Qf~=0))])
-
-    WM1=WM1(wom(Qf~=0,3),:);
-    WM2=WM2(:,wom(Qf~=0,3));
-    WM3=WM3(wom(Qf~=0,3),wom(Qf~=0,3));
+    wmm=unique(wom(:,3));
+    WM1=WM1(wmm(Qf~=0),:);
+    WM2=WM2(:,wmm(Qf~=0));
+    WM3=WM3(wmm(Qf~=0),wmm(Qf~=0));
 
     BC1=[ba1-bl';bc1;bg1;bd1-bld']'-(Clp.*Pj)'-Gr';
 
-     Pt=[BC1,Qz(wom(Qf~=0,3))']/[AMC1,WM2;WM1,WM3];
+     Pt=[BC1,Qz(wmm(Qf~=0))']/[AMC1,WM2;WM1,WM3];
      Pj(:,1)=Pt(1:na+nc+ng+nd);
 
-     Pw(wom(Qf~=0,3))=Pt(na+nc+ng+nd+1:end);
+     Pw(wmm(Qf~=0))=Pt(na+nc+ng+nd+1:end);
 
      A2=TW2-sparse(1:na,1:na,sum(TW2,2)+sum(A2CW,2)+sum(A2GW,2)+sum(A2DW,2)+Cwp(va)+bAw',na,na)-sparse(wom(:,1),wom(:,1),W6,na,na);
      D2=DW2-sparse(1:nd,1:nd,sum(DW2,2)+sum(D2CW,2)+sum(D2GW,2)+sum(A2DW,1)'+Cwp(vd)+bDw',nd,nd)-sparse(wod(:,1),wod(:,1),W6D,nd,nd);
@@ -223,8 +223,6 @@ i=i+1;
      
      Pc=Pj(vc);
      Pg=Pj(vg);
-     [ndt,j_ndt,fl]=vibor_t(ndt,Fl,Pc,Pg,Pw,PR,RC,dt,SW0([v_c,v_g]),SW([v_c,v_g]),CL,GL,dVc,dVg,W1C,W1G,...
-         WonC,WonG,i,j_ndt);
     
      Sw1=Sw;
      Sw=Sw1+(AMC2*Pj+BC)./Cws*dt/ndt;
@@ -234,7 +232,6 @@ i=i+1;
      
      SW0([v_c,v_g])=Sw1([vc,vg]);
      SW([v_c,v_g])=Sw([vc,vg]);
-     
       %hj(:,i)=SCw(vc);
 
 [Blc,Bwc]=crack_bond(Blc,Bwc,Pj(vc),Pj(va),A2CL,A2CW,dt,ndt,c1);
@@ -256,6 +253,8 @@ Q2(:,:)=Q2+QBild(W1G,W6G,W7G,Pj(vg),Uf(WonG(:,3)),WonG(:,1),dt/ndt,Pw(WonG(:,3))
 Qd(:,:)=Qd+QBild(W1D,W6D,W7D,Pj(vd),Uf(wod(:,3)),wod(:,1),dt/ndt,Pw(wod(:,3)),wod(:,3),nw);
 %SCwC(Na+1:Na+nc)-1
 ndtI(i)=ndt;
+[ndt,j_ndt,fl]=vibor_t(ndt,Fl,Pc,Pg,Pw,PR,RC,dt,SW0([v_c,v_g]),SW([v_c,v_g]),CL,GL,dVc,dVg,W1C,W1G,...
+    WonC,WonG,0,j_ndt);
 % Sw(vc)'
 % [Pj(va),Pj(vc(end:-1:1)),Pj(vd)]
 end;
@@ -284,8 +283,8 @@ v=CR_rc.v;
 end
 function [Bl,Bw]=crack_bond(Bl,Bw,P1,P2,A2CL,A2CW,dt,ndt,c)
  if isempty(c)==0
-    Bw=Bw+(A2CW*P1-sum(A2CW,2).*P2)*dt/ndt;
-    Bl=Bl+(A2CL*P1-sum(A2CL,2).*P2)*dt/ndt;
+    Bw=Bw+(sum(A2CW,1)'.*P1-A2CW'*P2)*dt/ndt;
+    Bl=Bl+(sum(A2CL,1)'.*P1-A2CL'*P2)*dt/ndt;
  end
 end
 

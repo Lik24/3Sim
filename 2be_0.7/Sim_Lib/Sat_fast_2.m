@@ -1,4 +1,4 @@
-function [Sw,Cp,ndt,Q1,Q2,Qm,Qd,tmp]=Sat_fast_2(Sw,Cp,RC,TC,TG,A2C,A2G,A2D,D2C,D2G,Pi,PR,...
+function [Sw,Cp,ndt,Q1,Q2,Qm,Qd,tmp,ndti]=Sat_fast_2(Sw,Cp,RC,TC,TG,A2C,A2G,A2D,D2C,D2G,Pi,PR,...
     ndt0,Won,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,Qz,Qf,Pi0,TL,W1,TW,W6,TP,...
     W7,L,Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qzm1,WonM,nw,b1gm,b1gd,GYData,...
     Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WoD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb,Grw,dZ,Mp,Bwo,P0)
@@ -38,7 +38,7 @@ PwNl=repmat(Pw,Nl,1);
 % aw1=sum(SCw(vc).*dV(vc));
 
  if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
-     [Bwc,Bwg,Blc,Blg,Bwcd,Bwgd,Blcd,Blgd,Sw(vc),Sw(vg),ndt,Q1,Q2,Qm,Qd,~]=fun1(RC,Pi,Sw,Cp,PR,TC,TG,A2C,...
+     [Bwc,Bwg,Blc,Blg,Bwcd,Bwgd,Blcd,Blgd,Sw(vc),Sw(vg),ndt,Q1,Q2,Qm,Qd,~,ndti]=fun1(RC,Pi,Sw,Cp,PR,TC,TG,A2C,...
          A2G,A2D,D2C,D2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke,dZ,Mp,Bwo,P0);
      %  [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun2(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...
      %     A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke,CR,TM);
@@ -59,7 +59,13 @@ PwNl=repmat(Pw,Nl,1);
      WM3=-sparse(1:nw,1:nw,W3vec,nw,nw);
   
      bl=[b1wm;b1wd;b1wb]+BLGY_GIM;
-     blm=bl(va)-sparse(r1a,ones(sum(v1a),1),Blc,na,1)/dt-sparse(r2a,ones(sum(v2a),1),Blg,na,1)/dt;
+     Blc1=zeros(na,1);
+     Blc1(RC.ACr)=Blc;
+     
+     Bwc1=zeros(na,1);
+     Bwc1(RC.ACr)=Bwc;
+     
+     blm=bl(va)-Blc1/dt-sparse(r2a,ones(sum(v2a),1),Blg,na,1)/dt;%sparse(r1a,ones(sum(v1a),1),Blc(),na,1)
      bld=bl(vd-nc-ng)-sparse(r1d,ones(sum(v1d),1),Blcd,nd,1)/dt-sparse(r2d,ones(sum(v2d),1),Blgd,nd,1)/dt;
      Bl=[blm;bld;bl(vb-na-nd)];
      
@@ -111,6 +117,7 @@ PwNl=repmat(Pw,Nl,1);
      Bpgd=zeros(size(Bwgd));
      
      ndt=1;
+     ndti=1;
      Q1=zeros(nw,5);
      Q2=zeros(nw,5);
      Qm=zeros(0,5);
@@ -134,8 +141,8 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
      
      bw=[bwm;bwd];
      bp=[bpm;bpd];
-
-     Bw=bw+sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bwc;Bwcd],na+nd,1)/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bwg;Bwgd],na+nd,1)/dt...
+%sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bwc;Bwcd],na+nd,1)/dt
+     Bw=bw+Bwc1/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bwg;Bwgd],na+nd,1)/dt...
          -Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]))+Grw([va,vd]);
      Bp=bp+sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bpc;Bpcd],na+nd,1)/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bpg;Bpgd],na+nd,1)/dt...
          -Cp([va,vd]).*Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]))+Cp([va,vd]).*Grw([va,vd]);
@@ -154,8 +161,12 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
      v0=Sw(vad)==0;
      Cp(vad(v0==0))=Cp(vad(v0==0))./Sw(vad(v0==0));
 
-    % Sw=Sw.*(Sw>=PR.aw(4)).*(Sw<=1-PR.aw(5))+(1-PR.aw(5)).*(Sw>1-PR.aw(5))+PR.aw(4).*(Sw<PR.aw(4));
-    Sw=Sw.*(Sw>=0).*(Sw<=1)+(Sw>1); 
+    %Sw=Sw.*(Sw>=PR.aw(4)).*(Sw<=1-PR.aw(5))+(1-PR.aw(5)).*(Sw>1-PR.aw(5))+PR.aw(4).*(Sw<PR.aw(4));
+    Swr=PR.Swr;
+    Sor=PR.Sor;
+     
+    Sw=Sw.*(Sw>=Swr).*(Sw<=(1-Sor))+(1-Sor).*(Sw>(1-Sor))+Swr.*(Sw<Swr);
+    %Sw=Sw.*(Sw>=0).*(Sw<=1)+(Sw>1); 
     Cp=Cp.*(Cp>=0).*(Cp<=1)+(Cp>1);
 end
 
