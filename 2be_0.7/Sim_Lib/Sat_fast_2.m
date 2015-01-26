@@ -43,7 +43,6 @@ PwNl=repmat(Pw,Nl,1);
      %  [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun2(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...
      %     A2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke,CR,TM);
      
-     
      b1wm=sparse(Won(:,1),ones(1,size(Won,1)),-W1.*Pw(Won(:,3)),na,1);
      b1wd=sparse(WoD(:,1),ones(1,size(WoD,1)),-W1D.*Pw(WoD(:,3)),nd,1);
      
@@ -97,6 +96,7 @@ PwNl=repmat(Pw,Nl,1);
      Bpg=zeros(size(Bwg));
      Bpcd=zeros(size(Bwcd));
      Bpgd=zeros(size(Bwgd));
+
  else
      Bwc=zeros(nc,1);
      Bwg=zeros(ng,1);
