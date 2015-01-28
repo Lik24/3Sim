@@ -59,14 +59,14 @@ PwNl=repmat(Pw,Nl,1);
      WM3=-sparse(1:nw,1:nw,W3vec,nw,nw);
   
      bl=[b1wm;b1wd;b1wb]+BLGY_GIM;
-     Blc1=zeros(na,1);
-     Blc1(RC.ACr)=Blc;
+     Blc1=zeros(na,1);      Blc1(RC.ACr)=Blc;
+     Bwc1=zeros(na,1);      Bwc1(RC.ACr)=Bwc;
      
-     Bwc1=zeros(na,1);
-     Bwc1(RC.ACr)=Bwc;
+     Blcd1=zeros(nd,1);     Blcd1(RC.DCr)=Blcd;
+     Bwcd1=zeros(nd,1);     Bwcd1(RC.DCr)=Bwcd;
      
      blm=bl(va)-Blc1/dt-sparse(r2a,ones(sum(v2a),1),Blg,na,1)/dt;%sparse(r1a,ones(sum(v1a),1),Blc(),na,1)
-     bld=bl(vd-nc-ng)-sparse(r1d,ones(sum(v1d),1),Blcd,nd,1)/dt-sparse(r2d,ones(sum(v2d),1),Blgd,nd,1)/dt;
+     bld=bl(vd-nc-ng)-Blcd1/dt-sparse(r2d,ones(sum(v2d),1),Blgd,nd,1)/dt;
      Bl=[blm;bld;bl(vb-na-nd)];
      
      A1=TL-sparse(Won(:,1),Won(:,1),W1,na,na)-sparse(1:na,1:na,Clp(va)+sum(b1gm(:,1:2),2)+sum(A2DL,2),na,na);
@@ -122,6 +122,12 @@ PwNl=repmat(Pw,Nl,1);
      Q2=zeros(nw,5);
      Qm=zeros(0,5);
      Qd=zeros(0,5);
+     
+     Blc1=zeros(na,1);     
+     Bwc1=zeros(na,1);     
+     
+     Blcd1=zeros(nd,1);    
+     Bwcd1=zeros(nd,1);   
  end;
 
 b_A2B=Soed2B(A2BW,A2BP,Pi,na,nb,va,vb);     % Связь пор с граничной областью
@@ -142,7 +148,7 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
      bw=[bwm;bwd];
      bp=[bpm;bpd];
 %sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bwc;Bwcd],na+nd,1)/dt
-     Bw=bw+Bwc1/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bwg;Bwgd],na+nd,1)/dt...
+     Bw=bw+[Bwc1;Bwcd1]/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bwg;Bwgd],na+nd,1)/dt...
          -Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]))+Grw([va,vd]);
      Bp=bp+sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bpc;Bpcd],na+nd,1)/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bpg;Bpgd],na+nd,1)/dt...
          -Cp([va,vd]).*Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]))+Cp([va,vd]).*Grw([va,vd]);

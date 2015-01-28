@@ -1,4 +1,4 @@
-function [NLT,PXY,gXY,dl,tXY,XY_GY,Won,WData]=kvad_crack_fun(XY_GY,NL,WData,dh,Won)
+function [NLT,PXY,gXY,dl,tXY,XY_GY,Won,WData]=kvad_crack_fun1(XY_GY,NL,WData,dh,Won,g_cr)
 
 WXY=WData.WXY;
 Won_s=Won;
@@ -12,10 +12,10 @@ ws=size(WXY,1);
 NT=cell(NL,1);
 PXY=cell(NL,1);
 
-g_cr{1,1}=[];
-   % Nt l    X  Y
-g_cr{1,1}=[100,200;
-           400,200]; %����
+% g_cr{1,1}=[];
+%    % Nt l    X  Y
+% g_cr{1,1}=[150,450;
+%            350,450]; %����
 
 % g_cr{2,1}=[300,450;
 %            450,300]; %����

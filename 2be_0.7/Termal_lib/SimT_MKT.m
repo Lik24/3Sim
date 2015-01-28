@@ -395,8 +395,6 @@ while t_flag==1
         +sum(Qg(:,2,t+1)-Qg(:,3,t+1)+Qg(:,1,t+1))+sum(Qd(:,2,t+1)-Qd(:,3,t+1)+Qd(:,1,t+1));
     %sum(sQo(:))
     % dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
-    if t==68
-    end
     %%prob.progress;
     c_lik=1-Qm(:,3,t+1)./Qm(:,2,t+1);
     c_lik(isnan(c_lik)==1)=0;
