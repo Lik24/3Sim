@@ -89,9 +89,9 @@ KfoD=Sat_cal(DSw,2,1,ts,tw); %oil
 
 fl=1;
 i=0;
-j_ndt=0;
-
-while fl==1% & i<3000
+j_ndt=1/ndt;
+fl2=0;
+while fl2<2% & i<3000
 i=i+1;
 
      kfw(va)=Sat_cal(Sw(va),1,1,as,aw); %water
@@ -253,12 +253,17 @@ Q2(:,:)=Q2+QBild(W1G,W6G,W7G,Pj(vg),Uf(WonG(:,3)),WonG(:,1),dt/ndt,Pw(WonG(:,3))
 Qd(:,:)=Qd+QBild(W1D,W6D,W7D,Pj(vd),Uf(wod(:,3)),wod(:,1),dt/ndt,Pw(wod(:,3)),wod(:,3),nw);
 %SCwC(Na+1:Na+nc)-1
 ndtI(i)=ndt;
-[ndt,j_ndt,fl]=vibor_t(ndt,Fl,Pc,Pg,Pw,PR,RC,dt,SW0([v_c,v_g]),SW([v_c,v_g]),CL,GL,dVc,dVg,W1C,W1G,...
+[ndt,j_ndt,fl]=vibor_t(ndt,Fl,Pc,Pg,Pw,PR,RC,dt,SW([v_c,v_g]),SW0([v_c,v_g]),CL,GL,dVc,dVg,W1C,W1G,...
     WonC,WonG,0,j_ndt);
-% Sw(vc)'
+if fl==0
+    fl2=fl2+1;
+%     if fl2==2
+%     ndt=ndtI(end-1);
+%     end
+end;
 % [Pj(va),Pj(vc(end:-1:1)),Pj(vd)]
 end;
-%ndtI
+ndt=ndtI(end);
 
 %Bc(r1)=Bc;
 %hj-1
