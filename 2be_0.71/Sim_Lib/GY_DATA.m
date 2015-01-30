@@ -20,7 +20,8 @@ GY_Swz=1*ones(nz);
 GY_Kz(bnd_Z~=2)=0;
 GY_Kz(bnd_Z~=1)=0.628*8.64/20*0;
 
-GY_Kxy=0.628*ones(size(P))*8.64*0.1*0;
+GY_Kxy=ones(size(P))*8.64*1.0;
+GY_Kxy(DATA.XY(:,2)>0)=0;
 GY_Pxy=P.*ones(size(P));
 GY_Swxy=1*ones(size(P));
 
