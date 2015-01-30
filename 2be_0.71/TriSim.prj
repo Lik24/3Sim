@@ -1,0 +1,190 @@
+<deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
+  <configuration build-checksum="2780091099" file="C:\GitHub\2be_0.7\TriSim.prj" location="C:\GitHub\2be_0.7" name="TriSim" preferred-package-location="C:\GitHub\2be_0.7\TriSim\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications">
+    <param.appname>TriSim</param.appname>
+    <param.icon />
+    <param.icons />
+    <param.version>1.0</param.version>
+    <param.authnamewatermark />
+    <param.email />
+    <param.company />
+    <param.summary />
+    <param.description />
+    <param.screenshot />
+    <param.guid />
+    <param.installpath.string>\TriSim\</param.installpath.string>
+    <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
+    <param.logo />
+    <param.install.notes />
+    <param.intermediate>${PROJECT_ROOT}\TriSim\for_testing</param.intermediate>
+    <param.files.only>${PROJECT_ROOT}\TriSim\for_redistribution_files_only</param.files.only>
+    <param.output>${PROJECT_ROOT}\TriSim\for_redistribution</param.output>
+    <param.enable.clean.build>false</param.enable.clean.build>
+    <param.user.defined.mcr.options />
+    <param.embed.ctf>true</param.embed.ctf>
+    <param.server.ctf>${PROJECT_ROOT}\TriSim\for_testing\.ctf</param.server.ctf>
+    <param.server.readme>${PROJECT_ROOT}\TriSim\for_testing\readme.txt</param.server.readme>
+    <param.target.type>subtarget.standalone</param.target.type>
+    <param.support.packages />
+    <param.required.mcr.products>
+      <item>35000</item>
+      <item>35001</item>
+    </param.required.mcr.products>
+    <param.web.mcr>true</param.web.mcr>
+    <param.package.mcr>false</param.package.mcr>
+    <param.no.mcr>false</param.no.mcr>
+    <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
+    <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
+    <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
+    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.create.log>false</param.create.log>
+    <param.log.file />
+    <unset>
+      <param.icon />
+      <param.icons />
+      <param.version />
+      <param.authnamewatermark />
+      <param.email />
+      <param.company />
+      <param.summary />
+      <param.description />
+      <param.screenshot />
+      <param.guid />
+      <param.installpath.string />
+      <param.installpath.combo />
+      <param.logo />
+      <param.install.notes />
+      <param.intermediate />
+      <param.files.only />
+      <param.output />
+      <param.enable.clean.build />
+      <param.user.defined.mcr.options />
+      <param.embed.ctf />
+      <param.server.ctf />
+      <param.server.readme />
+      <param.target.type />
+      <param.support.packages />
+      <param.web.mcr />
+      <param.package.mcr />
+      <param.no.mcr />
+      <param.web.mcr.name />
+      <param.package.mcr.name />
+      <param.no.mcr.name />
+      <param.windows.command.prompt />
+      <param.create.log />
+      <param.log.file />
+    </unset>
+    <fileset.main>
+      <file>${PROJECT_ROOT}\main.m</file>
+    </fileset.main>
+    <fileset.resources>
+      <file>${PROJECT_ROOT}\2exe\imp_glb_prm.m</file>
+      <file>${PROJECT_ROOT}\2exe\read_mr_prop.m</file>
+      <file>${PROJECT_ROOT}\Crack_gen\elka.m</file>
+      <file>${PROJECT_ROOT}\CrGeom\Fracture.m</file>
+      <file>${PROJECT_ROOT}\CrGeom\kvad_crack_fun.m</file>
+      <file>${PROJECT_ROOT}\CrGeom\Mesh3.m</file>
+      <file>${PROJECT_ROOT}\CrGeom\Mesh4.m</file>
+      <file>${PROJECT_ROOT}\CrGeom\Purgatory.m</file>
+      <file>${PROJECT_ROOT}\dZ_bild.m</file>
+      <file>${PROJECT_ROOT}\Poly_lib\fusion.m</file>
+      <file>${PROJECT_ROOT}\Poly_lib\poly_vis.m</file>
+      <file>${PROJECT_ROOT}\Rasp.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Forh.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\fun1.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Geome3.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Geome3_1.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Gravity.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\GridProp.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\GY_bild.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\GY_DATA.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\KH2Mat.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\MR_Prop.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\MR_Prop_Bond.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\PereYpor.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Potok_GY.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Potok_MKT.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Potok_MKT_2.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Pre_fast.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\pre_potok_2.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Sat_cal.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Sat_fast_2.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Sat_tube.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\SGim.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\Sintetic_Real.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\vibor_t.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\vibor_t2.m</file>
+      <file>${PROJECT_ROOT}\Sim_Lib\YdalActcell.m</file>
+      <file>${PROJECT_ROOT}\SS_lib\SS_ind.m</file>
+      <file>${PROJECT_ROOT}\Termal_lib\SimT_MKT.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\Conek2.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\Conek2D.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\Conek2G.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\CrackProp.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\DPorist.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\Obmen_T2M.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\Obmen_T2M_2.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\Potok_Tube.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\Potok_Tube_2.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\Pre_Crack.m</file>
+      <file>${PROJECT_ROOT}\Tube_Lib\Tresh_Gor.m</file>
+      <file>${PROJECT_ROOT}\Viz_lib\VZL.m</file>
+      <file>${PROJECT_ROOT}\Well_lib\KWell.m</file>
+      <file>${PROJECT_ROOT}\Well_lib\Q2Sut.m</file>
+      <file>${PROJECT_ROOT}\Well_lib\QBild.m</file>
+      <file>${PROJECT_ROOT}\Well_lib\Well_DATA.m</file>
+      <file>${PROJECT_ROOT}\Well_lib\Well_MKT.m</file>
+      <file>${PROJECT_ROOT}\Well_lib\Well_MKT_2.m</file>
+    </fileset.resources>
+    <fileset.package />
+    <build-deliverables>
+      <file location="${PROJECT_ROOT}\TriSim\for_testing" name="readme.txt" optional="true">C:\GitHub\2be_0.7\TriSim\for_testing\readme.txt</file>
+      <file location="${PROJECT_ROOT}\TriSim\for_testing" name="TriSim.exe" optional="false">C:\GitHub\2be_0.7\TriSim\for_testing\TriSim.exe</file>
+      <file location="${PROJECT_ROOT}\TriSim\for_testing" name="splash.png" optional="false">C:\GitHub\2be_0.7\TriSim\for_testing\splash.png</file>
+    </build-deliverables>
+    <workflow />
+    <matlab>
+      <root>C:\Program Files\MATLAB\R2014b</root>
+      <toolboxes>
+        <toolbox name="matlabhdlcoder" />
+        <toolbox name="fixedpoint" />
+        <toolbox name="embeddedcoder" />
+        <toolbox name="matlabcoder" />
+      </toolboxes>
+      <toolbox>
+        <matlabhdlcoder>
+          <enabled>true</enabled>
+        </matlabhdlcoder>
+      </toolbox>
+      <toolbox>
+        <fixedpoint>
+          <enabled>true</enabled>
+        </fixedpoint>
+      </toolbox>
+      <toolbox>
+        <embeddedcoder>
+          <enabled>true</enabled>
+        </embeddedcoder>
+      </toolbox>
+      <toolbox>
+        <matlabcoder>
+          <enabled>true</enabled>
+        </matlabcoder>
+      </toolbox>
+    </matlab>
+    <platform>
+      <unix>false</unix>
+      <mac>false</mac>
+      <windows>true</windows>
+      <win2k>false</win2k>
+      <winxp>false</winxp>
+      <vista>false</vista>
+      <linux>false</linux>
+      <solaris>false</solaris>
+      <osver>6.1</osver>
+      <os32>false</os32>
+      <os64>true</os64>
+      <arch>win64</arch>
+      <matlab>true</matlab>
+    </platform>
+  </configuration>
+</deployment-project>
