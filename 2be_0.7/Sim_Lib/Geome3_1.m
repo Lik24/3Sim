@@ -77,7 +77,7 @@ for i=1:Nl
 end;
 Bc1=reshape(Bc1,Nl,Nl);
 H=cell2mat(Bc1);
-HV=sum(H,2);
+HV=h(:);
 
 L=A_constr(L,Nl,n);
 B=A_constr(B,Nl,n);

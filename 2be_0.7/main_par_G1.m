@@ -6,10 +6,10 @@ PR=imp_glb_prm;%Gl_PRM;
 [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(PR.Ns,PR.Nl);
 SD=load('nt_h');
 parfor i=1:7
-    CD(:,i)=run_sim(PR,KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl,SD.GF{i});
+    [CD(:,i),v0(i)]=run_sim(PR,KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl,SD.GF{i},i);
 end
 end
-function CD=run_sim(PR,KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl,Cr_coord)
+function [CD,V0]=run_sim(PR,KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl,Cr_coord,i)
 
 [WData,Won3,~]=Well_DATA(WXY,Z,PR.Ta,PR.Nl,PR.drob);
 
@@ -47,8 +47,10 @@ dV1([p,size(p,2)+DData.pd])=dV0([1:size(p,2),size(p,2)+size(pc,2)+1:size(pc,2)+s
 Sw0=Sw0(DATA.ka==1); Sw0=[Sw0;Sw0(1:size(DData.D,1))];
 V0=sum(dV1'.*(1-Sw0));
 sQo(end,:)/V0
-
+v0(i)=full(V0);
 CD(1)={[Qo,Ql,Qz,sQo,sQl]};
 CD(2)={Pw'};
 CD(3)={PpW'};
+CD(4)={Sw(:,end)};
+CD(5)={p };
 end
