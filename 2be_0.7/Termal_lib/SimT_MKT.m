@@ -1,4 +1,4 @@
-function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,CSw,NDT,Uf,dt1,dV0,ka,dtz,DSwj]=SimT_MKT(PR,C,A2C,GData,BB,A2B,DData,dVC,dVB,DATA,WData,GYData,fll,CR_GRUP)
+function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,CSw,NDT,Uf,dt1,dV0,ka,dtz,DSwj,t_step,fV]=SimT_MKT(PR,C,A2C,GData,BB,A2B,DData,dVC,dVB,DATA,WData,GYData,fll,CR_GRUP)
 tic
 
 KX=DATA.gKX;
@@ -389,7 +389,9 @@ while t_flag==1
         DSwj(:,j)=DSw;
         MCpj(:,j)=MCp;
         Tj(:,j)=Ti;
-        waitbar(st/Ta)
+       %         waitbar(st/Ta)
+completed=round(st/Ta*100)
+     t_step(1,j)=st;
     end;
     sQo=sum(Qm(:,2,t+1)-Qm(:,3,t+1)+Qm(:,1,t+1))+sum(Qc(:,2,t+1)-Qc(:,3,t+1)+Qc(:,1,t+1))...
         +sum(Qg(:,2,t+1)-Qg(:,3,t+1)+Qg(:,1,t+1))+sum(Qd(:,2,t+1)-Qd(:,3,t+1)+Qd(:,1,t+1));
@@ -418,10 +420,16 @@ Swj(:,j)=MSw;
 DSwj(:,j)=DSw;
 MCpj(:,j)=MCp;
 Tj(:,j)=Ti;
-waitbar(st/Ta)
+% waitbar(st/Ta)  
+completed=round(st/Ta*100)
+t_step(1,j)=st;
 [Q,Pw,PpW,dtz]=Q2Sut(Qm,Qc,Qg,Qd,Pwt(:,1:t+1),PpW(:,1:t+1),dt1,Ta);
 % GY_Pxy(p)=GY_Pxy;
 % save('GY_Pxy.mat','GY_Pxy')
 %  Bnd_xy(p)=DATA.BndXY;
 %  GY_Pxy(Bnd_xy==1)'
+fV.va=va;
+fV.vc=vc;
+fV.vg=vg;
+fV.vd=vd;
 toc

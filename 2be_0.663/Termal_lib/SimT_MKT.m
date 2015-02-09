@@ -138,8 +138,8 @@ fp=1;
 %     [C,G,A2C,A2G,WonC(:,2),WonG(:,2)]=temp_CG(fll,C2,G2,A2C2,A2G2,WonC1,WonG1,t);
 %     [TC,TG,TA2C,TA2G,WonC(:,2),WonG(:,2)]=temp_CG(fll,TC1,TG1,TA2C1,TA2G1,WonC1,WonG1,t);
     
-%     [C,TC]=GeoMex(C2,TC1,Pi(na+1:na+nc,1),1);
-%     [G,TG]=GeoMex(G2,TG1,Pi(na+nc+1:na+nc+ng,1),1);
+    [C,TC]=GeoMex(C2,TC1,Pi(na+1:na+nc,1),1);
+    [G,TG]=GeoMex(G2,TG1,Pi(na+nc+1:na+nc+ng,1),1);
 
      kfw(1:na,1)=Sat_cal(Sw,1,1,as,aw); %water
      kfo(1:na,1)=Sat_cal(Sw,2,1,as,aw); %oil

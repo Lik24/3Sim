@@ -1,5 +1,5 @@
 <deployment-project plugin="plugin.ezdeploy" plugin-version="1.0">
-  <configuration build-checksum="1752031153" file="C:\GitHub\2be_0.7\Tri_Sim.prj" location="C:\GitHub\2be_0.7" name="Tri_Sim" preferred-package-location="C:\GitHub\2be_0.7\Tri_Sim\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications">
+  <configuration build-checksum="3826041915" file="C:\GitHub\2be_0.7\Tri_Sim.prj" location="C:\GitHub\2be_0.7" name="Tri_Sim" preferred-package-location="C:\GitHub\2be_0.7\Tri_Sim\for_redistribution" preferred-package-type="package.type.exe" target="target.ezdeploy.standalone" target-name="MATLAB Compiler for Standalone Applications">
     <param.appname>Tri_Sim</param.appname>
     <param.icon />
     <param.icons />
@@ -9,7 +9,7 @@
     <param.company>UCCord</param.company>
     <param.summary>Гидродинамический симулятор на ячейках Вороного</param.summary>
     <param.description />
-    <param.screenshot>C:\Users\Jerry\Desktop\Koala.jpg</param.screenshot>
+    <param.screenshot />
     <param.guid />
     <param.installpath.string>\UCCord\Tri_Sim\</param.installpath.string>
     <param.installpath.combo>option.installpath.programfiles</param.installpath.combo>
@@ -30,12 +30,12 @@
       <item>35001</item>
     </param.required.mcr.products>
     <param.web.mcr>true</param.web.mcr>
-    <param.package.mcr>true</param.package.mcr>
+    <param.package.mcr>false</param.package.mcr>
     <param.no.mcr>false</param.no.mcr>
     <param.web.mcr.name>MyAppInstaller_web</param.web.mcr.name>
     <param.package.mcr.name>MyAppInstaller_mcr</param.package.mcr.name>
     <param.no.mcr.name>MyAppInstaller_app</param.no.mcr.name>
-    <param.windows.command.prompt>true</param.windows.command.prompt>
+    <param.windows.command.prompt>false</param.windows.command.prompt>
     <param.create.log>false</param.create.log>
     <param.log.file />
     <unset>
@@ -43,6 +43,7 @@
       <param.icons />
       <param.version />
       <param.description />
+      <param.screenshot />
       <param.guid />
       <param.installpath.string />
       <param.installpath.combo />
@@ -59,11 +60,11 @@
       <param.target.type />
       <param.support.packages />
       <param.web.mcr />
+      <param.package.mcr />
       <param.no.mcr />
       <param.web.mcr.name />
       <param.package.mcr.name />
       <param.no.mcr.name />
-      <param.windows.command.prompt />
       <param.create.log />
       <param.log.file />
     </unset>
@@ -80,6 +81,7 @@
       <file>${PROJECT_ROOT}\DATA_In\imp_glb_prm.m</file>
       <file>${PROJECT_ROOT}\DATA_In\read_mr_prop.m</file>
       <file>${PROJECT_ROOT}\dZ_bild.m</file>
+      <file>${PROJECT_ROOT}\Out_Data.m</file>
       <file>${PROJECT_ROOT}\Poly_lib\fusion.m</file>
       <file>${PROJECT_ROOT}\Poly_lib\poly_vis.m</file>
       <file>${PROJECT_ROOT}\Rasp.m</file>
@@ -122,7 +124,9 @@
       <file>${PROJECT_ROOT}\Tube_Lib\Pre_Crack.m</file>
       <file>${PROJECT_ROOT}\Tube_Lib\Tresh_Gor.m</file>
       <file>${PROJECT_ROOT}\Viz_lib\VZL.m</file>
+      <file>${PROJECT_ROOT}\Well_lib\crack2horwell.m</file>
       <file>${PROJECT_ROOT}\Well_lib\KWell.m</file>
+      <file>${PROJECT_ROOT}\Well_lib\KWell_Horiz.m</file>
       <file>${PROJECT_ROOT}\Well_lib\Q2Sut.m</file>
       <file>${PROJECT_ROOT}\Well_lib\QBild.m</file>
       <file>${PROJECT_ROOT}\Well_lib\Well_DATA.m</file>
@@ -137,7 +141,7 @@
     </build-deliverables>
     <workflow />
     <matlab>
-      <root>C:\Program Files\MATLAB\R2014b</root>
+      <root>C:\Program Files\MATLAB\MATLAB Production Server\R2014b</root>
       <toolboxes>
         <toolbox name="matlabhdlcoder" />
         <toolbox name="fixedpoint" />
