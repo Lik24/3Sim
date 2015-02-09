@@ -311,11 +311,11 @@ while t_flag==1
            % [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
             Pt0=Pt;
         end
+        Pi(:,1)=Pt(1:na+nc+ng+nd+nb);    
     end
     
     Pi0=Pi;
-    Pi(:,1)=Pt(1:na+nc+ng+nd+nb);
-    
+        
     Pw(Qf~=0,ft+1)=Pt(na+nc+ng+nd+nb+1:end);
     Pwt(:,t+1)=Pw(:,ft+1);
     %% Водонасыщенность

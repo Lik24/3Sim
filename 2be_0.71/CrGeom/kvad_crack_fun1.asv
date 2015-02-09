@@ -123,8 +123,6 @@ doly_s=doly(Won_s(:,2)==1,:);
 Sdoly_s=Sdoly(Won_s(:,2)==1);
 do1y=doly;
 Sdo1y=Sdoly;
-do1y(de,:)=[];
-Sdo1y(de,:)=[];
 
 wn=unique(won_s(:,1));
  for i=1:size(wn,1)
@@ -133,7 +131,7 @@ wn=unique(won_s(:,1));
      do1y(Won(:,1)==wn(i),:)=interp1(df,doly_s(won_s(:,1)==wn(i),:),nf,'linear','extrap');
      Sdo1y(Won(:,1)==wn(i))=interp1(df,Sdoly_s(won_s(:,1)==wn(i)),nf,'linear','extrap');
  end
-
+d
 WData.WXY=WXY;
 WData.Doly=do1y;
 WData.SDoly=Sdo1y;

@@ -25,7 +25,7 @@ Sw0=DATA.gSw;
 % nt1=nt{1,1};
 % % nt1(8)=[];
 % nt={nt1};
-nt=elka(0,PR.Nl,DATA.XY,15,5,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, флаг к скважине
+nt=elka(PR.fC(1),PR.Nl,DATA.XY,15,5,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, флаг к скважине
 [CrDATA]=CrackProp(DATA,PR,nt);
 %[nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
 [C,A2C,dVc,pc,DATA.WonV,DATA.Lc,CR_GRUP]=Conek2(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,WData.r0,DATA.ka);
@@ -36,11 +36,12 @@ gt=Tresh_Gor(PR.fC(2),DATA.XY,PR.Nl);  % 0/1 - выкл/вкл. горизонтальные трещ.
 nd=DPorist(PR.fC(3),DATA.XY,PR.Nl); % 0/1 - выкл/вкл. двойная пористость
 [DData,~,DATA.gMp]=Conek2D(DATA,nd,PR.Nl,CrDATA,WData,A2C,GData.A2G,PR.ddol);
 
-[Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz,DSw]=SimT_MKT(PR,C,A2C,GData,B,A2B,DData,dVc,dVb,DATA,WData,GYData,1,CR_GRUP);
+[Pi,Sw,Ti,MCp,p,Q,Pw,PpW,SwC,NDT,Uf,dt1,dV0,DATA.ka,dtz,DSw,t_step,fV]=SimT_MKT(PR,C,A2C,GData,B,A2B,DData,dVc,dVb,DATA,WData,GYData,1,CR_GRUP);
 
+if PR.fVz==1
 VZL(DATA,WData.WXY,Pi,Sw(:,end),Ti,MCp,PR.Nl,p,Q,SwC,CR_GRUP,pc,nt,XY_GY,Uf(:,end),pb,GYData,XY_GY_new,dtz,Won3);
 %VZL_VORONOI(DATA,Pi(:,end),p,WXY,WData.Uf(:,end))
-
+end;
   Qo(:,1)=sum(Q(:,3,:));
   Ql(:,1)=sum(Q(:,2,:));
   Qz(:,1)=sum(Q(:,1,:));
@@ -55,5 +56,4 @@ Sw0=Sw0(DATA.ka==1); Sw0=[Sw0;Sw0(1:size(DData.D,1))];
 V0=sum(dV1'.*(1-Sw0));
 sQo(end,:)/V0
 
-TBL=table(single(Ql),single(Qo),single(Qz),single(c),'VariableNames',{'Ql','Qo','Qz','c'});
-writetable(TBL,'OutQ.txt','Delimiter','tab')
+Out_Data(Pi,Sw,p,Ql,Qo,Qz,c,t_step,DATA,fV);

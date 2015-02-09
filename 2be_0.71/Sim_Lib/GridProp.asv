@@ -169,12 +169,10 @@ ka=(gKX+gKY+gKZ).*gMp.*gNTG.*gH~=0;
 % mean([gH(XY(:,1)<500);gH(XY(:,2)>1050)])
 % mean([gNTG(XY(:,1)<500);gNTG(XY(:,2)>1050)])
 %[gSw0,gSw]
-%dK=rand(size(gKX))-1;
-%load('dk.mat','dK')
 
-DATA.gKX=gKX;%+dK.*max(gKX)*0.5;
-DATA.gKY=gKY;%+dK.*max(gKY)*0.5;
-DATA.gKZ=gKZ;%+dK.*max(gKZ)*0.5;
+DATA.gKX=gKX.*;
+DATA.gKY=gKY;
+DATA.gKZ=gKZ;
 DATA.gMp=gMp;
 DATA.gP=gP+0.001*rand(size(gP));
 DATA.gSw=gSw;

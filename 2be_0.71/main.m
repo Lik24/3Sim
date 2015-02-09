@@ -2,11 +2,17 @@ clearvars
 
 addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','GeoMeh_Lib',...
     'Well_lib','Crack_gen','Problems','Poly_lib','SS_lib','Diff_lib','Viz_lib','DATA_In','Adap_lib');
-PR=imp_glb_prm;%Gl_PRM;
+PR=Gl_PRM;%imp_glb_prm;%
 
 [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(PR.Ns,PR.Nl);
 %Sw(:)=0.3;
-%KX(:)=mean(KX(:));
+%dK=rand(size(KX))-0.5;
+load('dk.mat','dK')
+KX=KX+dK.*max(KX(:));
+KY=KY+dK.*max(KY(:));
+KZ=KZ+dK.*max(KZ(:));
+SD=load('WHor.mat');
+WXY=SD.WHO100_90{1};
 XY_GYs=XY_GY;
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z]=Sintetic(PR.Ns,PR.Nl);
 [WData,Won3,~]=Well_DATA(WXY,Z,PR.Ta,PR.Nl,PR.drob);

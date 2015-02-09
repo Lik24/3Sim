@@ -1,7 +1,8 @@
 function [WData,W_N,WXY]=Well_DATA(WXY,Z,Ta,Nl,dh)
 r0=0.084;
 
-[~,WXY,~,~,~,~,~,~,~,~,Pw1,Qz1,Uf1,CpW1,Pw_Q_C_bnd,Won3]=read_mr_prop;
+%[~,~,~,~,~,~,~,~,~,~,Pw1,Qz1,Uf1,CpW1,Pw_Q_C_bnd,Won3]=read_mr_prop;
+[~,~,~,~,~,~,~,~,~,~,Pw1,Qz1,Uf1,CpW1,Pw_Q_C_bnd,Won3]=read_mr_prop_MF;
 Pw=rep(Pw1,Ta);
 Qz=rep(Qz1,Ta);
 Uf=rep(Uf1,Ta);
