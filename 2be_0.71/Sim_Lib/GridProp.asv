@@ -102,7 +102,8 @@ end;
 % gK=gK.*(gK>0)+0.1*(gK<0)+10;
 % gK=gK/10;
 v1=0:nl-1;
-Won(:,1)=repmat(1:size(Won3,1),1,nl)+reshape(repmat(v1'*size(XY,1),1,size(WXY,1))',1,size(Won3,1)*nl); 
+[~,~,won1]=intersect(WXY,XY,'rows','stable');
+Won(:,1)=repmat(won1,1,nl)+reshape(repmat(v1'*size(XY,1),1,size(WXY,1))',size(Won3,1)*nl,1); 
 Won(:,2)=repmat(Won3(:,2),nl,1);
 Won(:,3)=repmat(Won3(:,1),nl,1);
 Won(:,4)=repmat(Won3(:,3),nl,1);
@@ -169,10 +170,12 @@ ka=(gKX+gKY+gKZ).*gMp.*gNTG.*gH~=0;
 % mean([gH(XY(:,1)<500);gH(XY(:,2)>1050)])
 % mean([gNTG(XY(:,1)<500);gNTG(XY(:,2)>1050)])
 %[gSw0,gSw]
+%dK=rand(size(gKX))-1;
+%load('dk.mat','dK')
 
-DATA.gKX=gKX.*;
-DATA.gKY=gKY;
-DATA.gKZ=gKZ;
+DATA.gKX=gKX;%+dK.*max(gKX)*0.5;
+DATA.gKY=gKY;%+dK.*max(gKY)*0.5;
+DATA.gKZ=gKZ;%+dK.*max(gKZ)*0.5;
 DATA.gMp=gMp;
 DATA.gP=gP+0.001*rand(size(gP));
 DATA.gSw=gSw;

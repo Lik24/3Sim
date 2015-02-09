@@ -24,12 +24,10 @@ if sum(Won(:,2))~=0
               end
               new_xy=A(fl==1,:);
               if sum(fl)>0
-                new_won=[WN(k)*ones(sum(fl),1),ones(sum(fl),1),por(fl==1)+0.5.*(flp(fl==1)==1)'-0.5.*(flm(fl==1)==1)'];
+                new_won=[WN(k),ones(sum(fl),1),por(fl==1)+0.5.*(flp(fl==1)==1)-0.5.*(flm==1)];
               else
                 new_won=zeros(0,3); 
               end;
-              [new_xy,ia,ic]=unique(new_xy,'rows');
-              new_won=new_won(ia,:);
               new_XY=[new_XY;new_xy];
               new_XY1=[new_XY1;new_xy];
               new_Won=[new_Won;new_won];

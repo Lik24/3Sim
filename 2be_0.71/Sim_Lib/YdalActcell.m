@@ -7,7 +7,7 @@ S=S(ka==1);
 H1=H1(ka==1,ka==1);
 HV=HV(ka==1);
 
-XY=XY(ka==1);
+XY=XY(ka==1,:);
 KX=KX(ka==1);
 KY=KY(ka==1);
 KZ=KZ(ka==1);

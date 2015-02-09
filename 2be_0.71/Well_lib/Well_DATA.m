@@ -29,7 +29,10 @@ for j=1:size(uB,1)
     np=2:size(wxy2,1)+1;
     wn1=uB(j)*ones(size(wxy2,1),1);
     g_flag=ones(size(wxy2,1),1);
-    Won3(Won3(:,3)==2,3)=size(wxy2,1)+2;   
+    t_won3=Won3(uB(j)==Won3(:,1),:);
+    t_won3(t_won3(:,3)==2,3)=size(wxy2,1)+2;   
+    Won3(uB(j)==Won3(:,1),:)=t_won3;
+    %Won3(Won3(:,3)==2,3)=size(wxy2,1)+2;   
     wn2=[wn2;wn1];
     g_flag1=[g_flag1;g_flag];
     np2=[np2,np];

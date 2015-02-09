@@ -11,7 +11,8 @@ XY_GYs=XY_GY;
 [WData,Won3,~]=Well_DATA(WXY,Z,PR.Ta,PR.Nl,PR.drob);
 %[WData,Ppwf,Pw_d,Pw_z]=Well_DATA_Adap(WXY,Z,PR.Ta);
 
-[nt,PXY,gXY,PR.dl,tXY,XY_GY,Won3,WData]=kvad_crack_fun(XY_GY,PR.Nl,WData,PR.drob,Won3);
+[nt,PXY,gXY,PR.dl,tXY,XY_GY,Won3,WData]=kvad_crack
+_fun(XY_GY,PR.Nl,WData,PR.drob,Won3);
 %[nt,PXY,gXY,PR.dl,tXY,XY_GY1,Won3,WData]=kvad_crack_fun1(XY_GY,PR.Nl,WData,PR.drob,Won3,SD.g_cr_90);
 [DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY(:,:),H,Z,tXY,PR.Nl,WData.WXY,XY_GY,GY_subl,Won3);
 Sw0=DATA.gSw;
@@ -21,8 +22,7 @@ Sw0=DATA.gSw;
 %[WData.Doly,DATA,GYData]=Load_adp_prm(DATA,GYData,tXY);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
 
-nt=elka(1,PR.Nl,DATA.XY,5,20,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, флаг к скважине
-%load('nt_s1')
+%nt=elka(0,PR.Nl,DATA.XY,15,5,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, флаг к скважине
 [CrDATA]=CrackProp(DATA,PR,nt);
 %[nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
 [C,A2C,dVc,pc,DATA.WonV,DATA.Lc,CR_GRUP]=Conek2(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,WData.r0,DATA.ka);
