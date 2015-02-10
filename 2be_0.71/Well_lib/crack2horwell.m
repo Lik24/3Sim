@@ -1,5 +1,5 @@
 function [WXY,Won,g_cr,de]=crack2horwell(g_cr,WXY,Won,drob)
-
+de=[];
 if sum(Won(:,2))~=0
     won=Won(Won(:,2)==1,:);
     wxy=WXY(Won(:,2)==1,:);
@@ -37,7 +37,7 @@ if sum(Won(:,2))~=0
             g_cr{i,j}=[XY1(1,:);new_XY1;XY1(2,:)];
         end;
     end;
-    de=[];
+    
     for i1=1:size(new_XY,1)
       R=((WXY(:,1)-new_XY(i1,1)).^2+(WXY(:,2)-new_XY(i1,2)).^2).^0.5;
       de=[de;find(R<drob/2)];
