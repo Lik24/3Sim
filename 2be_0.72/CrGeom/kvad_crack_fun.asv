@@ -1,4 +1,4 @@
-function [NLT,gXY,dl,tXY,XY_GY,Won,WData]=kvad_crack_fun(XY_GY,NL,WData,dh,Won)
+function [Nt,gXY,dl,tXY,XY_GY,Won,WData]=kvad_crack_fun(XY_GY,NL,WData,dh,Won)
 
 WXY=WData.WXY;
 Won_s=Won;
@@ -8,17 +8,13 @@ drob=dh;        % Густота сетки
 dl=dh;          % Шаг трещины
 dl2=dh;         % Очитска вокруг трещины
 
-
-NT=cell(NL,1);
-PXY=cell(NL,1);
-
 g_cr{1,1}=[];
    % Nt l    X  Y  Z
 g_cr{1}=[100,350,1;
          400,350,3]; %пїЅпїЅпїЅпїЅ
 
-g_cr{2}=[100,390,1;
-         400,390,3]; %пїЅпїЅпїЅпїЅ
+% g_cr{2}=[100,390,2;
+%          400,390,3]; %пїЅпїЅпїЅпїЅ
 %        
 % g_cr{3,1}=[100,430;
 %            900,430]; %пїЅпїЅпїЅпїЅ
@@ -53,8 +49,6 @@ g_cr{2}=[100,390,1;
 % g_cr{13,1}=[100,830;
 %             900,830]; %пїЅпїЅпїЅпїЅ
 
-ImA=zeros(size(g_cr,1),NL);
-
 if isempty(g_cr{1,1})==0;
     [p,~] = Mesh3(XY_GY,drob);
     [WXY,Won,gcr,de]=crack2horwell(g_cr,WXY,Won,drob);
@@ -72,31 +66,32 @@ if isempty(g_cr{1,1})==0;
     gXY(cb,:)=[];
     tXY=[WXY;gXY];
     n=size(tXY,1);
-%     for l=1:NL
-%         rl=find(ImA(:,l));
-        for i=1:size(crk2,1)
-            cr=crk2{i};
-            % nt=[];
-            [~,~,nt]=intersect(cr,tXY,'rows','stable');
-            nt1=nt(1:end-1)';
-            nt2=nt(2:end)';
-            Z=gcr{i}(:,3);
-            z(1)=min(Z);
-            z(2)=max(Z);
-            Z_nt1=[];
-            Z_nt2=[];
-            for j=z(1):z(2)
-                Z_nt1=[Z_nt1,nt1+(j-1)*n];
-                Z_nt2=[Z_nt2,nt2+(j-1)*n];
-            end
-            if z(1)~=z(2)
-               Z_nt1=[Z_nt1,Z_nt1,] 
-            end
-            Nt(i)={[nt1;nt2]};
-        end;
-        NLT(l)={Nt};
-        Nt={[]};
-%     end;
+
+    for i=1:size(crk2,1)
+        cr=crk2{i};
+        % nt=[];
+        [~,~,nt]=intersect(cr,tXY,'rows','stable');
+        nt1=nt(1:end-1)';
+        nt2=nt(2:end)';
+        Z=gcr{i}(:,3);
+        z(1)=min(Z).*(min(Z)<=NL)+NL*(min(Z)>NL);
+        z(2)=max(Z).*(max(Z)<=N)+NL*(max(Z)>NL);
+        Z_nt1=[];
+        Z_nt2=[];
+        nl=size(nt1,2);
+        k=0;
+        for j=z(1):z(2)
+            k=k+1;
+            Z_nt1=[Z_nt1,nt1+(j-1)*n];
+            Z_nt2=[Z_nt2,nt2+(j-1)*n];
+        end
+        if z(1)~=z(2)
+            Z_nt1=[Z_nt1,Z_nt1(1:nl*(k-1))];
+            Z_nt2=[Z_nt2,Z_nt1(nl+1:nl*k)];
+        end
+        Nt(i)={[Z_nt1;Z_nt2]};
+    end;
+
 else
     
     [p,GR] = Mesh4(WXY,drob);

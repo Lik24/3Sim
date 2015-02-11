@@ -10,13 +10,12 @@ kg=PR.Kg;
 hg=PR.Hg;
 
 alp_C=PR.Alp_C;
-
+KC={kc};
 for i=1:size(NT,2)%PR.Nl
   %nt=NT{l};
   DH(i)={dh*ones(size(NT))};
   GH(i)={hg*ones(size(NT))};
-
-  KC(i)={kc*ones(size(NT))};
+  KC(i)={kc};
 end
 
 for l=1:PR.Nl

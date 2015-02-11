@@ -1,8 +1,8 @@
 function [CR_rc]=Pre_Crack(RC,na,nd,TM,TD,A2C,A2G,D2C,D2G,A2D,Wf,Won,WonM,WonD,dZ)
 WonM=[Won,Wf,WonM];
 
- CR_rc(1,1)=conct2mat(na,RC.ACr,RC.AGr,RC.Arc2(:,2),RC.Arc2(:,1),TM,A2C,A2G,WonM);
- CR_rc(1,2)=conct2mat(nd,RC.DCr,RC.DGr,RC.Dc2,RC.Dr2,TD,D2C,D2G,WonD);
+ CR_rc(1,1)=conct2mat(na,RC.ACr,RC.AGr,RC.Arc(:,2),RC.Arc(:,1),TM,A2C,A2G,WonM,RC.Arc2(:,2),RC.Arc2(:,1));
+ CR_rc(1,2)=conct2mat(nd,RC.DCr,RC.DGr,RC.Dc2,RC.Dr2,TD,D2C,D2G,WonD,RC.Dc,RC.Dr);
  
  v1=CR_rc(1,1).v;
  v2=CR_rc(1,2).v;
@@ -32,7 +32,7 @@ WonM=[Won,Wf,WonM];
  CR_rc(1,4).dZ=dZ;
 end
 
-function [CR_rc,won]=conct2mat(n,inc,ing,r,c,T,A2C,A2G,WoM)
+function [CR_rc,won]=conct2mat(n,inc,ing,c,r,T,A2C,A2G,WoM,ch,rh)
  if isempty(r)==0
     rcm=unique([inc;ing]);
     
@@ -48,34 +48,44 @@ function [CR_rc,won]=conct2mat(n,inc,ing,r,c,T,A2C,A2G,WoM)
     end
     v=zeros(n,1);
     v(rcm)=1;
-    gh=ones(n,1);
-    gh(rcm)=2;
-    Img2=sparse(r,c,gh(c),n,n);
-    Img2=Img2+Img2';
 
-    [r1,c1]=find(Img2==2);
+    Img2=sparse(r,c,v(c),n,n);
+    %Img2=Img2+Img2';
+    [r1,c1]=find(Img2==1);
     de=[];
     for i=1:size(rcm,1)
         de=[de;find(rcm(i)==r1)];
     end;
-
-    r_gy=r1;  
-    r_gy(de,:)=[];    
-    r_in=r1(de,:);
-    c_gy=c1;      c_gy(de,:)=[];     c_in=c1(de,:);
-
-    de=[];
-    for i=1:size(rcm,1)
-        de=[de;find(rcm(i)==c_in)];
-    end;
-    r_in=r_in(de);
-    c_in=c_in(de);
     
-    RC_IN=sparse(r_in,c_in,1);
-    U=triu(RC_IN);
+    [~,ci,de2]=intersect(rcm,r1,'rows','stable');
+    [la,lb]=ismember(r1,rcm);
+    
+    
+    r_gy=r1;     % r_gy(de3,:)=[];     r_in=r1(de3,:);
+    c_gy=c1;     % c_gy(de3,:)=[];     c_in=c1(de3,:);
+
+        r_gy=r1(la==0);
+        c_gy=c1(la==0);
+        
+        r_in=r1(la==1);
+        c_in=c1(la==1);     
+        
+%     de=[];
+%     for i=1:size(rcm,1)
+%         de=[de;find(rcm(i)==c_in)];
+%     end;
+%     [~,ci,de1]=intersect(rcm,c_in,'rows','stable');
+%     r_in=r_in(de1);
+%     c_in=c_in(de1);
+[la,lb]=ismember(c_in,rcm);
+        r_in=r_in(la==1);
+        c_in=c_in(la==1);   
+    
+    RC_IN=sparse(r_in,c_in,1,n,n);
+    U=tril(RC_IN);
     [r_in_h,c_in_h]=find(U);
 
-     T=sparse(r,c,T,n,n);
+     T=sparse(rh,ch,T,n,n);
      T=T+T';
      
      T_gy=T(r_gy+n*(c_gy-1));

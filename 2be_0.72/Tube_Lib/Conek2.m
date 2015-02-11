@@ -36,7 +36,6 @@ for i=1:mnt
     L1=L(unt,:);   L2=L1(:,unt);
     H1=H(unt,:);   H2=H1(:,unt);
     
-    
     for j=1:size(Won,1)
         ty=find(Won(j,1)==unt);
         if isempty(ty)==0

@@ -162,13 +162,9 @@ end
 function plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z,A2C)
 
 if Nl==1
-    Nt=NT{1};
-    SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
-    cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
-    
-    for i1=1:size(Nt,2)
-        nt=Nt{i1};
-        SwC_nC=SwC_L(cr_grup==i1);
+    for i1=1:size(NT,2)
+        nt=NT{i1};
+        SwC_nC=SwC(CR_GRUP==i1);
         unt=unique(nt);
         for i=1:size(nt,2)
             rr1=find(nt(1,i)==unt);
@@ -189,21 +185,21 @@ else
         sw=SwC(i2==CR_GRUP(:,1));
         a2c=A2C(:,i2==CR_GRUP(:,1));
         [r,c]=find(a2c);
-        Z=z(:);
-        col_sw=sw;
-        col_sw=((1-col_sw)*0.9+0.1);
-
+    
         vxy=XY(r,:);
         vz=z(r);
-na=size(sw,1);
-vx=reshape(vxy(:,1),na/Nl,Nl);
-vy=reshape(vxy(:,2),na/Nl,Nl);
-vz1=reshape(vz,na/Nl,Nl);
-sw1=reshape(sw,na/Nl,Nl);
-surf(vx,vy,vz1,sw1);
+        fz=zeros(size(z));
+        fz(r)=1;
+        [~,c1]=find(fz);
+        na=size(sw,1);
 
+        nl=max(c1)-min(c1)+1;
+        vx=reshape(vxy(:,1),na/nl,nl);
+        vy=reshape(vxy(:,2),na/nl,nl);
+        vz1=reshape(vz,na/nl,nl);
+        sw1=reshape(sw,na/nl,nl);
+        surf(vx,vy,vz1,sw1);
         %plot3(vx,vy,vz,'Color',[col_sw col_sw col_sw])
-        
         hold on
     end;
 end;
