@@ -50,36 +50,18 @@ function [CR_rc,won]=conct2mat(n,inc,ing,c,r,T,A2C,A2G,WoM,ch,rh)
     v(rcm)=1;
 
     Img2=sparse(r,c,v(c),n,n);
-    %Img2=Img2+Img2';
     [r1,c1]=find(Img2==1);
-    de=[];
-    for i=1:size(rcm,1)
-        de=[de;find(rcm(i)==r1)];
-    end;
+    la=ismember(r1,rcm);
     
-    [~,ci,de2]=intersect(rcm,r1,'rows','stable');
-    [la,lb]=ismember(r1,rcm);
-    
-    
-    r_gy=r1;     % r_gy(de3,:)=[];     r_in=r1(de3,:);
-    c_gy=c1;     % c_gy(de3,:)=[];     c_in=c1(de3,:);
-
         r_gy=r1(la==0);
         c_gy=c1(la==0);
         
         r_in=r1(la==1);
         c_in=c1(la==1);     
-        
-%     de=[];
-%     for i=1:size(rcm,1)
-%         de=[de;find(rcm(i)==c_in)];
-%     end;
-%     [~,ci,de1]=intersect(rcm,c_in,'rows','stable');
-%     r_in=r_in(de1);
-%     c_in=c_in(de1);
-[la,lb]=ismember(c_in,rcm);
-        r_in=r_in(la==1);
-        c_in=c_in(la==1);   
+
+% [la,lb]=ismember(c_in,rcm);
+%         r_in=r_in(la==1);
+%         c_in=c_in(la==1);   
     
     RC_IN=sparse(r_in,c_in,1,n,n);
     U=tril(RC_IN);

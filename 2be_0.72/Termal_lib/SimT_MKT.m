@@ -358,7 +358,6 @@ while t_flag==1
     DCp(:,1)=Cp(vd);
     
     %% Дебиты
-    
     Qm(:,:,t+1)=QBild(W1,W6.*A(Won(:,1)),W7,Pi(va,1),Uf(WonM,ft+1),Won(:,1),dt,Pw(WonM,ft+1),WonM,nw);
     %Qm(CR_rc.wn,:,t+1)=Qm1(CR_rc.wn,:);
     Qm(CR_rc(1,1).won(:,3),:,t+1)=Qm1(CR_rc(1,1).won(:,3),:);
