@@ -257,10 +257,11 @@ ndtI(i)=ndt;
     WonC,WonG,0,j_ndt);
 if fl==0
     fl2=fl2+1;
-%     if fl2==2
-%     ndt=ndtI(end-1);
-%     end
 end;
+if isinf(ndt)==1
+   fl2=2;
+   nndt=1;
+end
 % [Pj(va),Pj(vc(end:-1:1)),Pj(vd)]
 end;
 ndt=ndtI(end);

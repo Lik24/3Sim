@@ -23,6 +23,12 @@ Sw0=DATA.gSw;
 
 %nt=elka(1,PR.Nl,DATA.XY,5,20,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, флаг к скважине
 load('nt_s2')
+nt1=nt{:};
+nt1(2:5)=[];
+nt2=nt1{:};
+nt2(:,1:15)=[];
+nt1={nt2};
+nt={nt1};
 [CrDATA]=CrackProp(DATA,PR,nt);
 %[nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
 [C,A2C,dVc,pc,DATA.WonV,DATA.Lc,CR_GRUP]=Conek2(DATA.XY,nt,PR.Nl,CrDATA,DATA.Won,WData.r0,DATA.ka);
