@@ -97,6 +97,9 @@ WData.CpW=CpW;
 WData.TeW=repmat(TeW,1,Ta);
 WData.Doly=ones(n(1),n1(2));  %Коэф связи скважины с пластом
 WData.SDoly=ones(n(1),1);     %Коэф связи скважины с меторождением
+
+WData.Doly(5:end,[1,3])=0;
+
 WData.r0=r0;
 WData.WXY=WXY;
 WData.PwQC_bnd=Pw_Q_C_bnd;

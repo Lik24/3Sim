@@ -1,4 +1,4 @@
-function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,CSw,NDT,Uf,dt1,dV0,ka,dtz,DSwj]=SimT_MKT(PR,C,A2C,GData,BB,A2B,DData,dVC,dVB,DATA,WData,GYData,fll,CR_GRUP)
+function [Pj,Swj,Tj,MCpj,p,Q,Pw,PpW,CSwj,NDT,Uf,dt1,dV0,ka,dtz,DSwj]=SimT_MKT(PR,C,A2C,GData,BB,A2B,DData,dVC,dVB,DATA,WData,GYData,fll,CR_GRUP)
 tic
 
 KX=DATA.gKX;
@@ -52,7 +52,7 @@ qd=zeros(size(Uf,1),5);
 [r,c]=find(A(1:size(XY,1),1:size(XY,1))==1);
 
 Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,nw,Nl);
-Wf=KWell_Horiz(Wf,KX,KY,KZ,H,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,nw,Nl);
+Wf=KWell_Horiz(Wf,KX,KY,KX,H,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,nw,Nl);
 
 XY=repmat(XY,Nl,1);
 ka1=ka(Won(:,1));
@@ -388,6 +388,7 @@ while t_flag==1
         Pj(:,j)=Pi;
         Swj(:,j)=MSw;
         DSwj(:,j)=DSw;
+        CSwj(:,j)=Sw(vc);
         MCpj(:,j)=MCp;
         Tj(:,j)=Ti;
         waitbar(st/Ta)
@@ -417,6 +418,7 @@ j=j+1;
 Pj(:,j)=Pi;
 Swj(:,j)=MSw;
 DSwj(:,j)=DSw;
+CSwj(:,j)=Sw(vc);
 MCpj(:,j)=MCp;
 Tj(:,j)=Ti;
 waitbar(st/Ta)

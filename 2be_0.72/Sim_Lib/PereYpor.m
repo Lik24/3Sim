@@ -20,7 +20,7 @@ NamXY=DATA.NamXY(ka==1);
 A=A.*(A>0);
 
 p=symrcm(A);
-[n,Nl]=size(KX);
+[n,Nl]=size(ka);
 
 A=A(p,p);
 L=L(p,p);

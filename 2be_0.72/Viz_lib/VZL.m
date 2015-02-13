@@ -86,7 +86,7 @@ hold on
 %plot(ax,ay,'k','LineWidth',2)
 PCC=(abs(min(PC(:,end)))+PC(:,end))/max(abs(min(PC(:,end)))+PC(:,end));
 if numel(PCC)~=0
-plot_crack_color(Nl,NT,PCC,CR_GRUP,XY,z,A2C);
+plot_crack_color(Nl,NT,PC,CR_GRUP,XY,z,A2C);
 end
 %set(s1,'CLim',[min([pgy;p]) max([pgy;p])])
 hold off
@@ -198,7 +198,7 @@ else
         vy=reshape(vxy(:,2),na/nl,nl);
         vz1=reshape(vz,na/nl,nl);
         sw1=reshape(sw,na/nl,nl);
-        surf(vx,vy,vz1,sw1);
+        surf(vx,vy,vz1,sw1,'LineStyle','none');
         %plot3(vx,vy,vz,'Color',[col_sw col_sw col_sw])
         hold on
     end;

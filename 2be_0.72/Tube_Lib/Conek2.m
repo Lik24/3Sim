@@ -41,14 +41,14 @@ for i=1:mnt
         if isempty(ty)==0
             k=k+1;
             WonV(k,1)=ty(1);
-            WonV(k,2)=HH(Won(j,1))*dh(i)*kc(i)*8.64/r0;%dC*100;
+            WonV(k,2)=HH(Won(j,1))*dh(i)*kc*8.64/r0;%dC*100;
             WonV(k,3)=Won(j,3);
         end;
     end;
     %         WonV
     n=size(A2,1);
     [r,c]=find(A2==1);
-    C=H2(r+(c-1)*n)*dh(i)./L2(r+(c-1)*n)*kc(i)*8.34;
+    C=H2(r+(c-1)*n)*dh(i)./L2(r+(c-1)*n)*kc*8.34;
     C=sparse(r,c,C,n,n);
     
     a2c=sum(H2.*L2,2)*alp_C;

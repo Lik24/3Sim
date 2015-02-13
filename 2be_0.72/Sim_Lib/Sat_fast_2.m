@@ -104,7 +104,7 @@ PwNl=repmat(Pw,Nl,1);
      Bpgd=zeros(size(Bwgd));
 
      Qm=QBild(W1,W6,W7,Pi(va,1),Uf(WonM),Won(:,1),dt,PwNl(WonM),WonM,nw);%PwNl
-     
+     Qd=QBild(W1D,W6D,W7D,Pi(vd,1),Uf(WoD(:,3)),WoD(:,1),dt,PwNl(WoD(:,3)),WoD(:,3),nw);
  else
      Bwc=zeros(nc,1);
      Bwg=zeros(ng,1);
