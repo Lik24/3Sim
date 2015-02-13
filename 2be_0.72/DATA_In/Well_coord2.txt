@@ -1,0 +1,6 @@
+Well_name	X_coord	Y_coord	X_coord_hor	Y_coord_hor
+1	0	0		
+2	0	500		
+3	750	500 900 500
+4	500	750 650 750
+5   250 500 400 500
