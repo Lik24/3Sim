@@ -2,7 +2,7 @@ function [WData,W_N,WXY]=Well_DATA(WXY,Z,Ta,Nl,dh)
 r0=0.084;
 
 %[~,~,~,~,~,~,~,~,~,~,Pw1,Qz1,Uf1,CpW1,Pw_Q_C_bnd,Won3]=read_mr_prop;
-[~,~,~,~,~,~,~,~,~,~,Pw1,Qz1,Uf1,CpW1,Pw_Q_C_bnd,Won3]=read_mr_prop_MF;
+[~,~,~,~,~,~,~,~,~,~,Pw1,Qz1,Uf1,CpW1,Pw_Q_C_bnd,Won3]=read_mr_prop_MF1;
 Pw=rep(Pw1,Ta);
 Qz=rep(Qz1,Ta);
 Uf=rep(Uf1,Ta);
@@ -98,7 +98,7 @@ WData.TeW=repmat(TeW,1,Ta);
 WData.Doly=ones(n(1),n1(2));  %Коэф связи скважины с пластом
 WData.SDoly=ones(n(1),1);     %Коэф связи скважины с меторождением
 
-WData.Doly(5:end,[1,3:10])=0;
+WData.Doly(5:end,[1:2,4:16])=0;
 
 WData.r0=r0;
 WData.WXY=WXY;
