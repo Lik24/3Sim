@@ -52,7 +52,7 @@ qd=zeros(size(Uf,1),5);
 [r,c]=find(A(1:size(XY,1),1:size(XY,1))==1);
 
 Wf=KWell(KX,H,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,nw,Nl);
-Wf=KWell_Horiz(Wf,KX,KY,KX,H,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,nw,Nl);
+Wf=KWell_Horiz(Wf,KX,KY,KZ,H,S,L,B,Won,r,c,WData.Doly,WData.SDoly,WData.r0,XY,nw,Nl);
 
 XY=repmat(XY,Nl,1);
 ka1=ka(Won(:,1));

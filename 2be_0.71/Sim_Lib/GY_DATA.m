@@ -19,8 +19,8 @@ GY_Swz=1*ones(nz);
 GY_Kz(bnd_Z~=2)=0;
 GY_Kz(bnd_Z~=1)=0.628*8.64/20*0;
 
-GY_Kxy=ones(size(P))*8.64*1.0;
-GY_Kxy(DATA.XY(:,2)>10)=0;
+GY_Kxy=ones(size(P))*8.64*1.0*0;
+%GY_Kxy(DATA.XY(:,2)>10)=0;
 % GY_Kxy(DATA.XY(:,2)<1)=8.64*1;
 % GY_Kxy(DATA.XY(:,1)>999)=8.64*1;
 
@@ -94,14 +94,7 @@ BND=[BND1;BND2];
 [B]=MR_Prop_Bond(XY,PR.Nl,BND);
 nb=size(B,1);
 
-for i=1:size(XY,1)
-  v1=XY(i,1)==DATA.XY(:,1);
-  v2=XY(i,2)==DATA.XY(:,2);
-  if sum(v1.*v2)~=0
-      r1(i)=find(v1.*v2);
-      c1(i)=i;
-  end    
-end;
+[~,c1,r1]=intersect(XY,DATA.XY,'rows','stable');
 
 for l=1:PR.Nl
     Z(:,l)=razmaz(DATA.gZ(:,l),DATA.XY,XY);

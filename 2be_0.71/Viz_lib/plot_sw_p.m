@@ -1,4 +1,4 @@
-function figure1 =plot_sw_p(xd1, yd1,zd1, zd2, X1, Y1, X2,Y2,PXY,PXY2,flt,SwC,NT,Nl,CR_GRUP,XY)
+function figure1 =plot_sw_p(xd1, yd1,zd1, zd2, X1, Y1, X2,Y2,PXY,PXY2,flt,SwC,PC,NT,Nl,CR_GRUP,XY)
 %CREATEFIGURE(ZDATA1, A1)
 %  ZDATA1:  contour z
 %  A1:  contour z
@@ -12,7 +12,7 @@ figure1 = figure('Position',[0 0 1366 690],'Colormap',...
 % Create subplot
 subplot1 = subplot(1,2,1,'Parent',figure1,'YGrid','on','XGrid','on',...
     'Layer','top',...
-    'CLim',[0 1]);
+    'CLim',[0.25 0.75]);
 %% Uncomment the following line to preserve the X-limits of the axes
 xlim(subplot1,[min(xd1(:))-1, max(xd1(:))+1]);
 ylim(subplot1,[min(yd1(:))-1, max(yd1(:))+2]);
@@ -50,7 +50,7 @@ plot(X2,Y2,'Parent',subplot1,'MarkerFaceColor',[0 0 0],...
 % Create subplot
 subplot2 = subplot(1,2,2,'Parent',figure1,'YGrid','on','XGrid','on',...
     'Layer','top',...
-    'CLim',[50 62 ]);
+    'CLim',[20 60]);
 %% Uncomment the following line to preserve the X-limits of the axes
 xlim(subplot2,[min(xd1(:))-1, max(xd1(:))+1]);
 %% Uncomment the following line to preserve the Y-limits of the axes
@@ -171,7 +171,7 @@ colorbar('peer',subplot2,'NorthOutside','XAxisLocation','top');
 %     end;
 % end;
   plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,subplot1)
-  plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,subplot2)
+  plot_crack_color(Nl,NT,PC,CR_GRUP,XY,subplot2)
   
 end
 

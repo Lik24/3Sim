@@ -1,14 +1,13 @@
 function [DATA]=GridProp(wKx,wKy,wKz,wMp,wP,wSw,wCp,wT,wNTG,CXY,wH,wZ,gXY,nl,WXY,XYgy,GY_subl,Won3)
 [nw]=size(wKx,1);
 A=zeros(nw,nl*6);
-XY=[gXY];
 
-XY=NODuble(XY);
+gXY=NODuble(gXY);
 %plot(XY(:,1),XY(:,2),'*')
 % plot(gXY(:,1),gXY(:,2),'*')
 % dfdf
-[IN,ON]=inpolygon(XY(:,1),XY(:,2),XYgy(:,1),XYgy(:,2));
-Con=XY(ON==1,:);
+[IN,ON]=inpolygon(gXY(:,1),gXY(:,2),XYgy(:,1),XYgy(:,2));
+Con=gXY(ON==1,:);
 
  xc=sum(Con(:,1),1)/size(Con,1);
  yc=sum(Con(:,2),1)/size(Con,1);
@@ -20,7 +19,7 @@ XYgy=Con(n,:);
 % Con=XY(ON==1,:);
 %         r=r(n) 
 for i=1:size(XYgy,1)
- r(i,1)=find((XYgy(i,1)==XY(:,1)).*(XYgy(i,2)==XY(:,2)));
+ r(i,1)=find((XYgy(i,1)==gXY(:,1)).*(XYgy(i,2)==gXY(:,2)));
 end;
 
 BND(:,1)=r;
@@ -48,24 +47,24 @@ BND(:,2)=[r(2:end);r(1)];
 %    pause(0.1)
 % end
 %   kjjh
-ncg=size(XY,1);
+ncg=size(gXY,1);
 
 BndXY=zeros(ncg,1);
 ao=r;
 BndXY(ao)=1;
 BndXY=repmat(BndXY,nl,1);
 
-gKX=zeros(size(XY,1),nl);
-gKY=zeros(size(XY,1),nl);
-gKZ=zeros(size(XY,1),nl);
-gMp=zeros(size(XY,1),nl);
-gP=zeros(size(XY,1),nl);
-gSw=zeros(size(XY,1),nl);
-gCp=zeros(size(XY,1),nl);
-gH=zeros(size(XY,1),nl);
-gZ=zeros(size(XY,1),nl);
-gT=zeros(size(XY,1),nl);
-gNTG=zeros(size(XY,1),nl);
+gKX=zeros(size(gXY,1),nl);
+gKY=zeros(size(gXY,1),nl);
+gKZ=zeros(size(gXY,1),nl);
+gMp=zeros(size(gXY,1),nl);
+gP=zeros(size(gXY,1),nl);
+gSw=zeros(size(gXY,1),nl);
+gCp=zeros(size(gXY,1),nl);
+gH=zeros(size(gXY,1),nl);
+gZ=zeros(size(gXY,1),nl);
+gT=zeros(size(gXY,1),nl);
+gNTG=zeros(size(gXY,1),nl);
 
 mo=11;
 for i=1:nl
@@ -83,7 +82,7 @@ for i=1:nl
 end;
 
 parfor i=1:mo*nl
-Aa(:,i)=razmaz(A(:,i),CXY,XY);
+Aa(:,i)=razmaz(A(:,i),CXY,gXY);
 end
 
 for i=1:nl
@@ -102,8 +101,8 @@ end;
 % gK=gK.*(gK>0)+0.1*(gK<0)+10;
 % gK=gK/10;
 v1=0:nl-1;
-[~,~,won1]=intersect(WXY,XY,'rows','stable');
-Won(:,1)=repmat(won1,1,nl)+reshape(repmat(v1'*size(XY,1),1,size(WXY,1))',size(Won3,1)*nl,1); 
+[~,~,won1]=intersect(WXY,gXY,'rows','stable');
+Won(:,1)=repmat(won1,1,nl)+reshape(repmat(v1'*size(gXY,1),1,size(WXY,1))',size(Won3,1)*nl,1); 
 Won(:,2)=repmat(Won3(:,2),nl,1);
 Won(:,3)=repmat(Won3(:,1),nl,1);
 Won(:,4)=repmat(Won3(:,3),nl,1);
@@ -138,13 +137,13 @@ for l=1:size(gKX,2)
 %  xy=GY.xy{l};
 %  a=GY.a{l};
 
- gKX(:,l)=sub_bond(gKX(:,l),x_y{l},XY,1);
- gKY(:,l)=sub_bond(gKY(:,l),x_y{l},XY,1);
- gKZ(:,l)=sub_bond(gKZ(:,l),x_y{l},XY,1);
- gMp(:,l)=sub_bond(gMp(:,l),x_y{l},XY,1);
- gSw(:,l)=sub_bond(gSw(:,l),x_y{l},XY,0);
- gH(:,l)=sub_bond(gH(:,l),x_y{l},XY,1);
- gNTG(:,l)=sub_bond(gNTG(:,l),x_y{l},XY,1);
+ gKX(:,l)=sub_bond(gKX(:,l),x_y{l},gXY,1);
+ gKY(:,l)=sub_bond(gKY(:,l),x_y{l},gXY,1);
+ gKZ(:,l)=sub_bond(gKZ(:,l),x_y{l},gXY,1);
+ gMp(:,l)=sub_bond(gMp(:,l),x_y{l},gXY,1);
+ gSw(:,l)=sub_bond(gSw(:,l),x_y{l},gXY,0);
+ gH(:,l)=sub_bond(gH(:,l),x_y{l},gXY,1);
+ gNTG(:,l)=sub_bond(gNTG(:,l),x_y{l},gXY,1);
 end
 
 ka=(gKX+gKY+gKZ).*gMp.*gNTG.*gH~=0;
@@ -180,7 +179,7 @@ DATA.gMp=gMp;
 DATA.gP=gP+0.001*rand(size(gP));
 DATA.gSw=gSw;
 DATA.gCp=gCp;
-DATA.XY=XY;
+DATA.XY=gXY;
 DATA.BND=BND;
 DATA.gH=gH;
 DATA.gZ=gZ;

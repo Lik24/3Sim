@@ -34,7 +34,7 @@ if sum(Won(:,2))~=0
             new_XY1=[new_XY1;new_xy];
             new_Won=[new_Won;new_won];
         end
-        g_cr{i}=[XY1(1,:),Z(1);new_XY1,mean(Z);XY1(2,:),Z(2)];
+        g_cr{i}=[XY1(1,:),Z(1);new_XY1,mean(Z).*ones(size(new_XY1(:,1)));XY1(2,:),Z(2)];
     end;
     
     for i1=1:size(new_XY,1)

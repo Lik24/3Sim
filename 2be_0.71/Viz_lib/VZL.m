@@ -94,7 +94,7 @@ figure(98),subplot(2,4,2);
 plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность',XYgy,a0,'linear') % 
 hold on
 if numel(SwC)~=0
-plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
+plot_crack_color(Nl,NT,SwC(:,end),CR_GRUP,XY,z);
 end
 hold off
 

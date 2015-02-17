@@ -1,14 +1,17 @@
-function video_save(XY,WXY,Z,Pi,Sw,Nl,pp,PXY,PXY2,uf,SwC,NT,CR_GRUP)
+function video_save(XY,WXY,Z,Pi,Sw,Nl,pp,PXY,PXY2,uf,SwC,NT,CR_GRUP,pc)
 tic
-writerObj = VideoWriter('Pre_new.avi','MPEG-4');
+writerObj = VideoWriter('Pre_new2.avi','MPEG-4');
 open(writerObj);
 size(Pi)
 size(XY)
 P2=Pi(1:size(XY,1),:);
 P3=Sw(1:size(XY,1),:);
 
-XY(pp,1)=XY(:,1);
-XY(pp,2)=XY(:,2);
+
+PC(pc,:)=Pi(size(XY,1)+1:end,:);
+SwC(pc,:)=SwC;
+% XY(pp,1)=XY(:,1);
+% XY(pp,2)=XY(:,2);
 t=size(P2,2);
 
 x=reshape(XY(:,1),size(Z,1)/Nl,Nl);
@@ -35,7 +38,7 @@ end;
 flt=flt(:,1:10:end);
 
 for j=1:t
- [frame(j)]=gogi(P2(:,j),P3(:,j),pp,Z,Nl,x,y,WXY,X,Y,PXY,PXY2,flt(:,j),uf,SwC(:,j),NT,CR_GRUP,XY);
+ [frame(j)]=gogi(P2(:,j),P3(:,j),pp,Z,Nl,x,y,WXY,X,Y,PXY,PXY2,flt(:,j),uf,SwC(:,j),PC(:,j),NT,CR_GRUP,XY);
 %frame = imdilate(frame, se);
 
 end
@@ -50,12 +53,12 @@ close(writerObj);
 toc
 end
 
-function [frame]=gogi(P2,P3,pp,WZ,Nl,x,y,WXY,X,Y,PXY,PXY2,flt,uf,SwC,NT,CR_GRUP,XY)
+function [frame]=gogi(P2,P3,pp,WZ,Nl,x,y,WXY,X,Y,PXY,PXY2,flt,uf,SwC,PC,NT,CR_GRUP,XY)
 Pt(pp)=P2;
 p1=reshape(Pt,size(WZ,1)/Nl,Nl);
 Pt(pp)=P3;
 p2=reshape(Pt,size(WZ,1)/Nl,Nl);
-
+PC=(abs(min(PC(:,end)))+PC(:,end))/max(abs(min(PC(:,end)))+PC(:,end));
 
 for i=1:Nl
 F=scatteredInterpolant(x(:,i),y(:,i),p2(:,i),'linear','none');
@@ -67,7 +70,7 @@ end;
 %h=figure(1);
 % contourf(X,Y,mean(B,3),'LineStyle','none','LineColor',[0 0 0],...
 %     'Fill','on');
-h=plot_sw_p(X,Y,B,Bp,WXY(uf==-1,1),WXY(uf==-1,2),WXY(uf==1,1),WXY(uf==1,2),PXY,PXY2,flt,SwC,NT,Nl,CR_GRUP,XY);
+h=plot_sw_p(X,Y,B,Bp,WXY(uf==-1,1),WXY(uf==-1,2),WXY(uf==1,1),WXY(uf==1,2),PXY,PXY2,flt,SwC,PC,NT,Nl,CR_GRUP,XY);
 %h=plot_sw(X,Y,B,WXY([1,4,7],1),WXY([1,4,7],2),WXY([3,6,9],1),WXY([3,6,9],2),PXY);
 %h1=plot_p(X,Y,Bp,WXY([1,4,7],1),WXY([1,4,7],2),WXY([3,6,9],1),WXY([3,6,9],2),PXY);
 % set(gca,'nextplot','replacechildren');

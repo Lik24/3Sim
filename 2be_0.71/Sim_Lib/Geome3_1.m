@@ -57,14 +57,12 @@ csn=(1-siny.^2).^0.5;
 csn=real(csn);
 dr=sparse(r1,c1,LS.*csn);
 dr=sum(dr,2);
-B=sparse(r,c,dr);
-
-
+B=sparse(r,c,dr,n,n);
 
 ss=polyarea([xc(r(r1)+(c(r1)-1)*n),xt,xf],[yc(r(r1)+(c(r1)-1)*n),yt,yf],2);
 ds=sparse(r1,c1,ss);
 ds=sum(ds,2);
-S=sparse(r,c,ds);
+S=sparse(r,c,ds,n,n);
 
 Bc1=cell(Nl*Nl,1);
 Bc1(:)={sparse(n,n)};
@@ -72,7 +70,7 @@ for i=1:Nl
     hc=h(r,i);
     hl=h(c,i);
     hm=(hc+hl)/2;
-    dh=sparse(r,c,hm);
+    dh=sparse(r,c,hm,n,n);
     Bc1(i+(i-1)*Nl)={dh};
 end;
 Bc1=reshape(Bc1,Nl,Nl);

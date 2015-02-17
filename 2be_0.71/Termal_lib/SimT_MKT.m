@@ -382,7 +382,7 @@ while t_flag==1
         elseif Ta/dt<=1e4
             zapt=100;
         else
-            zapt=1000;
+            zapt=5;
         end;
         
         j=j+1;
@@ -405,7 +405,7 @@ while t_flag==1
     qo=Qm(:,3,t+1)/dt;
     qo(Uf(:,ft+1)==-1)=inf;
     Qmin=repmat(PwQC_bnd(:,8),1,1);
-    Uf(:,ft+1:end)=Uf(:,ft+1:end).*repmat(qo>Qmin,1,size(Uf(:,ft+1:end),2));
+   % Uf(:,ft+1:end)=Uf(:,ft+1:end).*repmat(qo>=Qmin,1,size(Uf(:,ft+1:end),2));
     
     st=st+dt;
     dt1(t+1)=dt;
