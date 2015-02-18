@@ -1,7 +1,7 @@
 function [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(Nw,Nl)
 
 %[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop;
-[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop_MF;
+[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop_MF1;
 XY_GY=[GY(:,1),GY(:,2)];
 
 SD.Mp=Mp;
@@ -87,7 +87,7 @@ WXY(:,2)=WXY(:,2)-mXY(2);
 Mp=SD.Mp;
 KX=SD.K/1000*8.64;
 KY=SD.K/1000*8.64;
-KZ=SD.K/1000*8.64*0.001;
+KZ=SD.K/1000*8.64*0.1;
 
 Sw=SD.Sw;
 Z=SD.Z3;
