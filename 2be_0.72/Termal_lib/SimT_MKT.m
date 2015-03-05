@@ -27,7 +27,7 @@ Pw=WData.Pw;
 Uf=WData.Uf;
 CpW=WData.CpW;
 TeW=WData.TeW;
-Qz=WData.Qz;
+Qz=WData.Qz;    Qz=Qz.*(Uf~=0);
 PwQC_bnd=WData.PwQC_bnd;
 
 Nl=PR.Nl;  as=PR.as; aw=PR.aw; ts=PR.ts; tw=PR.tw; mu=PR.mu; mup=PR.mup;
@@ -174,6 +174,11 @@ GY_Pxy2=GYData.P0;
 zapt=1;
 Sw0=Sw;
 
+wna=unique(Won(:,3));
+wnc=unique(WonC(:,3));
+wng=unique(WonG(:,3));
+wnd=unique(WonD(:,3));
+
 while t_flag==1
     %for t=1:Ta-1
     t=t+1;
@@ -302,10 +307,10 @@ while t_flag==1
             
             %[flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond(pw,Pt(Won),W1,Uf(WonM,ft+1),Qf,PwQC_bnd);
             
-            qm=QBild(W1,W6,W7,Pt(va)',Uf(WonM,ft+1),Won(:,1),dt,pw(WonM),WonM,nw);
-            qc=QBild(W1C,W6C,W7C,Pt(vc)',Uf(WonC(:,3),ft+1),WonC(:,1),dt,pw(WonC(:,3)),WonC(:,3),nw);
-            qg=QBild(W1G,W6G,W7G,Pt(vg)',Uf(WNG,ft+1),WonG(:,1),dt,pw(WNG),WNG,nw);
-            qd=QBild(W1D,W6D,W7D,Pt(vd)',Uf(WonD(:,3),ft+1),WonD(:,1),dt,pw(WonD(:,3)),WonD(:,3),nw);
+            qm=QBild(W1,W6,W7,Pt(va)',Uf(WonM,ft+1),Won(:,1),dt,pw(WonM),WonM,nw,wna);
+            qc=QBild(W1C,W6C,W7C,Pt(vc)',Uf(WonC(:,3),ft+1),WonC(:,1),dt,pw(WonC(:,3)),WonC(:,3),nw,wnc);
+            qg=QBild(W1G,W6G,W7G,Pt(vg)',Uf(WNG,ft+1),WonG(:,1),dt,pw(WNG),WNG,nw,wng);
+            qd=QBild(W1D,W6D,W7D,Pt(vd)',Uf(WonD(:,3),ft+1),WonD(:,1),dt,pw(WonD(:,3)),WonD(:,3),nw,wnd);
             q=qm+qc+qg+qd;
             flag_pwq=0;
            % [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
@@ -341,7 +346,7 @@ while t_flag==1
     [Sw,Cp,NDT(t),Q1,Q2,Qm1,Qd1,dSS(t),ndt]=Sat_fast_2(Sw,Cp,RC,TC,TG,TA2C,TA2G,TA2D,TD2C,TD2G,Pi(:,1),PR,ndt,Won,...
         Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_rc,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
         W7,L,DATA.Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qz(:,ft+1),WonM,nw,b1gm,b1gd,GYData,Clp,ka1,...
-        W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WonD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb,Grw,dZ,Mp,Bwo,P0);
+        W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WonD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb,Grw,dZ,Mp,Bwo,P0,wna,wnd);
     %
     %  [SCw,SCp,NDT(:,t),Q1,Q2,Qm1,dSS(t)]=Sat_fast_1(SCw,SCp,RC,TC,TG,TA2C,TA2G,Pi(:,1),PR,ndt,Won,...
     %      Uf(:,ft+1),dt,dVCG,Pw(:,ft+1),WonG,CpW(:,ft+1),WonC,Nl,CR_ind,Qz1,Qf,Pi0,TL,W1,TW,W6,TP,...
@@ -358,12 +363,12 @@ while t_flag==1
     DCp(:,1)=Cp(vd);
     
     %% Дебиты
-    Qm(:,:,t+1)=QBild(W1,W6.*A(Won(:,1)),W7,Pi(va,1),Uf(WonM,ft+1),Won(:,1),dt,Pw(WonM,ft+1),WonM,nw);
+    Qm(:,:,t+1)=QBild(W1,W6.*A(Won(:,1)),W7,Pi(va,1),Uf(WonM,ft+1),Won(:,1),dt,Pw(WonM,ft+1),WonM,nw,wna);
     %Qm(CR_rc.wn,:,t+1)=Qm1(CR_rc.wn,:);
     Qm(CR_rc(1,1).won(:,3),:,t+1)=Qm1(CR_rc(1,1).won(:,3),:);
     Qc(:,:,t+1)=Q1;%QBild(W1C,W6C,W7C,Pi(na+1:na+nc,1),Uf(WonC(:,3),t+1),WonC(:,1),dt,Pw(WonC(:,3),t+1));
     Qg(:,:,t+1)=Q2;%QBild(W1G,W6G,W7G,Pi(na+nc+1:end,1),Uf(WNG,t+1),WonG(:,1),dt,Pw(WNG,t+1));
-    Qd(:,:,t+1)=QBild(W1D,W6D.*A(WonD(:,1)),W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,Pw(WonD(:,3),ft+1),WonD(:,3),nw);
+    Qd(:,:,t+1)=QBild(W1D,W6D.*A(WonD(:,1)),W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,Pw(WonD(:,3),ft+1),WonD(:,3),nw,wnd);
     Qd(CR_rc(1,2).won(:,3),:,t+1)=Qd1(CR_rc(1,2).won(:,3),:);
     
     PpW(WonM,t+1)=Pi(Won(:,1));
@@ -381,7 +386,7 @@ while t_flag==1
         elseif Ta/dt<=1e4
             zapt=100;
         else
-            zapt=1000;
+            zapt=10000;
         end;
         
         j=j+1;
