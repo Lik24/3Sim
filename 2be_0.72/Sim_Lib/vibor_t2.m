@@ -23,38 +23,47 @@ v2=dP2>0;
 Dl=zeros(0,1);
 Dl=[Dl;DL(RC.Dr2+(RC.Dc2-1)*nd)];
 
+    fl_swm=(min(Sw(va))>Sc);
 if numel(vd)~=0
-    fl_sw=(min(Sw(va))>Sc)*(min(Sw(vd))>Sc2);
+    fl_swd=(min(Sw(vd))>Sc2);
 else
-    fl_sw=(min(Sw(va))>Sc);
+    fl_swd=-1;
 end
 
 if dt==0
-    if fl_sw==1
-        MdS=abs((Sw2-Sw));
+    if fl_swm==1
+        MdS=abs((Sw2(va)-Sw(va)));
         nf=(isnan(MdS)==0);
         dS=max(MdS(nf==1));
       %  dS
         new_dt=0.005/dS;
-        dt=new_dt*dt0;
+        dtm=new_dt*dt0;
       %  dt
     else
-                
         dv=dV1(:,1).*(v1==0)+dV1(:,2).*v1;
         dt1=1./max(abs(TL.*dP1./dv));
         dt2=1./max(abs(W1.*dPw1./dVa(Won)));
         dt12=min([dt1,dt2])/Fc;
-        
+        dtm=min(dt12);
+    end;
+    
+    if fl_swd==1
+        MdS=abs((Sw2(vd)-Sw(vd)));
+        nf=(isnan(MdS)==0);
+        dS=max(MdS(nf==1));
+      %  dS
+        new_dt=0.005/dS;
+        dtd=new_dt*dt0;
+      %  dt
+    else
         dv=dV2(:,1).*(v2==0)+dV2(:,2).*v2;
         dt3=1./max(abs(Dl.*dP2./dv));
         dt4=1./max(abs(W1D.*dPw2./dVd(WonD(:,1))));
-        dt34=min([dt3,dt4])/Fc2;
-        
-        dt=min([dt12;dt34(:,1)]);
+        dt34=min([dt3;dt4])/Fc2;
+        dtd=min(dt34);
     end;
-    
 
-    %kjhjkhj
+   dt=min([dtm,dtd]);
 end;
 
     if st+dt>Ta

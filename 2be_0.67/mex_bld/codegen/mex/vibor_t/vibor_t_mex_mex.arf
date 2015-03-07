@@ -1,9 +1,0 @@
-libemlrt.lib
-libut.lib
-libmwblas.lib
-libmwmathutil.lib
-/export:mexFunction
-/export:emlrtMexFcnProperties
-/export:vibor_t
-/export:vibor_t_initialize
-/export:vibor_t_terminate

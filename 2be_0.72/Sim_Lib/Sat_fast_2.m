@@ -1,7 +1,7 @@
 function [Sw,Cp,ndt,Q1,Q2,Qm,Qd,tmp,ndti]=Sat_fast_2(Sw,Cp,RC,TC,TG,A2C,A2G,A2D,D2C,D2G,Pi,PR,...
     ndt0,Won,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,Qz,Qf,Pi0,TL,W1,TW,W6,TP,...
     W7,L,Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qzm1,WonM,nw,b1gm,b1gd,GYData,...
-    Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WoD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb,Grw,dZ,Mp,Bwo,P0)
+    Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WoD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb,Grw,dZ,Mp,Bwo,P0,wna,wnd)
 
 na=RC.na;
 nc=RC.nc;
@@ -61,9 +61,11 @@ PwNl=repmat(Pw,Nl,1);
      bl=[b1wm;b1wd;b1wb]+BLGY_GIM;
      Blc1=zeros(na,1);      Blc1(RC.ACr)=Blc;
      Bwc1=zeros(na,1);      Bwc1(RC.ACr)=Bwc;
+     Bpc1=zeros(na,1);      
      
      Blcd1=zeros(nd,1);     Blcd1(RC.DCr)=Blcd;
      Bwcd1=zeros(nd,1);     Bwcd1(RC.DCr)=Bwcd;
+     Bpcd1=zeros(nd,1);
      
      blm=bl(va)-Blc1/dt-sparse(r2a,ones(sum(v2a),1),Blg,na,1)/dt;%sparse(r1a,ones(sum(v1a),1),Blc(),na,1)
      bld=bl(vd-nc-ng)-Blcd1/dt-sparse(r2d,ones(sum(v2d),1),Blgd,nd,1)/dt;
@@ -103,8 +105,8 @@ PwNl=repmat(Pw,Nl,1);
      Bpcd=zeros(size(Bwcd));
      Bpgd=zeros(size(Bwgd));
 
-     Qm=QBild(W1,W6,W7,Pi(va,1),Uf(WonM),Won(:,1),dt,PwNl(WonM),WonM,nw);%PwNl
-     Qd=QBild(W1D,W6D,W7D,Pi(vd,1),Uf(WoD(:,3)),WoD(:,1),dt,PwNl(WoD(:,3)),WoD(:,3),nw);
+     Qm=QBild(W1,W6,W7,Pi(va,1),Uf(WonM),Won(:,1),dt,PwNl(WonM),WonM,nw,wna);%PwNl
+     Qd=QBild(W1D,W6D,W7D,Pi(vd,1),Uf(WoD(:,3)),WoD(:,1),dt,PwNl(WoD(:,3)),WoD(:,3),nw,wnd);
  else
      Bwc=zeros(nc,1);
      Bwg=zeros(ng,1);
@@ -126,10 +128,12 @@ PwNl=repmat(Pw,Nl,1);
      Qd=zeros(0,5);
      
      Blc1=zeros(na,1);     
-     Bwc1=zeros(na,1);     
+     Bwc1=zeros(na,1);   
+     Bpc1=zeros(na,1);   
      
      Blcd1=zeros(nd,1);    
-     Bwcd1=zeros(nd,1);   
+     Bwcd1=zeros(nd,1);  
+     Bpcd1=zeros(nd,1);  
  end;
 
 b_A2B=Soed2B(A2BW,A2BP,Pi,na,nb,va,vb);     % Связь пор с граничной областью
@@ -152,7 +156,7 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
 %sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bwc;Bwcd],na+nd,1)/dt
      Bw=bw+[Bwc1;Bwcd1]/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bwg;Bwgd],na+nd,1)/dt...
          -Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]))+Grw([va,vd]);
-     Bp=bp+sparse([r1a;r1d+na],ones(sum(v1a)+sum(v1d),1),[Bpc;Bpcd],na+nd,1)/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bpg;Bpgd],na+nd,1)/dt...
+     Bp=bp+[Bpc1;Bpcd1]/dt+sparse([r2a;r2d+na],ones(sum(v2a)+sum(v2d),1),[Bpg;Bpgd],na+nd,1)/dt...
          -Cp([va,vd]).*Cwp([va,vd]).*(Pi([va,vd])-Pi0([va,vd]))+Cp([va,vd]).*Grw([va,vd]);
      tmp=sum(Bw);    
 
