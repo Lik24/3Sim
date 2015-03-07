@@ -348,7 +348,7 @@ fp=1;
         else
             zapt=1000;
         end;
-     
+     zapt=1;
     if mod(t,zapt)==0
         j=j+1;
         Pj(:,j)=Pi;

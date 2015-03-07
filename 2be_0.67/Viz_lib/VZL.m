@@ -73,7 +73,7 @@ my(2)=max(XY(:,2));
 % my(2)=max(XY_GY2(:,2));
 % [X1,Y1]=meshgrid(mx(1):5:mx(2),my(1):5:my(2));
 %  
-figure(98),s1=subplot(2,4,1);
+figure(98),s1=subplot(2,1,1);
 % plot_fild(x1,y1,z,pgy,Nl,X1,Y1,WXY,'Пластовое давление',XYgy2,a0,'nearest') % 
 % hold on
 plot_fild(x,y,z,p,Nl,X,Y,WXY,'Пластовое давление',XYgy,a0,'nearest') % 
@@ -85,31 +85,31 @@ plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
 %set(s1,'CLim',[min([pgy;p]) max([pgy;p])])
 hold off
 
-figure(98),subplot(2,4,2);
+figure(98),subplot(2,1,2);
 plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность',XYgy,a0,'nearest') % 
 hold on
 plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z);
 hold off
 
 
-figure(98),subplot(2,4,4);
-plot_fild(x,y,z,cp,Nl,X,Y,WXY,'Концентрация',XYgy,a0,'nearest') % 
-
-figure(98),subplot(2,4,3);
-plot_fild(x,y,z,tt,Nl,X,Y,WXY,'Температура',XYgy,a0,'nearest') % 
-
-figure(98),subplot(2,4,5);
-plot_fild(x,y,z,log10k,Nl,X,Y,WXY,'Проницаемость',XYgy,a0,'nearest') % 
-
-
- subplot(2,4,8);
- T=(1:size(Q,3))*dtz;
+% figure(98),subplot(2,4,4);
+% plot_fild(x,y,z,cp,Nl,X,Y,WXY,'Концентрация',XYgy,a0,'nearest') % 
 % 
-Qz(:,:)=sum(Q(:,1,:));
-Qd(:,:)=sum(Q(:,2,:));
-Qo(:,:)=sum(Q(:,3,:));
-Qp(:,:)=sum(Q(:,5,:));
-plot(T,Qz,T,Qd,T,Qo,T,Qp)
+% figure(98),subplot(2,4,3);
+% plot_fild(x,y,z,tt,Nl,X,Y,WXY,'Температура',XYgy,a0,'nearest') % 
+% 
+% figure(98),subplot(2,4,5);
+% plot_fild(x,y,z,log10k,Nl,X,Y,WXY,'Проницаемость',XYgy,a0,'nearest') % 
+% 
+% 
+%  subplot(2,4,8);
+%  T=(1:size(Q,3))*dtz;
+% % 
+% Qz(:,:)=sum(Q(:,1,:));
+% Qd(:,:)=sum(Q(:,2,:));
+% Qo(:,:)=sum(Q(:,3,:));
+% Qp(:,:)=sum(Q(:,5,:));
+% plot(T,Qz,T,Qd,T,Qo,T,Qp)
 
 end
 
