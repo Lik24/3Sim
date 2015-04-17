@@ -1,4 +1,4 @@
-function VZL(DATA,WXY,P,Sw,T,Cp,Nl,pp,Q,SwC,CR_GRUP,pc,NT,XYgy,a0,pb,GYData,XYgy2,dtz,Won3,A2C)
+function VZL1(DATA,WXY,P,Sw,T,Cp,Nl,pp,Q,SwC,CR_GRUP,pc,NT,XYgy,a0,pb,GYData,XYgy2,dtz,Won3)
 
 XY=DATA.XY;
 WZ=DATA.gZ(:);
@@ -18,7 +18,6 @@ Cp1(pp,:)=Cp;
 T1(pp,:)=T1;
 PC(pc,:)=PC;
 SwC(pc,:)=SwC;
-A2C(:,pc)=A2C;
 
 %P1GY=P(size(pp,2)+1:end,:);
 %P1GY(pb,:)=P1GY;
@@ -76,7 +75,7 @@ my(2)=max(XY(:,2));
 % my(2)=max(XY_GY2(:,2));
 % [X1,Y1]=meshgrid(mx(1):5:mx(2),my(1):5:my(2));
 %  
-figure(98),s1=subplot(2,4,1);
+figure(98),s1=subplot(1,2,1);
 % plot_fild(x1,y1,z,pgy,Nl,X1,Y1,WXY,'Пластовое давление',XYgy2,a0,'nearest') % 
 % hold on
 plot_fild(x,y,z,p,Nl,X,Y,WXY,'Пластовое давление',XYgy,a0,'nearest') % 
@@ -86,38 +85,38 @@ hold on
 %plot(ax,ay,'k','LineWidth',2)
 PCC=(abs(min(PC(:,end)))+PC(:,end))/max(abs(min(PC(:,end)))+PC(:,end));
 if numel(PCC)~=0
-plot_crack_color(Nl,NT,PCC,CR_GRUP,XY,z,A2C);
+plot_crack_color(Nl,NT,PCC,CR_GRUP,XY,z);
 end
 %set(s1,'CLim',[min([pgy;p]) max([pgy;p])])
 hold off
 
-figure(98),subplot(2,4,2);
+figure(98),subplot(1,2,2);
 plot_fild(x,y,z,sw,Nl,X,Y,WXY,'Водонасыщенность',XYgy,a0,'linear') % 
 hold on
 if numel(SwC)~=0
-plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z,A2C);
+plot_crack_color(Nl,NT,SwC(:,end),CR_GRUP,XY,z);
 end
 hold off
 
 
-figure(98),subplot(2,4,4);
-plot_fild(x,y,z,cp,Nl,X,Y,WXY,'Концентрация',XYgy,a0,'nearest') % 
-
-figure(98),subplot(2,4,3);
-plot_fild(x,y,z,tt,Nl,X,Y,WXY,'Температура',XYgy,a0,'nearest') % 
-
-figure(98),subplot(2,4,5);
-plot_fild(x,y,z,log10k,Nl,X,Y,WXY,'Проницаемость',XYgy,a0,'nearest') % 
-
-
- subplot(2,4,8);
- T=(1:size(Q,3))*dtz;
+% figure(98),subplot(2,4,4);
+% plot_fild(x,y,z,cp,Nl,X,Y,WXY,'Концентрация',XYgy,a0,'nearest') % 
 % 
-Qz(:,:)=sum(Q(:,1,:))/dtz;
-Qd(:,:)=sum(Q(:,2,:))/dtz;
-Qo(:,:)=sum(Q(:,3,:))/dtz;
-Qp(:,:)=sum(Q(:,5,:)/dtz);
-plot(T,Qz,T,Qd,T,Qo,T,Qp)
+% figure(98),subplot(2,4,3);
+% plot_fild(x,y,z,tt,Nl,X,Y,WXY,'Температура',XYgy,a0,'nearest') % 
+% 
+% figure(98),subplot(2,4,5);
+% plot_fild(x,y,z,log10k,Nl,X,Y,WXY,'Проницаемость',XYgy,a0,'nearest') % 
+% 
+% 
+%  subplot(2,4,8);
+%  T=(1:size(Q,3))*dtz;
+% % 
+% Qz(:,:)=sum(Q(:,1,:))/dtz;
+% Qd(:,:)=sum(Q(:,2,:))/dtz;
+% Qo(:,:)=sum(Q(:,3,:))/dtz;
+% Qp(:,:)=sum(Q(:,5,:)/dtz);
+% plot(T,Qz,T,Qd,T,Qo,T,Qp)
 
 end
 
@@ -159,12 +158,16 @@ end;
  hold off
 end
 
-function plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z,A2C)
+function plot_crack_color(Nl,NT,SwC,CR_GRUP,XY,z)
 
 if Nl==1
-    for i1=1:size(NT,2)
-        nt=NT{i1};
-        SwC_nC=SwC(CR_GRUP==i1);
+    Nt=NT{1};
+    SwC_L=SwC(CR_GRUP(:,2)==Nl,end);
+    cr_grup=CR_GRUP(CR_GRUP(:,2)==Nl,1);
+    
+    for i1=1:size(Nt,2)
+        nt=Nt{i1};
+        SwC_nC=SwC_L(cr_grup==i1);
         unt=unique(nt);
         for i=1:size(nt,2)
             rr1=find(nt(1,i)==unt);
@@ -179,28 +182,29 @@ if Nl==1
         end;
     end;
 else
-    for i2=1:size(NT,2)
-        nt=NT{i2};
-        unt=unique(nt);
-        sw=SwC(i2==CR_GRUP(:,1));
-        a2c=A2C(:,i2==CR_GRUP(:,1));
-        [r,c]=find(a2c);
-    
-        vxy=XY(r,:);
-        vz=z(r);
-        fz=zeros(size(z));
-        fz(r)=1;
-        [~,c1]=find(fz);
-        na=size(sw,1);
-
-        nl=max(c1)-min(c1)+1;
-        vx=reshape(vxy(:,1),na/nl,nl);
-        vy=reshape(vxy(:,2),na/nl,nl);
-        vz1=reshape(vz,na/nl,nl);
-        sw1=reshape(sw,na/nl,nl);
-        surf(vx,vy,vz1,sw1,'LineStyle','none');
-        %plot3(vx,vy,vz,'Color',[col_sw col_sw col_sw])
-        hold on
+    for i2=1:Nl
+        Nt=NT{i2};
+        SwC_L=SwC(CR_GRUP(:,2)==i2,end);
+        cr_grup=CR_GRUP(CR_GRUP(:,2)==i2,1);
+        
+        for i1=1:size(Nt,2)
+            nt=Nt{i1};
+            SwC_nC=SwC_L(cr_grup==i1);
+            unt=unique(nt);
+            for i=1:size(nt,2)
+                rr1=find(nt(1,i)==unt);
+                rr2=find(nt(2,i)==unt);
+                col_sw=(SwC_nC(rr1)+SwC_nC(rr2))/2;
+                col_sw=((1-col_sw)*0.9+0.1);
+                vx=[XY(nt(1,i),1),XY(nt(2,i),1)];
+                vy=[XY(nt(1,i),2),XY(nt(2,i),2)];
+                vz=[z(nt(1,i),i2),z(nt(2,i),i2)];
+                
+                plot3(vx,vy,vz,'Color',[col_sw col_sw col_sw])
+                
+                hold on
+            end;
+        end;
     end;
 end;
 end

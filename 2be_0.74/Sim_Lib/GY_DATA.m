@@ -19,8 +19,13 @@ GY_Swz=1*ones(nz);
 GY_Kz(bnd_Z~=2)=0;
 GY_Kz(bnd_Z~=1)=0.628*8.64/20*0;
 
+<<<<<<< HEAD:2be_0.74/Sim_Lib/GY_DATA.m
 GY_Kxy=ones(size(P))*8.64*1.0*0.1;
 %GY_Kxy(repmat(DATA.XY(:,2),PR.Nl,1)>0)=0;
+=======
+GY_Kxy=ones(size(P))*8.64*0.1;
+%GY_Kxy(DATA.XY(:,2)>10)=0;
+>>>>>>> 76d5c93acc5ec589da11f6ce0108c6ed6380f328:2be_0.71/Sim_Lib/GY_DATA.m
 % GY_Kxy(DATA.XY(:,2)<1)=8.64*1;
 % GY_Kxy(DATA.XY(:,1)>999)=8.64*1;
 

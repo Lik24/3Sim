@@ -3,6 +3,7 @@ r0=0.084;
 
 %[~,~,~,~,~,~,~,~,~,~,Pw1,Qz1,Uf1,CpW1,Pw_Q_C_bnd,Won3]=read_mr_prop;
 [~,~,~,~,~,~,~,~,~,~,Pw1,Qz1,Uf1,CpW1,Pw_Q_C_bnd,Won3]=read_mr_prop_MF1;
+<<<<<<< HEAD:2be_0.74/Well_lib/Well_DATA.m
 
 load('toEmile.mat');
 CD=DATA;
@@ -19,6 +20,8 @@ Pw_Q_C_bnd=repmat(Pw_Q_C_bnd,nw,1);
 %Pw1=zeros(nw,1);
 
 
+=======
+>>>>>>> 76d5c93acc5ec589da11f6ce0108c6ed6380f328:2be_0.71/Well_lib/Well_DATA.m
 Pw=rep(Pw1,Ta);
 Qz=rep(Qz1,Ta);
 Uf=rep(Uf1,Ta);

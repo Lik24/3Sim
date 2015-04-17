@@ -1,6 +1,7 @@
 function [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl,pXY]=Sintetic_Real(Nw,Nl,fl2)
 
 %[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop;
+<<<<<<< HEAD:2be_0.74/Sim_Lib/Sintetic_Real.m
 %[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop_MF1;
 
 load('toEmile.mat');
@@ -54,6 +55,9 @@ GY1=GY(GY(:,1)<1500,:);
 GY3=GY(GY(:,1)>800,:);
 GY_subl=[[1,-1];GY1;[2,-1];GY;[3,-1];GY3];
 
+=======
+[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop_MF1;
+>>>>>>> 76d5c93acc5ec589da11f6ce0108c6ed6380f328:2be_0.71/Sim_Lib/Sintetic_Real.m
 XY_GY=[GY(:,1),GY(:,2)];
 
 SD.Mp=Mp;
