@@ -96,6 +96,7 @@ i=0;
 j_ndt=1/ndt;
 fl2=0;
 DZA=pre2Pot(dZA,[na,nc,ng,nd],RC,rc_in_h,rc_in_hd);
+bicflag=1;
 
 while fl2<2% & i<3000
 i=i+1;
@@ -205,9 +206,17 @@ i=i+1;
 
     BC1=[ba1-bl';bc1;bg1;bd1-bld']'-(Clp.*Pj)'-Gr';
 
-     Pt=[BC1,Qz(wna(Qf~=0))']/[AMC1,WM2;WM1,WM3];
+     AA=[AMC1,WM2;WM1,WM3];
+     BB=[BC1,Qz(wna(Qf~=0))']';
+     if bicflag==1
+     [L,U] = ilu(AA,struct('type','ilutp','droptol',1e-6));
+     end
+     [Pt,~] = bicgstab(AA,BB,10e-6,1000,L,U,[Pj;Pw(wna(Qf~=0))]);
+     
+     %Pt=[BC1,Qz(wna(Qf~=0))']/[AMC1,WM2;WM1,WM3];
      Pj(:,1)=Pt(1:na+nc+ng+nd);
 
+     
      Pw(wna(Qf~=0))=Pt(na+nc+ng+nd+1:end);
 
      A2=TW2-sparse(1:na,1:na,sum(TW2,2)+sum(A2CW,2)+sum(A2GW,2)+sum(A2DW,2)+Cwp(va)+bAw',na,na)-sparse(wom(:,1),wom(:,1),W6,na,na);
@@ -235,6 +244,7 @@ i=i+1;
   %   Sw(vc)-Sw1(vc)
      Sw=Sw.*(Sw>=0).*(Sw<=1)+(Sw>1);
 %fghgfh
+     bicflag=sum(abs(Sw-Sw1)>0.05)>1;
      
      SW0([v_c,v_g])=Sw1([vc,vg]);
      SW([v_c,v_g])=Sw([vc,vg]);

@@ -48,6 +48,10 @@ BND(:,2)=[r(2:end);r(1)];
 %    pause(0.1)
 % end
 %   kjjh
+
+ [a1,a2,r]=intersect(XYgy,XY,'rows');
+
+
 ncg=size(XY,1);
 
 BndXY=zeros(ncg,1);

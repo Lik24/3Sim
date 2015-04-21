@@ -173,7 +173,8 @@ GY_Pz=GYData.GY_Pz;
 GY_Pxy2=GYData.P0;
 zapt=1;
 Sw0=Sw;
-
+C_flag=1;
+ 
 wna=unique(Won(:,3));
 wnc=unique(WonC(:,3));
 wng=unique(WonG(:,3));
@@ -217,7 +218,7 @@ while t_flag==1
     kj=0;
     flag_gim=1;
     flag_pwq=1;
-    
+       
     while flag_gim==1 && kj<10
         kj=kj+1;
         
@@ -403,20 +404,36 @@ while t_flag==1
     %sum(sQo(:))
     % dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
     %%prob.progress;
-    c_lik=1-Qm(:,3,t+1)./Qm(:,2,t+1);
+    qo=(Qm(:,3,t+1)+Qc(:,3,t+1)+Qg(:,3,t+1)+Qd(:,3,t+1));
+    c_lik=1-qo./(Qm(:,2,t+1)+Qc(:,2,t+1)+Qg(:,2,t+1)+Qd(:,2,t+1));
     c_lik(isnan(c_lik)==1)=0;
-    Uf(:,ft+1:end)=Uf(:,ft+1:end).*repmat(c_lik<PwQC_bnd(:,7),1,size(Uf(:,ft+1:end),2));
+    C_lik=1-sum(qo)./sum(Qm(:,2,t+1)+Qc(:,2,t+1)+Qg(:,2,t+1)+Qd(:,2,t+1));
+    %Uf(:,ft+1:end)=Uf(:,ft+1:end).*repmat(c_lik<PwQC_bnd(:,7),1,size(Uf(:,ft+1:end),2));
     qin=-Qm(:,1,t+1)/dt;
-    qo=Qm(:,3,t+1)/dt;
+    qo=qo/dt;
     qo(Uf(:,ft+1)==-1)=inf;
     Qmin=repmat(PwQC_bnd(:,8),1,1);
-    Uf(:,ft+1:end)=Uf(:,ft+1:end).*repmat(qo>=Qmin,1,size(Uf(:,ft+1:end),2));
-    
+    %Uf(:,ft+1:end)=Uf(:,ft+1:end).*repmat(qo>=Qmin,1,size(Uf(:,ft+1:end),2));
+     
     st=st+dt;
     dt1(t+1)=dt;
     dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,Won(:,1),Pw(:,ft+1),na,PR,st,Ta,Sw,Sw0,dt,Nl,WonM,va,vd,DL,W1D,WonD,nd,dV1,dV2);
     t_flag=st~=Ta;
     
+    if C_lik>=0.985 && st>100
+        %t_flag=0;
+        if C_flag==1
+            if st<10*365
+                dtz=1;
+            elseif st<100*365
+                dtz=365/12;
+            else
+                dtz=365;
+            end;
+            Ta=st+dtz;
+            C_flag=0;
+        end
+    end
 end;
 
 j=j+1;
@@ -427,7 +444,7 @@ CSwj(:,j)=Sw(vc);
 MCpj(:,j)=MCp;
 Tj(:,j)=Ti;
 waitbar(st/Ta)
-[Q,Pw,PpW,dtz]=Q2Sut(Qm,Qc,Qg,Qd,Pwt(:,1:t+1),PpW(:,1:t+1),dt1,Ta);
+[Q,Pw,PpW,dtz]=Q2Sut(Qm(:,:,1:t+1),Qc(:,:,1:t+1),Qg(:,:,1:t+1),Qd(:,:,1:t+1),Pwt(:,1:t+1),PpW(:,1:t+1),dt1,Ta);
 % GY_Pxy(p)=GY_Pxy;
 % save('GY_Pxy.mat','GY_Pxy')
 %  Bnd_xy(p)=DATA.BndXY;

@@ -3,7 +3,7 @@ function [Q,pw,ppl,dtz]=Q2Sut(Qm,Qc,Qg,Qd,Pw,PpW,dt1,Ta)
 if Ta<10*365
     dtz=1;
 elseif Ta<100*365
-    dtz=100;
+    dtz=365/12;
 else
     dtz=365;
 end;
@@ -32,11 +32,11 @@ sQo(:,:)=sQ(:,3,:);
 sQg(:,:)=sQ(:,4,:);
 sQp(:,:)=sQ(:,5,:);
 
-sQz_d=interp1(st,sQz',dtz:dtz:Ta,'linear','extrap');
-sQl_d=interp1(st,sQl',dtz:dtz:Ta,'linear','extrap');
-sQo_d=interp1(st,sQo',dtz:dtz:Ta,'linear','extrap');
-sQg_d=interp1(st,sQg',dtz:dtz:Ta,'linear','extrap');
-sQp_d=interp1(st,sQp',dtz:dtz:Ta,'linear','extrap');
+sQz_d=interp1(st,sQz',mod(Ta,dtz):dtz:Ta,'linear','extrap');
+sQl_d=interp1(st,sQl',mod(Ta,dtz):dtz:Ta,'linear','extrap');
+sQo_d=interp1(st,sQo',mod(Ta,dtz):dtz:Ta,'linear','extrap');
+sQg_d=interp1(st,sQg',mod(Ta,dtz):dtz:Ta,'linear','extrap');
+sQp_d=interp1(st,sQp',mod(Ta,dtz):dtz:Ta,'linear','extrap');
 
 %sQz_d
 

@@ -1,7 +1,10 @@
-function [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(Nw,Nl)
+function [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(Nw,Nl,fl2)
 
 %[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop;
 [GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop_MF1;
+if fl2==0
+    WXY(5:6,:)=WXY(5:6,2:-1:1);
+end
 XY_GY=[GY(:,1),GY(:,2)];
 
 SD.Mp=Mp;

@@ -20,7 +20,7 @@ GY_Kz(bnd_Z~=2)=0;
 GY_Kz(bnd_Z~=1)=0.628*8.64/20*0;
 
 GY_Kxy=ones(size(P))*8.64*1.0*0;
-%GY_Kxy(repmat(DATA.XY(:,2),PR.Nl,1)>0)=0;
+GY_Kxy(repmat(DATA.XY(:,2),PR.Nl,1)==0)=8.64;
 % GY_Kxy(DATA.XY(:,2)<1)=8.64*1;
 % GY_Kxy(DATA.XY(:,1)>999)=8.64*1;
 
