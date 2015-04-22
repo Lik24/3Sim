@@ -4,7 +4,7 @@ addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','Geo
     'Well_lib','Crack_gen','Problems','Poly_lib','SS_lib','Diff_lib','Viz_lib','DATA_In','Adap_lib');
 PR=Gl_PRM;%imp_glb_prm;%
 
-[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl,pXY]=Sintetic_Real(PR.Ns,PR.Nl,1);
+[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(PR.Ns,PR.Nl,1);
 Sw(:)=0.25;
 % SD=load('dK16_10');
 % KX=SD.dK.*KX;
@@ -13,29 +13,24 @@ Sw(:)=0.25;
 
 XY_GYs=XY_GY;
 %[KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z]=Sintetic(PR.Ns,PR.Nl);
-fg=load('a_uni.mat');
-a0=fg.a_uni;
-[WData,Won3,~]=Well_DATA(WXY,Z,PR.Ta,PR.Nl,PR.drob,a0(:,1));
+[WData,Won3,~]=Well_DATA(WXY,Z,PR.Ta,PR.Nl,PR.drob);
 %[WData,Ppwf,Pw_d,Pw_z]=Well_DATA_Adap(WXY,Z,PR.Ta);
 % tt=65*365;
-% WData.Uf(:,tt:end)=-WData.Uf(:,tt:end);
+WData.Uf([2,4:9],1:end)=0;
 % WData.Qz(1:4,tt:end)=-100/3/4;
 % WData.Qz(5,tt:end)=0;
 % WData.Qz(6:9,tt:end)=-100/3/2;
 
 
 [nt,gXY,PR.dl,tXY,XY_GY,Won3,WData]=kvad_crack_fun(XY_GY,PR.Nl,WData,PR.drob,Won3);
-%[nt,PXY,gXY,PR.dl,tXY,XY_GY1,Won3,WData]=kvad_crack_fun1(XY_GY,PR.Nl,WData,PR.drob,Won3,SD.g_cr_90);
-[DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,pXY(:,:),H,Z,tXY,PR.Nl,WData.WXY,XY_GY,GY_subl,Won3);
+[DATA]=GridProp(KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,tXY,PR.Nl,WData.WXY,XY_GY,GY_subl,Won3);
 Sw0=DATA.gSw;
 [GYData,DATA.gKX,DATA.gSw,B,A2B,dVb,pb]=GY_DATA(0,DATA,XY_GY_new,PR); %0/1 - выкл/вкл. аквифер
 
-%[WData.Doly,DATA.gKX,GYData.GY_Kxy]=Load_adp_prm2(WData.Doly,DATA.gKX,GYData.GY_Kxy);
-%[WData.Doly,DATA,GYData]=Load_adp_prm(DATA,GYData,tXY);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
 nt={zeros(2,0)};
 %nt=elka(1,PR.Nl,DATA.XY,30,75,0,25,[1,1],1);  %0/1 - выкл/вкл.; кол-во трещин, длинна, флаг к скважине, номер фигуры, слои, соеденены
-%load('nt3')
+
 [CrDATA]=CrackProp(DATA,PR,nt);
 %[nt,PXY]=Tube_perc(PR,CrDATA,DATA.XY,1.1,WXY);
 [C,A2C,dVc,pc,DATA.WonV,DATA.Lc,CR_GRUP]=Conek2(DATA.XY,DATA.gZ,nt,PR.Nl,CrDATA,DATA.Won,WData.r0,DATA.ka);

@@ -40,7 +40,7 @@ P(ka==0,:)=nan;
 T(ka==0,:)=nan;
 Sw(ka==0,:)=nan;
 Cp(ka==0,:)=nan;
-K(ka==0)=nan;
+
 
 nxy=size(WZ,1)/Nl;
 %[A]=MR_Prop(XY,1);
@@ -68,7 +68,7 @@ mx(1)=min(XY(:,1));
 mx(2)=max(XY(:,1));
 my(1)=min(XY(:,2));
 my(2)=max(XY(:,2));
-[X,Y]=meshgrid(mx(1):5:mx(2),my(1):5:my(2));
+[X,Y]=meshgrid(mx(1):100:mx(2),my(1):100:my(2));
 
 % mx(1)=min(XY_GY2(:,1));
 % mx(2)=max(XY_GY2(:,1));
@@ -86,7 +86,7 @@ hold on
 %plot(ax,ay,'k','LineWidth',2)
 PCC=(abs(min(PC(:,end)))+PC(:,end))/max(abs(min(PC(:,end)))+PC(:,end));
 if numel(PCC)~=0
-plot_crack_color(Nl,NT,PCC,CR_GRUP,XY,z,A2C);
+plot_crack_color(Nl,NT,PC,CR_GRUP,XY,z,A2C);
 end
 %set(s1,'CLim',[min([pgy;p]) max([pgy;p])])
 hold off
@@ -150,15 +150,9 @@ else
     for i=1:Nl
         surf(X,Y,Z1(:,:,i),K(:,:,i),'LineStyle','none')
         hold on
-        
-        Zi=K(:,:,i);
-        F=scatteredInterpolant(X(:),Y(:),Zi(:),'nearest','none');
-        zii(:,i)=F(WXY(:,1),WXY(:,2));
     end;
 
-     wz=min(z(:))*ones(size(WXY,1),1);
-     wz(isnan(zii(:,end))==1)=z(isnan(zii(:,end))==1,end-1);
-     plot3(repmat(WXY(:,1),1,2)',repmat(WXY(:,2),1,2)',[wz,5+max(z(:))*ones(size(WXY,1),1)]','LineWidth',2,'Color',[0.749019622802734 0 0.749019622802734])
+   %  plot3(repmat(WXY(:,1),1,2)',repmat(WXY(:,2),1,2)',[min(z(:))*ones(size(WXY,1),1),5+max(z(:))*ones(size(WXY,1),1)]','LineWidth',2,'Color',[0.749019622802734 0 0.749019622802734])
 end;
  title(text);
  colorbar;

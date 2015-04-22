@@ -1,4 +1,4 @@
-function [V,C]=VoronoiLimit(x,y,BND)
+function [V,C,I]=VoronoiLimit(x,y,BND)
 % [V,C]=VoronoiLimit(x,y)
 % Provides the Voronoi decomposition of a set of data, but with all
 % vertices limited to the boundary created by the data itself. 
@@ -34,6 +34,8 @@ bnd=[min(x) max(x) min(y) max(y)]; %data bounds
 crs=double([bnd(1) bnd(4);bnd(2) bnd(4);bnd(2) bnd(3);bnd(1) bnd(3);bnd(1) bnd(4)]); %data boundary corners
 
 crs=[x(BND(:)),y(BND(:))];
+[x,I]=sort(x);
+y=y(I);
 
 dt=DelaunayTri(x(:),y(:));
 [V,C]=voronoiDiagram(dt); %This structure gives vertices for each individual point but is missing all "infinite" vertices

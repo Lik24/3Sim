@@ -19,15 +19,8 @@ GY_Swz=1*ones(nz);
 GY_Kz(bnd_Z~=2)=0;
 GY_Kz(bnd_Z~=1)=0.628*8.64/20*0;
 
-<<<<<<< HEAD:2be_0.74/Sim_Lib/GY_DATA.m
-GY_Kxy=ones(size(P))*8.64*1.0*0.1;
-%GY_Kxy(repmat(DATA.XY(:,2),PR.Nl,1)>0)=0;
-=======
-GY_Kxy=ones(size(P))*8.64*0.1;
-%GY_Kxy(DATA.XY(:,2)>10)=0;
->>>>>>> 76d5c93acc5ec589da11f6ce0108c6ed6380f328:2be_0.71/Sim_Lib/GY_DATA.m
-% GY_Kxy(DATA.XY(:,2)<1)=8.64*1;
-% GY_Kxy(DATA.XY(:,1)>999)=8.64*1;
+GY_Kxy=ones(size(P))*8.64*1.0*0;
+%GY_Kxy(DATA.XY(:,2)>0)=0;
 
 GY_Pxy=P.*ones(size(P));
 GY_Swxy=1*ones(size(P));
@@ -50,7 +43,7 @@ for l=1:PR.Nl
 KX(IN==1,l)=mean(GY_Kxy(:,l));
 Sw(IN==1,l)=mean(GY_Swxy(:,l));
 end
-k=boundary(xy2(:,1),xy2(:,2)); xy2=xy2(k,:);
+%k=boundary(xy2(:,1),xy2(:,2)); xy2=xy2(k,:);
 [XY,GR] = Mesh4(xy1,drob,xy2);
 
 % [IN1,ON1]=inpolygon(XY(:,1),XY(:,2),xy1(:,1),xy1(:,2));
@@ -60,7 +53,7 @@ xy2=XY(ON2,:);
 [~,ON1]=inpolygon(XY(:,1),XY(:,2),xy1(:,1),xy1(:,2));
 Con=XY(ON1==1,:);
 
-[t,R]=cart2pol(Con(:,1)-1250,Con(:,2)-600);
+[t,R]=cart2pol(Con(:,1)-mean(XY(:,1)),Con(:,2)-mean(XY(:,2)));
 [P,n]=sort(t);
 XYgy1=Con(n,:);
 
@@ -79,7 +72,7 @@ r=[];
 [IN2,ON2]=inpolygon(XY(:,1),XY(:,2),xy2(:,1),xy2(:,2));
 Con=XY(ON2==1,:);
 
-[t,R]=cart2pol(Con(:,1)-1250,Con(:,2)-600);
+[t,R]=cart2pol(Con(:,1)-mean(XY(:,1)),Con(:,2)-mean(XY(:,2)));
 [P,n]=sort(t);
 XYgy2=Con(n,:);
         

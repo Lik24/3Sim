@@ -1,73 +1,21 @@
-function [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl,pXY]=Sintetic_Real(Nw,Nl,fl2)
+function [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(Nw,Nl,fl2)
 
 %[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop;
-%[GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop_MF1;
-
-load('toEmile.mat');
-CD=DATA;
-
-Won=CD.Won;
-WXY=CD.XY(Won,:);
-mXY=min(WXY);
-
-pXY=CD.XY;
-pXY(:,1)=pXY(:,1)-mXY(1);
-pXY(:,2)=pXY(:,2)-mXY(2);
-
-WXY(:,1)=WXY(:,1)-mXY(1);
-WXY(:,2)=WXY(:,2)-mXY(2);
-XYmax=max(WXY); Lgr=( sum(XYmax.^2)  )^0.5/2;
-Mp=CD.gMp;
-K=CD.gKX(:,1);
-K(K>10000)=10000;
-H=CD.gH(:,1);
-Hk=CD.gH(:,1).*CD.gNTG(:,1);
-
-Sw=CD.gSw(:,1);
-
-Cp=CD.gCp(:,1);
-T=CD.gT(:,1);
-P=CD.gP(:,1);
-Z=CD.gZ(:,1);
-
-Mp=repmat(Mp,1,Nl);
-%dK=0.5*repmat(K,1,Nl).*(0.5-rand(size(K,1),Nl));
-load('dK1')
-K=repmat(K,1,Nl)+dK*10;%+0.5*repmat(K,1,Nl).*(0.5-rand(size(K,1),Nl));
-H=repmat(H,1,Nl);
-Hk=repmat(Hk,1,Nl);
-Sw=repmat(Sw,1,Nl);
-Cp=repmat(Cp,1,Nl);
-T=repmat(T,1,Nl);
-P=repmat(P,1,Nl);
-Z=repmat(Z,1,Nl)+repmat(1:10:10*Nl,size(Z,1),1);
-
-k=boundary(WXY(:,1),WXY(:,2));
-FD=load('GY300');
-GY=FD.GY_xy2;%WXY(k,:);
-% GY_subl=[[1,-1];GY];
-% n6=size(GY_subl,1);
-% GY_subl=repmat(GY_subl,Nl,1);
-% GY_subl(1:n6:end,1)=1:Nl;
-
-GY1=GY(GY(:,1)<1500,:);
-GY3=GY(GY(:,1)>800,:);
-GY_subl=[[1,-1];GY1;[2,-1];GY;[3,-1];GY3];
-
-=======
 [GY,WXY,H,Hk,K,Mp,Sw,Z1,Z3,GY_subl]=read_mr_prop_MF1;
->>>>>>> 76d5c93acc5ec589da11f6ce0108c6ed6380f328:2be_0.71/Sim_Lib/Sintetic_Real.m
+if fl2==0
+    WXY(5:6,:)=WXY(5:6,2:-1:1);
+end
 XY_GY=[GY(:,1),GY(:,2)];
 
 SD.Mp=Mp;
 SD.K=K;
 SD.Sw=Sw;
-SD.Z3=Z;
+SD.Z3=Z3;
 SD.H=H;
 SD.Hk=Hk;
 
 
-pR=300;
+pR=100;
 min_gy=min(XY_GY);
 max_gy=max(XY_GY);
 dx=max_gy(1)-min_gy(1);
@@ -131,10 +79,6 @@ XY_GY_new(:,2)=XY_GY_new(:,2)-mXY(2);
 WXY(:,1)=WXY(:,1)-mXY(1);
 WXY(:,2)=WXY(:,2)-mXY(2);
 
-GY_subl1=GY_subl;
-GY_subl(:,1)=GY_subl(:,1)-mXY(1);
-GY_subl(:,2)=GY_subl(:,2)-mXY(2);
-GY_subl(GY_subl1(:,2)==-1,:)=GY_subl1(GY_subl1(:,2)==-1,:);
 
 % X=[0,1000,500,0,1000]/4;
 % Y=[0,0,500,1000,1000]/4;
@@ -146,7 +90,7 @@ GY_subl(GY_subl1(:,2)==-1,:)=GY_subl1(GY_subl1(:,2)==-1,:);
 Mp=SD.Mp;
 KX=SD.K/1000*8.64;
 KY=SD.K/1000*8.64;
-KZ=SD.K/1000*8.64*0.1*0;
+KZ=SD.K/1000*8.64*0.1;
 
 Sw=SD.Sw;
 Z=SD.Z3;

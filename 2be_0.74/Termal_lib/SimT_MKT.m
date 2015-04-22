@@ -98,12 +98,6 @@ Sor(va,1)=PR.aw(5); Sor([vc,vg,vd],1)=PR.tw(5);
 PR.Swr=Swr; PR.Sor=Sor;
 
 WonM=Won(:,3);
-%WW=WonM~=0;
-%WonM=WonM(ka1==1);
-% WW(ka1==0)=0;
-% WW=reshape(WW,Nl,nw);
-% WW=sum(WW,1)~=0;
-
 %figure(98),subplot(2,4,7),spy([A,A2C,A2G;A2C',C,C2G;A2G',C2G',G]);
 
 [Ke,Ke_gy,dV]=KH2Mat(K,HV,Mp,S,r,c,rz,cz,GYData.GY_Kz,GYData.GY_Kxy,BndXY(p),DData,ka);
@@ -188,9 +182,6 @@ while t_flag==1
     %for t=1:Ta-1
     t=t+1;
     
-%     if t==43
-%         123
-%     end
     if t==1 && dtt==0
         dt=1;
         dtt=1;
@@ -201,15 +192,10 @@ while t_flag==1
     ft=floor(st);
     % if ~isempty(find(CpW(:,t)~=0)) fp=1; else fp=0; end;
     fp=0;
-    
     Qf=Qz(:,ft+1);
-    %Qf(WW==0)=0;
-    
+
     %     [C,G,A2C,A2G,WonC(:,2),WonG(:,2)]=temp_CG(fll,C2,G2,A2C2,A2G2,WonC1,WonG1,t);
-    %     [TC,TG,TA2C,TA2G,WonC(:,2),WonG(:,2)]=temp_CG(fll,TC1,TG1,TA2C1,TA2G1,WonC1,WonG1,t);
-    
     [~,TC,WonC(:,2)]=GeoMex(C2,TC1,Pi(vc,1),0.01,30*ones(size(vc,2),1),WC2,WonC(:,1));
-    %     [G,TG]=GeoMex(G2,TG1,Pi(na+nc+1:na+nc+ng,1),1);
     
     kfw(1:na,1)=Sat_cal(MSw,1,1,as,aw); %water
     kfo(1:na,1)=Sat_cal(MSw,2,1,as,aw); %oil
@@ -290,8 +276,6 @@ while t_flag==1
             b1wc=b1wc.*(sum(W2C(Qf==0,:),1)~=0)';
             b1wg=b1wg.*(sum(W2G(Qf==0,:),1)~=0)';
             b1wd=b1wd.*(sum(W2D(Qf==0,:),1)~=0)';
-            %  b1wm
-
             BM=[b1wm;b1wc;b1wg;b1wd;b1wb]+[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy;b1gc;b1gg;...
                 [-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];-b1gb.*GY_Pxy2]-(Clp.*Pi)-Gr;
             
@@ -317,7 +301,7 @@ while t_flag==1
             qg=QBild(W1G,W6G,W7G,Pt(vg)',Uf(WNG,ft+1),WonG(:,1),dt,pw(WNG),WNG,nw,wng);
             qd=QBild(W1D,W6D,W7D,Pt(vd)',Uf(WonD(:,3),ft+1),WonD(:,1),dt,pw(WonD(:,3)),WonD(:,3),nw,wnd);
             q=qm+qc+qg+qd;
-            flag_pwq=0;
+           flag_pwq=0;
            % [flag_pwq,Pw(:,ft+1),Qz(:,ft+1),Qf]=Chek_bond2(pw,Pt(Won),Uf(WonM,ft+1),Qf,PwQC_bnd,q/dt);
             Pt0=Pt;
         end
@@ -389,9 +373,9 @@ while t_flag==1
         elseif Ta/dt<=1000
             zapt=10;
         elseif Ta/dt<=1e4
-            zapt=100;
+            zapt=10;
         else
-            zapt=10000;
+            zapt=10;
         end;
         
         j=j+1;
