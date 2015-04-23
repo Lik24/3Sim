@@ -166,9 +166,8 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
      Sw_old=Sw([va,vd]);
      
      Qc=ciklik_sat(Sw_old,PR,qe,RC.rc);
-     Qc=0;
-     Sw([va,vd])=Sw([va,vd])+dt*(AM2*Pi([va,vd])+Bw+Qc)./Cws([va,vd]);
 
+     Sw([va,vd])=Sw([va,vd])+dt*(AM2*Pi([va,vd])+Bw+Qc)./Cws([va,vd]);
      Cp([va,vd])=Sw_old.*Cp([va,vd])+dt*(AM3*Pi([va,vd])+Bp)./Cws([va,vd]);
      
      vad=[va,vd];

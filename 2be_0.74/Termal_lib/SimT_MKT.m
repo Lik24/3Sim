@@ -208,15 +208,16 @@ while t_flag==1
     kj=0;
     flag_gim=1;
     flag_pwq=1;
-    
+    BWO1=Bwo(va,2);
+    BWO2=Bwo(va,4);
+        
     while flag_gim==1 && kj<10
         kj=kj+1;
-        
         [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dVCG./Mp(:,1),Sw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd,vb,dt);
 %         if st>365*100
 %             12
-%         end
-        [TL,TW,TP]=Potok_MKT(TTM,Pi(va,1),kfw(va),kfo(va),MCp(:,1),mu,RC.Arc2,mup,fp,kms(1),L,Ke,Ro,A(va),dZ(1,:));
+%         end 
+        [TL,TW,TP]=Potok_MKT(TTM,Pi(va,1),kfw(va)./BWO1,kfo(va)./BWO2,MCp(:,1),mu,RC.Arc2,mup,fp,kms(1),L,Ke,Ro,A(va),dZ(1,:));
         [CL,CW,~]=Potok_Tube(TC,Pi(vc,1),CSw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc),dZ(2,:));
         [GL,GW,~]=Potok_Tube(TG,Pi(vg,1),GSw(:,t),GCp(:,t),PR,mup,fp,kms(3),Lg,RC.Gr2,RC.Gc2,ng,A(vg),dZ(3,:));
         [DL,DW,DP]=Potok_Tube(TD,Pi(vd,1),DSw(:,1),DCp(:,1),PR,mup,fp,kms(4),Ld,RC.Dr2,RC.Dc2,nd,A(vd),dZ(4,:));
@@ -234,10 +235,10 @@ while t_flag==1
         [D2GL,~,~]=Obmen_T2M(G2D,Pi(vd,1),Pi(vg,1),DSw(:,1),GSw(:,t),K(:,1),PR,DCp(:,1),GCp(:,t));
         
         %Wf=Wf0.*(1-0.0001*(P0(Won)-Pi(Won))).^3;
-        [W1,W6,W7]=Well_MKT(Wf,Won(:,1),Uf(WonM,ft+1),MSw(:,1),MCp(:,1),aw,as,mu,mup,CpW(WonM,ft+1),A(va));
-        [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),CSw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1),A(vc));
-        [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),GSw(:,t),GCp(:,t),tw,ts,mu,mup,CpW(WNG,ft+1),A(vg));
-        [W1D,W6D,W7D]=Well_MKT(WonD(:,2),WonD(:,1),Uf(WonD(:,3),ft+1),DSw(:,1),DCp(:,1),tw,ts,mu,mup,CpW(WonD(:,3),ft+1),A(vd));
+        [W1,W6,W7]=Well_MKT(Wf,Won(:,1),Uf(WonM,ft+1),MSw(:,1),MCp(:,1),aw,as,mu,mup,CpW(WonM,ft+1),A(va),[BWO1,BWO2]);
+        [W1C,W6C,W7C]=Well_MKT(WonC(:,2),WonC(:,1),Uf(WonC(:,3),ft+1),CSw(:,t),CCp(:,t),tw,ts,mu,mup,CpW(WonC(:,3),ft+1),A(vc),Bwo);
+        [W1G,W6G,W7G]=Well_MKT(WonG(:,2),WonG(:,1),Uf(WNG,ft+1),GSw(:,t),GCp(:,t),tw,ts,mu,mup,CpW(WNG,ft+1),A(vg),Bwo);
+        [W1D,W6D,W7D]=Well_MKT(WonD(:,2),WonD(:,1),Uf(WonD(:,3),ft+1),DSw(:,1),DCp(:,1),tw,ts,mu,mup,CpW(WonD(:,3),ft+1),A(vd),Bwo);
         
         A1=TL-sparse(Won(:,1),Won(:,1),W1,na,na)-sparse(1:na,1:na,sum(A2CL,2)+sum(A2GL,2)+sum(A2BL,2)+sum(A2DL,2)+Clp(va)+sum(b1gm(:,1:2),2),na,na);  %Матрица коэф. для пор
         C1=CL-sparse(1:nc,1:nc,sum(A2CL,1)+sum(D2CL,1)+Clp(vc)',nc,nc)-sparse(WonC(:,1),WonC(:,1),W1C,nc,nc);                       %Матрица коэф. для вертикальных трещ.
@@ -245,7 +246,7 @@ while t_flag==1
         D1=DL-sparse(WonD(:,1),WonD(:,1),W1D,nd,nd)-sparse(1:nd,1:nd,sum(A2DL,1)'+sum(D2BL,2)+sum(D2CL,2)+sum(D2GL,2)+Clp(vd)+sum(b1gd(:,1:2),2),nd,nd);                       %Матрица коэф. для двойной пор.
         B1=BB-sparse(1:nb,1:nb,sum(A2BL,1)+sum(D2BL,1)+Clp(vb)'+b1gb',nb,nb);                                                             %Матрица коэф. для границ
         
-        [qe,A11,B11]=ciklik(PR.flag_cikl,A1,PR,Won,Uf,W1,na,b1gm,dV,Psi);
+        [qe,A11,B11]=ciklik(PR.flag_cikl,A1,PR,Won,Uf,W1,na,b1gm,dV,Psi,MSw);
         
         W2M=sparse(WonM,Won(:,1),W1,nw,na);
         W2C=sparse(WonC(:,3),WonC(:,1),W1C,nw,nc);
@@ -287,7 +288,7 @@ while t_flag==1
             W2M1=WM1(Qf~=0,:);
             W2M2=WM2(:,Qf~=0);
             W2M3=WM3(Qf~=0,Qf~=0);
-
+           % Qz(:,ft+1)=Qz(:,ft+1).*A(Won(:,1));
             Pt=[BM',Qz(Qf~=0,ft+1)']/[AM,W2M2;W2M1,W2M3];
            
             flag_gim=sum(abs(Pt(1:na+nc+ng+nd+nb)-Pt0(1:na+nc+ng+nd+nb))./Pt(1:na+nc+ng+nd+nb)>=1e-6)~=0;
@@ -354,12 +355,15 @@ while t_flag==1
     DCp(:,1)=Cp(vd);
     
     %% Дебиты
-    Qm(:,:,t+1)=QBild(W1,W6.*A(Won(:,1)),W7,Pi(va,1),Uf(WonM,ft+1),Won(:,1),dt,Pw(WonM,ft+1),WonM,nw,wna);
+    Qm(:,:,t+1)=QBild(W1,W6,W7,Pi(va,1),Uf(WonM,ft+1),Won(:,1),dt,Pw(WonM,ft+1),WonM,nw,wna);
+    [Q11]=QBild2(Wf,Won,kfw./BWO1,kfo./BWO2,PR.mu,Uf(WonM,ft+1),Pi(va,1),Pw(WonM,ft+1),dt,WonM,nw,wna);
+    %Q11
+    Qm(:,:,t+1)=Q11;
     %Qm(CR_rc.wn,:,t+1)=Qm1(CR_rc.wn,:);
     Qm(CR_rc(1,1).won(:,3),:,t+1)=Qm1(CR_rc(1,1).won(:,3),:);
     Qc(:,:,t+1)=Q1;%QBild(W1C,W6C,W7C,Pi(na+1:na+nc,1),Uf(WonC(:,3),t+1),WonC(:,1),dt,Pw(WonC(:,3),t+1));
     Qg(:,:,t+1)=Q2;%QBild(W1G,W6G,W7G,Pi(na+nc+1:end,1),Uf(WNG,t+1),WonG(:,1),dt,Pw(WNG,t+1));
-    Qd(:,:,t+1)=QBild(W1D,W6D.*A(WonD(:,1)),W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,Pw(WonD(:,3),ft+1),WonD(:,3),nw,wnd);
+    Qd(:,:,t+1)=QBild(W1D,W6D,W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,Pw(WonD(:,3),ft+1),WonD(:,3),nw,wnd);
     Qd(CR_rc(1,2).won(:,3),:,t+1)=Qd1(CR_rc(1,2).won(:,3),:);
     
   
