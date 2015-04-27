@@ -21,10 +21,14 @@ Kol=Kfo(r);
 Cpc=Cp(c);
 Cpl=Cp(r);
 
+Ac=A(c);
+Al=A(r);
+
 %Swe=Swc.*vP+Swl.*(vP==0);
 Cpe=Cpc.*vPW+Cpl.*(vPW==0);
 Kfw1=Kwc.*vPW+Kwl.*(vPW==0);
 Kfo1=Koc.*vPO+Kol.*(vPO==0);
+A1=Ac.*vPW+Al.*(vPW==0);
 
 % Kfw=Sat_cal(Swe,1,1,as,aw); %water
 % Kfo=Sat_cal(Swe,2,1,as,aw); %oil
@@ -45,9 +49,8 @@ end;
 
 % Tw1=sparse((r+(c-1)*n),ones(size(r)),Tw,n*n,1);
 % To1=sparse((r+(c-1)*n),ones(size(r)),To,n*n,1);
-
-Twa=Tw.*A(c);
-Tw1a=sparse(r,c,Twa,n,n);     Tw1a=Tw1a+Tw1a';
+%Ac(:)=1;
+Tw1a=sparse(r,c,Tw.*Ac,n,n);  Tw1a=Tw1a+Tw1a';
 Tw1=sparse(r,c,Tw,n,n);       Tw1=Tw1+Tw1';
 To1=sparse(r,c,To,n,n);       To1=To1+To1';
 

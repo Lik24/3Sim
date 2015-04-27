@@ -68,7 +68,7 @@ mx(1)=min(XY(:,1));
 mx(2)=max(XY(:,1));
 my(1)=min(XY(:,2));
 my(2)=max(XY(:,2));
-[X,Y]=meshgrid(mx(1):100:mx(2),my(1):100:my(2));
+[X,Y]=meshgrid(mx(1):10:mx(2),my(1):10:my(2));
 
 % mx(1)=min(XY_GY2(:,1));
 % mx(2)=max(XY_GY2(:,1));
