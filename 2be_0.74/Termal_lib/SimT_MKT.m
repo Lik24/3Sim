@@ -181,7 +181,7 @@ Mp_old=Mp(:,1);
 while t_flag==1
     %for t=1:Ta-1
     t=t+1;
-    
+    Pi0=Pi;
     if t==1 && dtt==0
         dt=1;
         dtt=1;
@@ -219,7 +219,7 @@ while t_flag==1
             BWOS=Bwo(va,[2,4]);
         end
             BWO1=Bwo(va,2);
-    BWO2=Bwo(va,4);
+            BWO2=Bwo(va,4);
         [TL,TW,TP]=Potok_MKT(TTM,Pi(va,1),kfw(va)./BWO1,kfo(va)./BWO2,MCp(:,1),mu,RC.Arc2,mup,fp,kms(1),L,Ke,Ro,A(va),dZ(1,:));
         [CL,CW,~]=Potok_Tube(TC,Pi(vc,1),CSw(:,t),CCp(:,t),PR,mup,fp,kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,A(vc),dZ(2,:));
         [GL,GW,~]=Potok_Tube(TG,Pi(vg,1),GSw(:,t),GCp(:,t),PR,mup,fp,kms(3),Lg,RC.Gr2,RC.Gc2,ng,A(vg),dZ(3,:));
@@ -283,10 +283,10 @@ while t_flag==1
             b1wg=b1wg.*(sum(W2G(Qf==0,:),1)~=0)';
             b1wd=b1wd.*(sum(W2D(Qf==0,:),1)~=0)';
             BM=[b1wm;b1wc;b1wg;b1wd;b1wb]+[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy;b1gc;b1gg;...
-                [-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];-b1gb.*GY_Pxy2]-(Clp.*Pi)-Gr;
+                [-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];-b1gb.*GY_Pxy2]-(Clp.*Pi0)-Gr;
             
             BLGY_GIM=[[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy];[-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];...
-                -b1gb.*GY_Pxy2]-(Clp([va,vd,vb]).*Pi([va,vd,vb]))-Gr([va,vd,vb]);
+                -b1gb.*GY_Pxy2]-(Clp([va,vd,vb]).*Pi0([va,vd,vb]))-Gr([va,vd,vb]);
             
             W2M1=WM1(Qf~=0,:);
             W2M2=WM2(:,Qf~=0);
@@ -314,8 +314,7 @@ while t_flag==1
         Pi(:,1)=Pt(1:na+nc+ng+nd+nb);    
     end
     
-    Pi0=Pi;
-        
+       
     Pw(Qf~=0,ft+1)=Pt(na+nc+ng+nd+nb+1:end);
     Pwt(:,t+1)=Pw(:,ft+1);
     %% Водонасыщенность
@@ -401,11 +400,11 @@ while t_flag==1
     end;
     sQo=sum(Qm(:,2,t+1)-Qm(:,3,t+1)+Qm(:,1,t+1))+sum(Qc(:,2,t+1)-Qc(:,3,t+1)+Qc(:,1,t+1))...
         +sum(Qg(:,2,t+1)-Qg(:,3,t+1)+Qg(:,1,t+1))+sum(Qd(:,2,t+1)-Qd(:,3,t+1)+Qd(:,1,t+1));
-    %sQo-dq(end)
+    sQo-dq(end)
     %sum(sQo(:))
     % dQ(t)=sum(Sw0.*[dV;dVC;dVG])-sum([Sw;Cw(:,t+1);Gw(:,t+1)].*[dV;dVC;dVG])-sum(sQo(:));
     %%prob.progress;
-    if t==1000
+    if t==4000
         132
     end
     qo=(Qm(:,3,t+1)+Qc(:,3,t+1)+Qg(:,3,t+1)+Qd(:,3,t+1));
