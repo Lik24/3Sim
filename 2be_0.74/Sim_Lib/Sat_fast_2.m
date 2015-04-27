@@ -1,7 +1,7 @@
 function [Sw,Cp,ndt,Q1,Q2,Qm,Qd,tmp,ndti]=Sat_fast_2(Sw,Cp,RC,TC,TG,A2C,A2G,A2D,D2C,D2G,Pi,PR,...
     ndt0,Won,Uf,dt,dV,Pw,WonG,CpW,WonC,Nl,CR_cr,Qz,Qf,Pi0,TL,W1,TW,W6,TP,...
     W7,L,Lc,Lg,Ke,Cws,Cwp,BLGY_GIM,Qzm1,WonM,nw,b1gm,b1gd,GYData,...
-    Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WoD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb,Grw,dZ,Mp,Bwo,P0,wna,wnd)
+    Clp,ka1,W1D,W6D,W7D,A2BW,A2BP,D2BW,D2BP,DL,DW,DP,WoD,A2DW,A2DP,A2DL,BB,A2BL,D2BL,b1gb,Grw,dZ,Mp,Bwo,P0,wna,wnd,qe)
 
 na=RC.na;
 nc=RC.nc;
@@ -163,10 +163,11 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
      AM2=[TW-sparse(1:na,1:na,sum(A2DW,2)),A2DW;
           A2DW',DW-sparse(1:nd,1:nd,sum(A2DW,1))];
      AM3=[TP,A2DP;A2DP',DP];
-     
      Sw_old=Sw([va,vd]);
-     Sw([va,vd])=Sw([va,vd])+dt*(AM2*Pi([va,vd])+Bw)./Cws([va,vd]);
+     
+     Qc=ciklik_sat(Sw_old,PR,qe,RC.Arc);
 
+     Sw([va,vd])=Sw([va,vd])+dt*(AM2*Pi([va,vd])+Bw+Qc)./Cws([va,vd]);
      Cp([va,vd])=Sw_old.*Cp([va,vd])+dt*(AM3*Pi([va,vd])+Bp)./Cws([va,vd]);
      
      vad=[va,vd];

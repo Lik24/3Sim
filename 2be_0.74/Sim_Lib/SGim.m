@@ -31,13 +31,13 @@ Zc(vd,3)=zc(6);
 % Cws=dV.*[CwsA;CwsC;CwsG;CwsD;CwsB];
 
 Bwo=[Bw,Bo];
-Cwp=dV.*Cwp;
-Cop=dV.*Cop;
+Cwp=dV.*Cwp/dt;
+Cop=dV.*Cop/dt;
 Cws=dV.*Cws;
 
 %A=[AA;AC;AG;AD;AB];
 Clp=A.*Cwp+Cop;
-Clp=Clp/dt;
+%Clp=Clp;
 
 %Mp=[MpA;MpC;MpG;MpD;MpB];
 end
@@ -73,6 +73,7 @@ function [Cwp,Cop,Bw,Bo,Cws,A,Mp]=ZaSgim1(Sw,mp,zc,P,Patm,P0,Bw,Bo)
     
     Cws=mp2./Bw2;
     A=Bw2./Bo2;
+    %A=Bo2./Bw2;
     
     Bw(:,2)=Bw2;
     Bo(:,2)=Bo2;
