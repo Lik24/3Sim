@@ -50,10 +50,12 @@ end;
 % Tw1=sparse((r+(c-1)*n),ones(size(r)),Tw,n*n,1);
 % To1=sparse((r+(c-1)*n),ones(size(r)),To,n*n,1);
 %Ac(:)=1;
-Tw1a=sparse(r,c,Tw.*Ac,n,n);  Tw1a=Tw1a+Tw1a';
+Tw1a=sparse(r,c,Tw,n,n);  Tw1a=Tw1a+Tw1a';
 Tw1=sparse(r,c,Tw,n,n);       Tw1=Tw1+Tw1';
 To1=sparse(r,c,To,n,n);       To1=To1+To1';
 
+Tw1a=Tw1a*sparse(1:n,1:n,A);
+Tw1a=Tw1a;
 % T1=sparse(r,c,abs(dP),n,n); T1=T1+T1';
 %  T1-T1'
 %  Tw1-Tw1'
