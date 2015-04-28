@@ -292,6 +292,7 @@ while t_flag==1
             W2M2=WM2(:,Qf~=0);
             W2M3=WM3(Qf~=0,Qf~=0);
             Qz(:,ft+1)=Qz(:,ft+1).*A(Won(:,1));
+            
             Pt=[BM',Qz(Qf~=0,ft+1)']/[AM,W2M2;W2M1,W2M3];
            
             flag_gim=sum(abs(Pt(1:na+nc+ng+nd+nb)-Pt0(1:na+nc+ng+nd+nb))./Pt(1:na+nc+ng+nd+nb)>=1e-6)~=0;
