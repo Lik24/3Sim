@@ -197,11 +197,11 @@ while t_flag==1
     %     [C,G,A2C,A2G,WonC(:,2),WonG(:,2)]=temp_CG(fll,C2,G2,A2C2,A2G2,WonC1,WonG1,t);
     [~,TC,WonC(:,2)]=GeoMex(C2,TC1,Pi(vc,1),0.01,30*ones(size(vc,2),1),WC2,WonC(:,1));
     
-    kfw(1:na,1)=Sat_cal(MSw,1,1,as,aw); %water
-    kfo(1:na,1)=Sat_cal(MSw,2,1,as,aw); %oil
+    kfw0(1:na,1)=Sat_cal(MSw,1,1,as,aw); %water
+    kfo0(1:na,1)=Sat_cal(MSw,2,1,as,aw); %oil
     
-    kfw(na+1:na+nc+ng+nd,1)=Sat_cal([CSw(:,t);GSw(:,t);DSw],1,1,ts,tw); %water
-    kfo(na+1:na+nc+ng+nd,1)=Sat_cal([CSw(:,t);GSw(:,t);DSw],2,1,ts,tw); %oil
+    kfw0(na+1:na+nc+ng+nd,1)=Sat_cal([CSw(:,t);GSw(:,t);DSw],1,1,ts,tw); %water
+    kfo0(na+1:na+nc+ng+nd,1)=Sat_cal([CSw(:,t);GSw(:,t);DSw],2,1,ts,tw); %oil
     
     [b1gm,b1gc,b1gg,b1gd,b1gb]=GY_bild(GYData,Pi([va,vd],1),Sw([va,vd],1),Cp([va,vd],1),RC,Txyz_GY_A,Txyz_GY_D,PR);
     
@@ -218,8 +218,8 @@ while t_flag==1
         if t==1
             BWOS=Bwo(va,[2,4]);
         end
-        kfw=kfw./Bwo(:,2);
-        kfo=kfo./Bwo(:,4);
+        kfw=kfw0./Bwo(:,2);
+        kfo=kfo0./Bwo(:,4);
         
         BWO1=Bwo(va,2);
         BWO2=Bwo(va,4);
@@ -363,7 +363,7 @@ while t_flag==1
     
     %% Дебиты
     Qm(:,:,t+1)=QBild(W1,W6,W7,Pi(va,1),Uf(WonM,ft+1),Won(:,1),dt,Pw(WonM,ft+1),WonM,nw,wna);
-    [Q11]=QBild2(Wf,Won,kfw(va),kfo(va),PR.mu,Uf(WonM,ft+1),Pi(va,1),Pw(WonM,ft+1),dt,WonM,nw,wna);
+    [Q11]=QBild2(Wf,Won,kfw(va).*Bwo(va,2),kfo(va).*Bwo(va,4),PR.mu,Uf(WonM,ft+1),Pi(va,1),Pw(WonM,ft+1),dt,WonM,nw,wna);
     %Q11
     Qm(:,:,t+1)=Q11;
     %Qm(CR_rc.wn,:,t+1)=Qm1(CR_rc.wn,:);
@@ -371,9 +371,9 @@ while t_flag==1
     Qc(:,:,t+1)=Q1;%QBild(W1C,W6C,W7C,Pi(na+1:na+nc,1),Uf(WonC(:,3),t+1),WonC(:,1),dt,Pw(WonC(:,3),t+1));
     Qg(:,:,t+1)=Q2;%QBild(W1G,W6G,W7G,Pi(na+nc+1:end,1),Uf(WNG,t+1),WonG(:,1),dt,Pw(WNG,t+1));
     Qd(:,:,t+1)=QBild(W1D,W6D,W7D,Pi(vd,1),Uf(WonD(:,3),ft+1),WonD(:,1),dt,Pw(WonD(:,3),ft+1),WonD(:,3),nw,wnd);
-    [Q12]=QBild2(Wf,WonD(:,1),kfw(vd),kfo(vd),PR.mu,Uf(WonD(:,3),ft+1),Pi(vd,1),Pw(WonD(:,3),ft+1),dt,WonD(:,3),nw,wnd);
+    [Q12]=QBild2(WonD(:,2),WonD(:,1),kfw(vd).*Bwo(vd,2),kfo(vd).*Bwo(vd,4),PR.mu,Uf(WonD(:,3),ft+1),Pi(vd,1),Pw(WonD(:,3),ft+1),dt,WonD(:,3),nw,wnd);
     Qd(CR_rc(1,2).won(:,3),:,t+1)=Qd1(CR_rc(1,2).won(:,3),:);
-    
+     Qd(:,:,t+1)=Q12;
   
     PpW(WonM,t+1)=Pi(Won(:,1));
     %% пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
