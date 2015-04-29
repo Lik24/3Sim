@@ -178,10 +178,11 @@ wnc=unique(WonC(:,3));
 wng=unique(WonG(:,3));
 wnd=unique(WonD(:,3));
 Mp_old=Mp(:,1);
+
 while t_flag==1
     %for t=1:Ta-1
     t=t+1;
-    
+    Pi0=Pi;
     if t==1 && dtt==0
         dt=1;
         dtt=1;
@@ -283,10 +284,10 @@ while t_flag==1
             b1wg=b1wg.*(sum(W2G(Qf==0,:),1)~=0)';
             b1wd=b1wd.*(sum(W2D(Qf==0,:),1)~=0)';
             BM=[b1wm;b1wc;b1wg;b1wd;b1wb]+[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy;b1gc;b1gg;...
-                [-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];-b1gb.*GY_Pxy2]-(Clp.*Pi)-Gr;
+                [-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];-b1gb.*GY_Pxy2]-(Clp.*Pi0)-Gr;
             
             BLGY_GIM=[[-b1gm(:,2).*GY_Pz-b1gm(:,1).*GY_Pxy];[-b1gd(:,2).*GY_Pz(vad)-b1gd(:,1).*GY_Pxy(vad)];...
-                -b1gb.*GY_Pxy2]-(Clp([va,vd,vb]).*Pi([va,vd,vb]))-Gr([va,vd,vb]);
+                -b1gb.*GY_Pxy2]-(Clp([va,vd,vb]).*Pi0([va,vd,vb]))-Gr([va,vd,vb]);
             
             W2M1=WM1(Qf~=0,:);
             W2M2=WM2(:,Qf~=0);
@@ -314,7 +315,7 @@ while t_flag==1
         Pi(:,1)=Pt(1:na+nc+ng+nd+nb);    
     end
     
-    Pi0=Pi;
+    %Pi0=Pi;
         
     Pw(Qf~=0,ft+1)=Pt(na+nc+ng+nd+nb+1:end);
     Pwt(:,t+1)=Pw(:,ft+1);
