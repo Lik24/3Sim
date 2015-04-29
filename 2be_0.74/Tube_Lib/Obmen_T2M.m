@@ -1,14 +1,8 @@
-function [A2CL,A2CW,A2CP,A2CG]=Obmen_T2M(A2C,Pm,Pt,Sw,Cw,K,PR,MCp,CCp)
+function [A2CL1,A2CL2,A2CW,A2CP,A2CG]=Obmen_T2M(A2C,Pm,Pt,A_kfw,A_kfo,C_kfw,C_kfo,K,PR,MCp,CCp,AA,AC)
 
 if isempty(Pm)==0 && isempty(Pt)==0
-    
-as=PR.as;
-aw=PR.aw;
-ts=PR.ts;
-tw=PR.tw;
 mu=PR.mu;
 mup=PR.mup;
-
 
 [n,m]=size(A2C);
 [r,c]=find(A2C);
@@ -19,53 +13,37 @@ a2c=A2C(r+(c-1)*n).*K(r);
 % Pt=P(n+1:end);
 
 vP=Pm(r)>=Pt(c);
-% vP
-% [Pm(r),Pt(c)]
-Swc=Sw(r);
-Swl=Cw(c);
-
 Cpc=MCp(r);
 Cpl=CCp(c);
 
-Swe=Swc.*vP+Swl.*(vP==0);
 Cpe=Cpc.*vP+Cpl.*(vP==0);
+kfw=A_kfw.*vP+C_kfw.*(vP==0);
+kfo=A_kfo.*vP+C_kfo.*(vP==0);
 
-wmu1=fusion(Cpe(vP==1),mup);
-wmu0=fusion(Cpe(vP==0),mup);
+wmu=fusion(Cpe,mup);
 
-Afw=Sat_cal(Swe(vP==1),1,1,as,aw)./wmu1; 
-Afp=Sat_cal(Swe(vP==1),1,1,as,aw)./wmu1.*Cpe(vP==1); 
-Afo=Sat_cal(Swe(vP==1),2,1,as,aw)/mu(2); %oil
+Afw=kfw./wmu; 
+Afp=kfw./wmu.*Cpe; 
+Afo=kfo/mu(2); %oil
 
-Cfw=Sat_cal(Swe(vP==0),1,1,ts,tw)./wmu0; %water
-Cfp=Sat_cal(Swe(vP==0),1,1,ts,tw)./wmu0.*Cpe(vP==0);
-Cfo=Sat_cal(Swe(vP==0),2,1,ts,tw)/mu(2); %oil
-%Cfp=Sat_tube(Swe(vP==0).*Cpe(vP==0),1,1,ts,tw)/mu(4); %polim
-
-v1=find(vP==1);
-v2=find(vP==0);
-m1=size(vP,1);
-vone=ones(m1,1);
-% 
- %size([P])
-% size([v1;v2])
-% size(vone)
-% size([Afw+Afo;Cfw+Cfo])
-
-ACL=sparse([v1;v2],vone,[Afw+Afo;Cfw+Cfo],m1,1);
-ACW=sparse([v1;v2],vone,[Afw;Cfw],m1,1);
-ACP=sparse([v1;v2],vone,[Afp;Cfp],m1,1);
+ACL1=Afw.*AA(r)+Afo;
+ACL2=Afw.*AC(c)+Afo;
+ACW=Afw;
+ACP=Afp;
 %ACL
-a2cl=a2c.*ACL;
+a2cl1=a2c.*ACL1;
+a2cl2=a2c.*ACL2;
 a2cw=a2c.*ACW;
 a2cp=a2c.*ACP;
 
-A2CL=sparse(r,c,a2cl,n,m);
+A2CL1=sparse(r,c,a2cl1,n,m);
+A2CL2=sparse(r,c,a2cl2,n,m);
 A2CW=sparse(r,c,a2cw,n,m);
 A2CP=sparse(r,c,a2cp,n,m);
 A2CG=1;
 else
-    A2CL=A2C;
+    A2CL1=A2C;
+    A2CL2=A2C;
     A2CW=A2C;
     A2CP=A2C;
     A2CG=1;  

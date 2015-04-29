@@ -1,4 +1,4 @@
-function [CL,CW,CP,CG]=Potok_Tube(C,P,Sw,Cp,PR,mup,fp,kms,L,r,c,n,A,DZ)
+function [CL,CW,CP,CG]=Potok_Tube(C,P,Kfw,Kfo,Cp,PR,mup,fp,kms,L,r,c,n,A,DZ)
 
 ts=PR.ts;
 tw=PR.tw;
@@ -6,9 +6,6 @@ mu=PR.mu;
 Ro=PR.Ro;
 Kc=PR.Kc;
 dZW=DZ{1};  dZO=DZ{2};  dZG=DZ{3};
-
-Kfw=Sat_tube(Sw,1,1,ts,tw); %water
-Kfo=Sat_tube(Sw,2,1,ts,tw); %oil
 
 dP=P(c)-P(r);
 vP=dP>0;
@@ -45,11 +42,12 @@ if kms~=0
     [To] = Forh(To,kms, Ro(2), Kfo, Kc, mu(2), dPL);
 end;
 
-Twa=Tw.*A(c);
+
 Tw=sparse(r,c,Tw,n,n);  Tw=Tw+Tw';
-Twa=sparse(r,c,Twa,n,n);  Twa=Twa+Twa';
 To=sparse(r,c,To,n,n);  To=To+To';
 
-CL=To+Twa-sparse(1:n,1:n,sum(To+Twa,2),n,n);
+Twa=Tw*sparse(1:n,1:n,A);
+
+CL=To+Twa-sparse(1:n,1:n,sum(To+Twa,1),n,n);
 CW=Tw-sparse(1:n,1:n,sum(Tw,2),n,n);
 CG=1;

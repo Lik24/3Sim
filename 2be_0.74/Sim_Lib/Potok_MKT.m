@@ -21,14 +21,10 @@ Kol=Kfo(r);
 Cpc=Cp(c);
 Cpl=Cp(r);
 
-Ac=A(c);
-Al=A(r);
-
 %Swe=Swc.*vP+Swl.*(vP==0);
 Cpe=Cpc.*vPW+Cpl.*(vPW==0);
 Kfw1=Kwc.*vPW+Kwl.*(vPW==0);
 Kfo1=Koc.*vPO+Kol.*(vPO==0);
-A1=Ac.*vPW+Al.*(vPW==0);
 
 % Kfw=Sat_cal(Swe,1,1,as,aw); %water
 % Kfo=Sat_cal(Swe,2,1,as,aw); %oil
@@ -50,15 +46,16 @@ end;
 % Tw1=sparse((r+(c-1)*n),ones(size(r)),Tw,n*n,1);
 % To1=sparse((r+(c-1)*n),ones(size(r)),To,n*n,1);
 %Ac(:)=1;
-Tw1a=sparse(r,c,Tw.*Ac,n,n);  Tw1a=Tw1a+Tw1a';
 Tw1=sparse(r,c,Tw,n,n);       Tw1=Tw1+Tw1';
 To1=sparse(r,c,To,n,n);       To1=To1+To1';
+
+Tw1a=Tw1*sparse(1:n,1:n,A);
 
 % T1=sparse(r,c,abs(dP),n,n); T1=T1+T1';
 %  T1-T1'
 %  Tw1-Tw1'
 
-TL=To1+Tw1a-sparse(1:n,1:n,sum(To1+Tw1a,2),n,n);
+TL=To1+Tw1a-sparse(1:n,1:n,sum(To1+Tw1a,1),n,n);
 TW=Tw1-sparse(1:n,1:n,sum(Tw1,2),n,n);
 % TP=Tp-sparse(1:n,1:n,sum(Tp,2),n,n);
 % Tp1=sparse(r,c,Tp,n,n);
