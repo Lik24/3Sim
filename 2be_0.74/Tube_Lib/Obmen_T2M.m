@@ -17,8 +17,8 @@ Cpc=MCp(r);
 Cpl=CCp(c);
 
 Cpe=Cpc.*vP+Cpl.*(vP==0);
-kfw=A_kfw.*vP+C_kfw.*(vP==0);
-kfo=A_kfo.*vP+C_kfo.*(vP==0);
+kfw=A_kfw(r).*vP+C_kfw(c).*(vP==0);
+kfo=A_kfo(r).*vP+C_kfo(c).*(vP==0);
 
 wmu=fusion(Cpe,mup);
 

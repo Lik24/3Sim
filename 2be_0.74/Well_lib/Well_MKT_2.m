@@ -1,4 +1,4 @@
-function [W1,W6,W7]=Well_MKT_2(Wf,Won,Uf,Cp,mu,Cpin,kfw,kfo)
+function [W1,W6,W7]=Well_MKT_2(Wf,Won,Uf,Cp,mu,Cpin,kfw,kfo,A)
 
 % TW=Sat_cal(Sw(Won),1,1,as,aw)/mu(1);
 % TO=Sat_cal(Sw(Won),2,1,as,aw)/mu(2);
@@ -16,6 +16,6 @@ Tip=Cpin/mu(4);%Sat_cal(ones(size(Won,1),1).*Cpin,1,1,as,aw)/mu(4);
 % size(TW+TO)
 % size(Uf)
 
-W1=Wf.*((TW+TO).*(Uf==1)+(Tiw+Tip).*(Uf==-1));%
+W1=Wf.*((A(Won).*TW+TO).*(Uf==1)+A(Won).*(Tiw+Tip).*(Uf==-1));%
 W6=Wf.*(TW.*(Uf==1)+(Tiw+Tip).*(Uf==-1));%
 W7=Wf.*(TP.*(Uf==1)+Tip.*(Uf==-1));%

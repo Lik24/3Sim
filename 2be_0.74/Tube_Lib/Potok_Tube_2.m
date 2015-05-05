@@ -1,4 +1,4 @@
-function [CL,CW,CP,CG]=Potok_Tube_2(TC,P,vP1,Kfw,Kfo,Cp,PR,r,c,kms,dP,L,n,A,DZ)
+function [CL1,CW1,CL,CW,CP,CG]=Potok_Tube_2(TC,P,vP1,Kfw,Kfo,Cp,PR,r,c,kms,dP,L,n,A,DZ)
 
 if isempty(TC)==0
 mu=PR.mu;
@@ -34,10 +34,20 @@ if kms~=0
     [CO] = Forh(CO,kms, Ro(2), Kfo, Kc, mu(2), dPL);
 end;
 
-CL=CO+A(c).*CW;
+CL=CO+CW;
 CG=1;
 
+ CO1=sparse(r,c,CO,n,n);      CO1=CO1+CO1';
+ CW1=sparse(r,c,CW,n,n);     CW1=CW1+CW1';
+ CW1a=CW1*sparse(1:n,1:n,A);
+ 
+ CL1=CO1+CW1a-sparse(1:n,1:n,sum(CO1+CW1a,1));
+ CW1=CW1-sparse(1:n,1:n,sum(CW1,1));
+ 
 else
+
+   CL1=zeros(0);
+  CW1=zeros(0);
   CL=[];
   CW=[];
   CP=[];

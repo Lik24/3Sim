@@ -39,5 +39,8 @@ TO=TO(v1==1,:);
 TW=TW(:,v1==1);
 TW=TW(v1==1,:);
 
-[r,c]=find(TO+TW);
-TL=TO+sparse(r,c,A(c)).*TW;
+n=size(A,1);
+TWa=TW*sparse(1:n,1:n,A);
+
+TL=TO+TWa-sparse(1:n,1:n,sum(TO+TWa,1),n,n);
+TW=TW-sparse(1:n,1:n,sum(TW,1),n,n);

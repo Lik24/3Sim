@@ -1,4 +1,4 @@
-function [bAl,bAw,bl,bw]=Potok_GY(T,Pgy,Pin,rc2,kfw,kfo,c,mu,na)
+function [bAl,bAw,bl,bw]=Potok_GY(T,Pgy,Pin,rc2,kfw,kfo,c,mu,na,A)
 if na~=0
     v2=Pgy>=Pin(rc2(:,2));
     
@@ -8,7 +8,7 @@ if na~=0
     kfw_in=kfw(rc2(:,2))/mu(1);
     kfo_in=kfo(rc2(:,2))/mu(2);
     
-    Kl=(kfw_gy+kfo_gy).*v2+(kfw_in+kfo_in).*(v2==0);
+    Kl=(kfw_gy.*A(c)+kfo_gy).*v2+(kfw_in.*A(c)+kfo_in).*(v2==0);
     Kw=kfw_gy.*v2+kfw_in.*(v2==0);
     
     bAl=T.*Kl;

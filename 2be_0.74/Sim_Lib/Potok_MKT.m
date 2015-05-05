@@ -49,7 +49,7 @@ end;
 Tw1=sparse(r,c,Tw,n,n);       Tw1=Tw1+Tw1';
 To1=sparse(r,c,To,n,n);       To1=To1+To1';
 
-Tw1a=Tw1*sparse(1:n,1:n,A);
+Tw1a=sparse(1:n,1:n,A)*Tw1;
 
 % T1=sparse(r,c,abs(dP),n,n); T1=T1+T1';
 %  T1-T1'
@@ -57,6 +57,7 @@ Tw1a=Tw1*sparse(1:n,1:n,A);
 
 TL=To1+Tw1a-sparse(1:n,1:n,sum(To1+Tw1a,1),n,n);
 TW=Tw1-sparse(1:n,1:n,sum(Tw1,2),n,n);
+
 % TP=Tp-sparse(1:n,1:n,sum(Tp,2),n,n);
 % Tp1=sparse(r,c,Tp,n,n);
 TG=1;
