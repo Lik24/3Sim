@@ -211,7 +211,7 @@ while t_flag==1
     BWO1=Bwo(va,2);
     BWO2=Bwo(va,4);
         
-    while flag_gim==1 && kj<20
+    while flag_gim==1 && kj<400
         kj=kj+1;
         flag_pwq=1;
         [Clp,Cwp,Cws,A,Bwo,Mp]=SGim(dVCG./Mp(:,1),Sw,Mp,zc,Bwo,Pi,1,P0,va,vc,vg,vd,vb,dt);
@@ -295,10 +295,13 @@ while t_flag==1
             W2M1=WM1(Qf~=0,:);
             W2M2=WM2(:,Qf~=0);
             W2M3=WM3(Qf~=0,Qf~=0);
-            Qz(:,ft+1)=Qz(:,ft+1).*A(Won(:,1));
+            Qz(:,ft+1)=Qf.*A(Won(:,1));
             
             Pt=[BM',Qz(Qf~=0,ft+1)']/[AM,W2M2;W2M1,W2M3];
            
+            if sum(isnan(Pt))~=0
+               132 
+            end
             flag_gim=sum(abs(Pt(1:na+nc+ng+nd+nb)-Pt0(1:na+nc+ng+nd+nb))./Pt(1:na+nc+ng+nd+nb)>=1e-6)~=0;
             flag_gim=flag_gim*(sum(zc==0)==0);
             

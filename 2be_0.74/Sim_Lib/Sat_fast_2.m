@@ -39,7 +39,7 @@ Pw=repmat(Pw,Nl,1);
 % aw1=sum(SCw(vc).*dV(vc));
 
  if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
-     PR.zc(:)=0;
+     %PR.zc(:)=0;
      [Bwc,Bwg,Boc,Bog,Bwcd,Bwgd,Bocd,Bogd,Sw(vc),Sw(vg),ndt,Q1,Q2,Qm,Qd,~,ndti]=fun1(RC,Pi,Sw,Cp,PR,TC,TG,A2C,...
          A2G,A2D,D2C,D2G,WonC,WonG,Uf,CpW,Pw,dt,dV,CR_cr,Qz,Qf,ndt0,Pi0,L,Lc,Lg,Ke,dZ,Mp,Bwo,P0);
      %  [Bc,Bg,SCw(vc),SCw(vg),ndt,Q1,Q2,Qm,dSS]=fun2(RC,Pi,SCw,SCp,PR,TC,TG,A2C,...

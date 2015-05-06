@@ -30,7 +30,7 @@ Sw0=DATA.gSw;
 [GYData,DATA.gKX,DATA.gSw,B,A2B,dVb,pb]=GY_DATA(0,DATA,XY_GY_new,PR); %0/1 - выкл/вкл. аквифер
 
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
-nt={zeros(2,0)};
+%nt={zeros(2,0)};
 %nt=elka(1,PR.Nl,DATA.XY,30,75,0,25,[1,1],1);  %0/1 - выкл/вкл.; кол-во трещин, длинна, флаг к скважине, номер фигуры, слои, соеденены
 
 [CrDATA]=CrackProp(DATA,PR,nt);
