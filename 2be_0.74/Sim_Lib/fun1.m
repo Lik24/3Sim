@@ -158,7 +158,7 @@ while fl2<2% & i<3000
         C2=CW1-sparse(1:nc,1:nc,sum(A2C.W,1)+sum(D2C.W,1)+Cwp(vc)',nc,nc)-sparse(WonC(:,1),WonC(:,1),W6C,nc,nc);
         G2=GW1-sparse(1:ng,1:ng,sum(A2G.W,1)+sum(D2G.W,1)+Cwp(vg)',ng,ng)-sparse(WonG(:,1),WonG(:,1),W6G,ng,ng);
         
-        [bAl,bAw,bl,bw]=Potok_GY(T_gy,Pgy,Pa,rc_gy,KfwM,KfoM,vc1,mu,Na,A(va));
+        [bAl,bAw,bl,bw]=Potok_GY(T_gy,Pgy,Pi0(v_a),rc_gy,KfwM,KfoM,vc1,mu,Na,A(va));
         [bDl,bDw,bld,bwd]=Potok_GY(T_gy_d,Pgy2,Pd,rc_gy_d,KfwD,KfoD,vc2,mu,Nd,A(vd));
         
         [Gr,Grw]=Gravity(TL2,TW2,CL1,CW1,GL1,GW1,DL2,DW2,[],A,dZ);

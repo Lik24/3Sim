@@ -6,7 +6,7 @@ addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','Geo
 PR=Gl_PRM;%imp_glb_prm;%
 
 [KX,KY,KZ,Mp,P,Sw,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(PR.Ns,PR.Nl,1);
-Sw(:)=0;
+Sw(:)=0.25;
 % SD=load('dK16_10');
 %KX(:,2)=KX(:,2)*0.001;
 %Sw(:,1)=0.75;
