@@ -1,4 +1,4 @@
-function [Pi,Sw,Pw,CL,GL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(Pi,Sw,Phi,Sw0,Pw,Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,M2FR,ft,PR,BXYZ,dt,t,Qf,Qz,GYData,BB,QQ,QQBND,QQoBND,ndt)
+function [Pi,Sw,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(Pi,Sw,Phi,Sw0,Pw,Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,M2FR,ft,PR,BXYZ,dt,t,Qf,Qz,GYData,BB,QQ,QQBND,QQoBND,ndt)
   na = RC.na;
   nc = RC.nc;
   ng = RC.ng;
@@ -93,7 +93,7 @@ function [Pi,Sw,Pw,CL,GL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(
    dPhi = Awater*Phi(:,1) + AMO*Phi(:,2);
  %  while  flag_pwq==1
 
-    b1wm=sparse(WELL.Won(:,1),ones(1,nw),-W1.*dPw(WELL.Won(:,3)),na,1);
+    b1wm=sparse(WELL.Won(:,1),ones(1,size(WELL.Won,1)),-W1.*dPw(WELL.Won(:,3)),na,1);
     b1wc=sparse(WELL.WonC(:,1),ones(1,size(WELL.WonC,1)),-W1C.*dPw(WELL.WonC(:,3)),nc,1);
     b1wg=sparse(WELL.WonG(:,1),ones(1,size(WELL.WonG,1)),-W1G.*dPw(WELL.WonG(:,3)),ng,1);
     b1wd=sparse(WELL.WonD(:,1),ones(1,size(WELL.WonD,1)),-W1D.*dPw(WELL.WonD(:,3)),nd,1);
@@ -103,7 +103,7 @@ function [Pi,Sw,Pw,CL,GL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(
     b1wg=b1wg.*(sum(W2G(Qf==0,:),1)~=0)';
     b1wd=b1wd.*(sum(W2D(Qf==0,:),1)~=0)';
            
-    QQ.QQm = QQ.QQm + sparse(WELL.Won(:,1),ones(1,nw),W1.*(dPw(WELL.Won(:,3))-dPt(VEC.va(WELL.Won(:,1)))),na,1);
+    QQ.QQm = QQ.QQm + sparse(WELL.Won(:,1),ones(1,size(W1,1)),W1.*(dPw(WELL.Won(:,3))-dPt(VEC.va(WELL.Won(:,1)))),na,1);
     QQ.QQc = QQ.QQc + sparse(WELL.WonC(:,1),ones(1,size(W1C,1)),W1C.*(dPw(WELL.WonC(:,3))-dPt(VEC.vc(WELL.WonC(:,1)))),nc,1);
     QQ.QQg = QQ.QQg + sparse(WELL.WonG(:,1),ones(1,size(W1G,1)),W1G.*(dPw(WELL.WonG(:,3))-dPt(VEC.vg(WELL.WonG(:,1)))),ng,1);
     QQ.QQd = QQ.QQd + sparse(WELL.WonD(:,1),ones(1,size(W1D,1)),W1D.*(dPw(WELL.WonD(:,3))-dPt(VEC.vd(WELL.WonD(:,1)))),nd,1);
@@ -170,8 +170,8 @@ function [Pi,Sw,Pw,CL,GL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(
      flag_gim=sum(abs(dPt(1:na+nc+ng+nd)./Pi(1:na+nc+ng+nd))>=1e-6)~=0; 
    end;
   %end; 
-  CL = sparse(1:nc,1:nc,CMP.Cw(VEC.vc),nc,nc)*CW + CO;
-  GL = sparse(1:ng,1:ng,CMP.Cw(VEC.vg),ng,ng)*GW + GO;
+  TL = sparse(1:na,1:na,CMP.Cw(VEC.va),na,na)*TW + TO;
+  DL = sparse(1:nd,1:nd,CMP.Cw(VEC.vd),nd,nd)*DW + DO;
   
      
  
