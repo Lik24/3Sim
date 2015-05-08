@@ -2,7 +2,7 @@ clearvars
 
 addpath('Sim_Lib','Tube_Lib','Gor_crack','Sparse_GPU','CrGeom','Termal_lib','GeoMeh_Lib',...
     'Well_lib','Crack_gen','Problems','Poly_lib','SS_lib','Diff_lib','Viz_lib','DATA_In','Adap_lib','Sim_Lib\2phase','Sim_Lib\Black-oil',...
-    'Tube_Lib\phase2','Well_lib\2phase','cikl_lib');
+    'Tube_Lib\phase2','Well_lib\2phase','Well_lib\Black-oil','cikl_lib');
 PR=Gl_PRM;%imp_glb_prm;%
 
 [KX,KY,KZ,Mp,P,Sw,So,Cp,T,NTG,WXY,H,Z,XY_GY,XY_GY_new,GY_subl]=Sintetic_Real(PR.Ns,PR.Nl);

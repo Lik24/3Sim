@@ -24,23 +24,23 @@ function [Pi,Sw,Pw,CL,GL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(
    [GW,GO,~]=Potok_Tube2(TRM.TG,Phi(VEC.vg,:),KWOG,Cp(VEC.vg),PR,fp,PR.kms(3),GEOM.Lg,RC.Gr2,RC.Gc2,ng,CMP,VEC.vg);
    [DW,DO,DP]=Potok_Tube2(TRM.TD,Phi(VEC.vd,:),KWOG,Cp(VEC.vd),PR,fp,PR.kms(4),GEOM.Ld,RC.Dr2,RC.Dc2,nd,CMP,VEC.vd);
                                                    
-   [A2CW,A2CO,~]=Obmen_T2M2(M2FR.A2C,Pi(VEC.va),Pi(VEC.vc),GEOM.K(:,1),PR,Cp(VEC.va),Cp(VEC.vc),KWOG,CMP,VEC.va,VEC.vc);
-   [A2GW,A2GO,~]=Obmen_T2M2(M2FR.A2G,Pi(VEC.va),Pi(VEC.vg),GEOM.K(:,1),PR,Cp(VEC.va),Cp(VEC.vg),KWOG,CMP,VEC.va,VEC.vg);
+   [A2CW,A2CO,~]=Obmen_T2M2(M2FR.A2C,Phi(VEC.va,:),Phi(VEC.vc,:),GEOM.K(:,1),PR,Cp(VEC.va),Cp(VEC.vc),KWOG,CMP,VEC.va,VEC.vc);
+   [A2GW,A2GO,~]=Obmen_T2M2(M2FR.A2G,Phi(VEC.va,:),Phi(VEC.vg,:),GEOM.K(:,1),PR,Cp(VEC.va),Cp(VEC.vg),KWOG,CMP,VEC.va,VEC.vg);
         
-   [A2DW,A2DO,A2DP]=Obmen_T2M2(M2FR.A2D,Pi(VEC.va),Pi(VEC.vd),GEOM.K(:,1),PR,Cp(VEC.va),Cp(VEC.vd),KWOG,CMP,VEC.va,VEC.vd);
-   [A2BW,A2BO,A2BP]=Obmen_T2M2(M2FR.A2B,Pi(VEC.va),Pi(VEC.vb),ones(na,1),PR,Cp(VEC.va),Cp(VEC.vb),KWOG,CMP,VEC.va,VEC.vb);
-   [D2BW,D2BO,D2BP]=Obmen_T2M2(M2FR.D2B,Pi(VEC.vd),Pi(VEC.vb),GEOM.K(:,1),PR,Cp(VEC.vd),Cp(VEC.vb),KWOG,CMP,VEC.vd,VEC.vb);
+   [A2DW,A2DO,A2DP]=Obmen_T2M2(M2FR.A2D,Phi(VEC.va,:),Phi(VEC.vd,:),GEOM.K(:,1),PR,Cp(VEC.va),Cp(VEC.vd),KWOG,CMP,VEC.va,VEC.vd);
+   [A2BW,A2BO,A2BP]=Obmen_T2M2(M2FR.A2B,Phi(VEC.va,:),Phi(VEC.vb,:),ones(na,1),PR,Cp(VEC.va),Cp(VEC.vb),KWOG,CMP,VEC.va,VEC.vb);
+   [D2BW,D2BO,D2BP]=Obmen_T2M2(M2FR.D2B,Phi(VEC.vd,:),Phi(VEC.vb,:),GEOM.K(:,1),PR,Cp(VEC.vd),Cp(VEC.vb),KWOG,CMP,VEC.vd,VEC.vb);
         
-   [D2CW,D2CO,~]=Obmen_T2M2(M2FR.C2D,Pi(VEC.vd),Pi(VEC.vc),GEOM.K(:,1),PR,Cp(VEC.vd),Cp(VEC.vc),KWOG,CMP,VEC.vd,VEC.vc);
-   [D2GW,D2GO,~]=Obmen_T2M2(M2FR.G2D,Pi(VEC.vd),Pi(VEC.vg),GEOM.K(:,1),PR,Cp(VEC.vd),Cp(VEC.vg),KWOG,CMP,VEC.vd,VEC.vg);
+   [D2CW,D2CO,~]=Obmen_T2M2(M2FR.C2D,Phi(VEC.vd,:),Phi(VEC.vc,:),GEOM.K(:,1),PR,Cp(VEC.vd),Cp(VEC.vc),KWOG,CMP,VEC.vd,VEC.vc);
+   [D2GW,D2GO,~]=Obmen_T2M2(M2FR.G2D,Phi(VEC.vd,:),Phi(VEC.vg,:),GEOM.K(:,1),PR,Cp(VEC.vd),Cp(VEC.vg),KWOG,CMP,VEC.vd,VEC.vg);
         
         %Wf=Wf0.*(1-0.0001*(P0(Won)-Pi(Won))).^3;
    [WBND,QQBND]=GY_bild2(GYData,Pi(:,1),dPt(:,1),KWOG_GY,Cp(:,1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,CMP,VEC,QQBND);
       
-   [W1,W6,Wo,W7]=Well_MKT2(dPt(VEC.va),dPw(WELL.Won(:,3)),WELL.Won,Uf(WELL.Won(:,3)),Cp(VEC.va),PR.aw,PR.as,PR,CpW(WELL.Won(:,3)),CMP,KWOG,VEC.va);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
-   [W1C,W6C,WoC,W7C]=Well_MKT2(dPt(VEC.vc),dPw(WELL.WonC(:,3)),WELL.WonC,Uf(WELL.WonC(:,3)),Cp(VEC.vc),PR.tw,PR.ts,PR,CpW(WELL.WonC(:,3)),CMP,KWOG,VEC.vc);
-   [W1G,W6G,WoG,W7G]=Well_MKT2(dPt(VEC.vg),dPw(WELL.WonG(:,3)),WELL.WonG,Uf(WELL.WonG(:,3)),Cp(VEC.vg),PR.tw,PR.ts,PR,CpW(WELL.WonG(:,3)),CMP,KWOG,VEC.vg);
-   [W1D,W6D,WoD,W7D]=Well_MKT2(dPt(VEC.vd),dPw(WELL.WonD(:,3)),WELL.WonD,Uf(WELL.WonD(:,3)),Cp(VEC.vd),PR.tw,PR.ts,PR,CpW(WELL.WonD(:,3)),CMP,KWOG,VEC.vd);
+   [W1,W6,Wo,W7]=Well_MKT2(WELL.Won,Uf(WELL.Won(:,3)),Cp(VEC.va),PR,CpW(WELL.Won(:,3)),CMP,KWOG,VEC.va);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
+   [W1C,W6C,WoC,W7C]=Well_MKT2(WELL.WonC,Uf(WELL.WonC(:,3)),Cp(VEC.vc),PR,CpW(WELL.WonC(:,3)),CMP,KWOG,VEC.vc);
+   [W1G,W6G,WoG,W7G]=Well_MKT2(WELL.WonG,Uf(WELL.WonG(:,3)),Cp(VEC.vg),PR,CpW(WELL.WonG(:,3)),CMP,KWOG,VEC.vg);
+   [W1D,W6D,WoD,W7D]=Well_MKT2(WELL.WonD,Uf(WELL.WonD(:,3)),Cp(VEC.vd),PR,CpW(WELL.WonD(:,3)),CMP,KWOG,VEC.vd);
         
    A1= -sparse(WELL.Won(:,1),WELL.Won(:,1),W1,na,na)-sparse(1:na,1:na,SGM.Clp(VEC.va)+sum(WBND.b1gm(:,1:2),2),na,na);  %Матрица коэф. для пор
    C1= -sparse(1:nc,1:nc,SGM.Clp(VEC.vc)',nc,nc)-sparse(WELL.WonC(:,1),WELL.WonC(:,1),W1C,nc,nc);                       %Матрица коэф. для вертикальных трещ.

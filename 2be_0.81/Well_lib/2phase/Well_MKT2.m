@@ -1,4 +1,4 @@
-function [W1,W6,Wo,W7]=Well_MKT2(dP,dPw,Won,Uf,Cp,aw,as,PR,Cpin,CMP,KWOG,v)
+function [W1,W6,Wo,W7]=Well_MKT2(Won,Uf,Cp,PR,Cpin,CMP,KWOG,v)
 
 wmu=fusion(Cp(Won(:,1)),PR.mup);
 
@@ -12,14 +12,6 @@ TP=KWOG.w(v(Won(:,1)))./wmu.*Cp(Won(:,1));
 
 Tiw=(1-Cpin)./wmu;
 Tip=Cpin./wmu;
-
-% size((TW+TO+TP))
-% size((Uf==1))
-% size((Tiw+Tip))
-% size((Uf==-1))
-% size(Wf)
-% size(TW)
-% size(Uf)
 
 W6 = Won(:,2).*(TW.*(Uf==1)+(Tiw+Tip).*(Uf==-1));
 Wo = Won(:,2).*TO.*(Uf==1);

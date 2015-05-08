@@ -168,7 +168,7 @@ t=0;
 t_flag=1;
 dt=dtt;
 
-CMP.Bo0 = Bo;
+CMP.B0 = Bo;
 CMP.Mp0 = [Mp.*ones(na,1);Mp_c;Mp_g;Mp_d;Mp_b];
 
 GEOM.dV = dVCG./CMP.Mp0; 
@@ -183,42 +183,17 @@ CMP.P0=Pi;
 dtt1=dtt;
 Wf0=WELL.Won(:,2);
 zapt=1;
-
-% VSAT.ap = VEC.va(Pb(VEC.va) >= Pi(VEC.va)); VSAT.ag = VEC.va(Pb(VEC.va) < Pi(VEC.va)); 
-% VSAT.cp = VEC.vc(Pb(VEC.vc) >= Pi(VEC.vc)); VSAT.cg = VEC.vc(Pb(VEC.vc) < Pi(VEC.vc));  
-% VSAT.gp = VEC.vg(Pb(VEC.vg) >= Pi(VEC.vg)); VSAT.gg = VEC.vc(Pb(VEC.vg) < Pi(VEC.vg));  
-% VSAT.dp = VEC.vd(Pb(VEC.vd) >= Pi(VEC.vd)); VSAT.dg = VEC.vc(Pb(VEC.vd) < Pi(VEC.vd));   
-% VSAT.vp = [VSAT.ap,VSAT.cp,VSAT.gp,VSAT.dp];  VSAT.vg = [VSAT.ag,VSAT.cg,VSAT.gg,VSAT.dg];
  
- VSAT.vp = VEC.v(Pb(VEC.v) >= Pi(VEC.v)); VSAT.vg = VEC.v(Pb(VEC.v) < Pi(VEC.v)); 
-% VSAT.vp = Pb >= Pi; VSAT.vg = Pb < Pi; 
- 
-%  SGM.Cg = zeros(na+nc+ng+nd+nb,1);
-%  SGM.Cor = SGM.Cg;
-%  SGM.Co = SGM.Cg;
-%  SGM.Cw = SGM.Cg;  
- % SGM.Clp = SGM.Cg;
+ VSAT.vg = VEC.v(Pb(VEC.v) >= Pi(VEC.v)); VSAT.vp = VEC.v(Pb(VEC.v) < Pi(VEC.v)); 
  
 dt = 0.01; 
-[SGM,CMP]=SGimBO0(Sw,So,zc,PR.rs,Pi,Pb,1,CMP,GEOM.dV,dt,VSAT);
-
- %[BOUNDFL]=GY_bild(GYData,Pi([VEC.va,VEC.vd],1),Sw([VEC.va,VEC.vd]),So([VEC.va,VEC.vd]),Cp([VEC.va,VEC.vd],1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,SGM,CMP);
+[CMP]=SGimBO0(Sw,So,zc,PR.rs,Pi,Pb,CMP,VSAT);
 
  BXYZ.mxy = find(TRM.Txyz_GY_A(:,1));
  BXYZ.dxy = find(TRM.Txyz_GY_D(:,1));
  BXYZ.mz = find(TRM.Txyz_GY_A(:,2));
  BXYZ.dz = find(TRM.Txyz_GY_A(:,2)); 
-  
-    KWOG.w(1:na,1)=Sat_cal(MSw,MSo,1,1,as,aw); %water
-    KWOG.o(1:na,1)=Sat_cal(MSw,MSo,2,1,as,aw); %oil 
-    KWOG.g(1:na,1)=Sat_cal(MSw,MSo,3,1,as,aw); %gas  ///////////
-    
-   [W1,W6,Wo,Wg,W7,QQ.QQm,QQ.QQmwo]=Well_MKT0(Pi(VEC.va),Pw(WELL.Won(:,3)),WELL.Won,WELL.Uf(WELL.Won(:,3)),Sw(VEC.va),So(VEC.va),Cp(VEC.va),PR.aw,PR.as,PR,WELL.CpW(WELL.Won(:,3)),SGM,CMP,KWOG);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
-   [W1C,W6C,WoC,WgC,W7C,QQ.QQc,QQ.QQcwo]=Well_MKT0(Pi(VEC.vc),Pw(WELL.WonC(:,3)),WELL.WonC,WELL.Uf(WELL.WonC(:,3)),Sw(VEC.vc),So(VEC.vc),Cp(VEC.vc),PR.tw,PR.ts,PR,WELL.CpW(WELL.WonC(:,3)),SGM,CMP,KWOG);
-   [W1G,W6G,WoG,WgG,W7G,QQ.QQg,QQ.QQgwo]=Well_MKT0(Pi(VEC.vg),Pw(WELL.WonG(:,3)),WELL.WonG,WELL.Uf(WELL.WonG(:,3)),Sw(VEC.vg),So(VEC.vg),Cp(VEC.vg),PR.tw,PR.ts,PR,WELL.CpW(WELL.WonG(:,3)),SGM,CMP,KWOG);
-   [W1D,W6D,WoD,WgD,W7D,QQ.QQd,QQ.QQdwo]=Well_MKT0(Pi(VEC.vd),Pw(WELL.WonD(:,3)),WELL.WonD,WELL.Uf(WELL.WonD(:,3)),Sw(VEC.vd),So(VEC.vd),Cp(VEC.vd),PR.tw,PR.ts,PR,WELL.CpW(WELL.WonD(:,3)),SGM,CMP,KWOG);
-   
-   [WBND,QQBND,QQwoBND,KWOG_GY]=GY_bild0(GYData,Pi([VEC.va,VEC.vd],1),Sw([VEC.va,VEC.vd],1),So([VEC.va,VEC.vd],1),Cp([VEC.va,VEC.vd],1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,SGM,CMP,BXYZ,VEC); 
+       
 while t_flag==1
     t=t+1;
 
@@ -249,16 +224,16 @@ while t_flag==1
     KWOG.w(na+1:na+nc+ng,1)=Sat_cal([CSw(:,t);GSw(:,t)],[CSo(:,t);GSo(:,t)],1,1,ts,tw); %water
     KWOG.o(na+1:na+nc+ng,1)=Sat_cal([CSw(:,t);GSw(:,t)],[CSo(:,t);GSo(:,t)],2,1,ts,tw); %oil
     KWOG.g(na+1:na+nc+ng,1)=Sat_cal([CSw(:,t);GSw(:,t)],[CSo(:,t);GSo(:,t)],3,1,ts,tw); %gas  ////////////
- 
-   [W1,W6,Wo,Wg,W7,QQ.QQm,QQ.QQmwo]=Well_MKT0(Pi(VEC.va),Pw(WELL.Won(:,3)),WELL.Won,WELL.Uf(WELL.Won(:,3)),Sw(VEC.va),So(VEC.va),Cp(VEC.va),PR.aw,PR.as,PR,WELL.CpW(WELL.Won(:,3)),SGM,CMP,KWOG);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
-   [W1C,W6C,WoC,WgC,W7C,QQ.QQc,QQ.QQcwo]=Well_MKT0(Pi(VEC.vc),Pw(WELL.WonC(:,3)),WELL.WonC,WELL.Uf(WELL.WonC(:,3)),Sw(VEC.vc),So(VEC.vc),Cp(VEC.vc),PR.tw,PR.ts,PR,WELL.CpW(WELL.WonC(:,3)),SGM,CMP,KWOG);
-   [W1G,W6G,WoG,WgG,W7G,QQ.QQg,QQ.QQgwo]=Well_MKT0(Pi(VEC.vg),Pw(WELL.WonG(:,3)),WELL.WonG,WELL.Uf(WELL.WonG(:,3)),Sw(VEC.vg),So(VEC.vg),Cp(VEC.vg),PR.tw,PR.ts,PR,WELL.CpW(WELL.WonG(:,3)),SGM,CMP,KWOG);
-   [W1D,W6D,WoD,WgD,W7D,QQ.QQd,QQ.QQdwo]=Well_MKT0(Pi(VEC.vd),Pw(WELL.WonD(:,3)),WELL.WonD,WELL.Uf(WELL.WonD(:,3)),Sw(VEC.vd),So(VEC.vd),Cp(VEC.vd),PR.tw,PR.ts,PR,WELL.CpW(WELL.WonD(:,3)),SGM,CMP,KWOG);
+
+   [~,~,~,~,~,QQ.QQm,QQ.QQmwo]=Well_MKTBO0(Pi(VEC.va),Pw(WELL.Won(:,3)),WELL.Won,WELL.Uf(WELL.Won(:,3)),Cp(VEC.va),PR,WELL.CpW(WELL.Won(:,3)),CMP,KWOG,VEC.va,na);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
+   [W1C,~,~,~,~,QQ.QQc,QQ.QQcwo]=Well_MKTBO0(Pi(VEC.vc),Pw(WELL.WonC(:,3)),WELL.WonC,WELL.Uf(WELL.WonC(:,3)),Cp(VEC.vc),PR,WELL.CpW(WELL.WonC(:,3)),CMP,KWOG,VEC.vc,nc);
+   [W1G,~,~,~,~,QQ.QQg,QQ.QQgwo]=Well_MKTBO0(Pi(VEC.vg),Pw(WELL.WonG(:,3)),WELL.WonG,WELL.Uf(WELL.WonG(:,3)),Cp(VEC.vg),PR,WELL.CpW(WELL.WonG(:,3)),CMP,KWOG,VEC.vg,ng);
+   [~,~,~,~,~,QQ.QQd,QQ.QQdwo]=Well_MKTBO0(Pi(VEC.vd),Pw(WELL.WonD(:,3)),WELL.WonD,WELL.Uf(WELL.WonD(:,3)),Cp(VEC.vd),PR,WELL.CpW(WELL.WonD(:,3)),CMP,KWOG,VEC.vd,nd);
    
-   [WBND,QQBND,QQwoBND,KWOG_GY]=GY_bild0(GYData,Pi([VEC.va,VEC.vd],1),Sw([VEC.va,VEC.vd],1),So([VEC.va,VEC.vd],1),Cp([VEC.va,VEC.vd],1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,SGM,CMP,BXYZ,VEC);
+   [WBND,QQBND,QQwoBND,KWOG_GY]=GY_bildBO0(GYData,Pi([VEC.va,VEC.vd],1),Sw([VEC.va,VEC.vd],1),So([VEC.va,VEC.vd],1),Cp([VEC.va,VEC.vd],1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,CMP,BXYZ,VEC);
   
-   [Pi,Pb,Sw,So,CL,GL,Phi,SGM,CMP,sQm2,sQd2,VSAT,QQ,QQBND,QQwoBND]=PressureCalc(Pi,Sw,So,Phi,Sw0,So0,Pb,Pw,Cp,TRM,KWOG,KWOG_GY,SGM,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,t,Qf,Qz,VSAT,GYData,BB,QQ,QQBND,QQwoBND);
-  % [Pi,Pb,Sw,So,CL,GL,Phi,SGM,CMP,sQm2,sQd2,VSAT,QQ,QQBND,QQwoBND]=PressureCalc2(Pi,Sw,So,Phi,Sw0,So0,Pb,Pw,Cp,TRM,KWOG,KWOG_GY,SGM,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,t,Qf,Qz,VSAT,GYData,BB,QQ,QQBND,QQwoBND);
+   [Pi,Pb,Sw,So,Pw(:,t+1),CL,GL,Phi,SGM,CMP,sQm2,sQd2,VSAT,QQ,QQBND,QQwoBND]=PressureCalcBO(Pi,Sw,So,Phi,Sw0,So0,Pb,Pw(:,t),Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,t,Qf,Qz,VSAT,GYData,BB,QQ,QQBND,QQwoBND);
+ 
     if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
         Sw = Sw0;
         So = So0;

@@ -176,9 +176,9 @@ b_D2B=Soed2B(D2BW,D2BP,Pi,nd,nb,vd,vb);     % Связь трещин с граничной областью
 
      Sw([va,vd])=Sw([va,vd])+dt*(AM2*Pi([va,vd])+Bw)./Cws([va,vd]);
      Cp([va,vd])=Sw_old.*Cp([va,vd])+dt*(AM3*Pi([va,vd])+Bp)./Cws([va,vd]);
-     if sum(isnan(Sw))~=0
-     123
-     end
+%      if sum(isnan(Sw))~=0
+%      123
+%      end
 
      vad=[va,vd];
      v0=Sw(vad)==0;
