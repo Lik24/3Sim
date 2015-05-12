@@ -21,7 +21,7 @@ Sw0=DATA.gSw;
 %[WData.Doly,DATA.gKX,GYData.GY_Kxy]=Load_adp_prm2(WData.Doly,DATA.gKX,GYData.GY_Kxy);
 %[WData.Doly,DATA,GYData]=Load_adp_prm(DATA,GYData,tXY);
 %[nt1,PXY]=derevo(nt,DATA.XY,22);
-%nt={zeros(2,0)};
+nt={zeros(2,0)};
 %nt=elka(1,PR.Nl,DATA.XY,1,30,0,25);  %0/1 - выкл/вкл.; кол-во трещин, длинна, флаг к скважине
 %load('nt_s');
 [CrDATA]=CrackProp(DATA,PR,nt);

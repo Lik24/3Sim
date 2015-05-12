@@ -236,7 +236,7 @@ while t_flag==1
    
    [WBND,QQBND,QQwoBND,KWOG_GY]=GY_bildBO0(GYData,Pi([VEC.va,VEC.vd],1),Sw([VEC.va,VEC.vd],1),So([VEC.va,VEC.vd],1),Cp([VEC.va,VEC.vd],1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,CMP,BXYZ,VEC);
   
-   %dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,WELL,Pwt(:,t),na,PR,st,Ta,Sw,Sw0,dt,Nl,va,vd,DL,W1D,nd,dV1,dV2);   
+   dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,WELL,Pwt(:,t),na,PR,st,Ta,Sw,Sw0,dt,Nl,va,vd,DL,W1D,nd,dV1,dV2);   
  
    [Pi,Pb,Sw,So,Pw(:,ft),TL,DL,Phi,CMP,sQm2,sQc2,sQg2,sQd2,VSAT,QQ,QQBND,QQwoBND]=PressureCalcBO(Pi,Sw,So,Phi,Sw0,So0,Pb,Pwt(:,t),Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,Qf,VSAT,GYData,BB,QQ,QQBND,QQwoBND);
  
