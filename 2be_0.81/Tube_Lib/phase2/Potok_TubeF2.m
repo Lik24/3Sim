@@ -1,4 +1,4 @@
-function [CW,CO,CP]=Potok_TubeF2(TC,P,vP1,Kfw,Kfo,Cp,PR,r,c,kms,dP,L,n,CMP,v)
+function [CW,CO,CP]=Potok_TubeF2(TC,vP1,Kfw,Kfo,Cp,PR,r,c,kms,dP,L,n,CMP,v)
 
 if isempty(TC)==0
 mu=PR.mu;

@@ -4,13 +4,7 @@ n = size(P,1);
 r = rc(:,1);
 c = rc(:,2);
 
-PW = P(:,1);
-PO = P(:,2);
-PG = P(:,3);
-
-vPW = PW(c) - PW(r)>0; 
-vPO = PO(c) - PO(r)>0;
-vPG = PG(c) - PG(r)>0;
+vP = P(c,:) - P(r,:)>0; 
 
 Kwc = KWOG.w(c);
 Kwl = KWOG.w(r);
@@ -25,25 +19,22 @@ Cpc = Cp(c);
 Cpl = Cp(r);
 
 %Swe=Swc.*vP+Swl.*(vP==0);
-Cpe = Cpc.*vPW + Cpl.*(vPW==0);
-Kfw1 = Kwc.*vPW + Kwl.*(vPW==0);
-Kfo1 = Koc.*vPO + Kol.*(vPO==0);
-Kfg1 = Kgc.*vPG + Kgl.*(vPG==0);        %///////
+Cpe = Cpc.*vP(:,1) + Cpl.*(vP(:,1)==0);
+Kfw = Kwc.*vP(:,1) + Kwl.*(vP(:,1)==0);
+Kfo = Koc.*vP(:,2) + Kol.*(vP(:,2)==0);
+Kfg = Kgc.*vP(:,3) + Kgl.*(vP(:,3)==0);        
+Rs = CMP.Rs(c,2).*vP(:,2) + CMP.Rs(r,2).*(vP(:,2)==0);    
 
 Bw = 0.5*(CMP.Bw(c,2) + CMP.Bw(r,2));
 Bo = 0.5*(CMP.Bo(c,2) + CMP.Bo(r,2));
 Bg = 0.5*(CMP.Bg(c,2) + CMP.Bg(r,2));
-Rs = 0.5*(CMP.Rs(c,2) + CMP.Rs(r,2));
+%Rs = 0.5*(CMP.Rs(c,2) + CMP.Rs(r,2));        %///////
 
-% Kfw=Sat_cal(Swe,1,1,as,aw); %water
-% Kfo=Sat_cal(Swe,2,1,as,aw); %oil
-% Kfp=Sat_cal(Swe.*Cpe,1,1,as,aw); %polim
+[TP,wmu]=poly_vis(Cpe,PR.mup,fp,Kfw,T,n,r,c,PR.mu(1));
 
-[TP,wmu]=poly_vis(Cpe,PR.mup,fp,Kfw1,T,n,r,c,PR.mu(1));
-
-Tw = T.*Kfw1./Bw./wmu;
-To = T.*Kfo1./Bo/PR.mu(2);
-Tg = T.*Kfg1./Bg/PR.mu(3);
+Tw = T.*Kfw./Bw./wmu;
+To = T.*Kfo./Bo/PR.mu(2);
+Tg = T.*Kfg./Bg/PR.mu(3);
 
  if kms~=0
      dPL=abs(dP./L((r+(c-1)*n)));

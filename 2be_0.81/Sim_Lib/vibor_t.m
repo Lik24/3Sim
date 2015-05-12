@@ -28,7 +28,7 @@ if  fl==0
     dvc=dVc(RC.Cc2).*(v1==0)+dVc(RC.Cr2).*v1;
     dvg=dVg(RC.Gc2).*(v2==0)+dVg(RC.Gr2).*v2;
     
-    dt1=1./max(abs([CL(RC.Cr2 + (RC.Cc2 - 1)*RC.nc).*dPc./dvc;GL(RC.Gr2 + (RC.Gc2 - 1)*RC.ng).*dPg./dvg]));
+    dt1=1./max(abs([CL.*dPc./dvc;GL.*dPg./dvg]));
     ndt1=dt/dt1;    
     
     if isempty(WoC(:,1))~=1 || isempty(WoG(:,1))~=1 

@@ -5,7 +5,7 @@ Q=zeros(size(uf,1),5);
 Q(uf==-1,1)=-QQ(uf==-1)*dt; 
 Q(uf==1,2)=-QQ(uf==1)*dt; 
 Q(uf==1,3)=-QQwom(uf==1,2)*dt; 
-Q(uf==1,4)=(QQ(uf==1,1) - QQwom(uf==1,1) - QQwom(uf==1,2))*dt; 
+Q(uf==1,4)=-(QQ(uf==1,1) - QQwom(uf==1,1) - QQwom(uf==1,2))*dt; 
 Q(uf==1,5)=0;%dt*qp(uf==1); 
  
 wn=unique(WonM);

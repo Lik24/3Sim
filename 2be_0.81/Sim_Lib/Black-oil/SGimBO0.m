@@ -1,21 +1,22 @@
-function [CMP]=SGimBO0(Sw,So,zc,rs,P,Pb,CMP,V)
+function [CMP]=SGimBO0(Sw,So,zc,rs,P,Pb,CMP,V,dt,dV)
   
   zcb = 0.001;
     
   Rs(V.vp,1) = rs*Pb(V.vp);
-  Rs(V.vg,1) = rs*Pb(V.vg);
+  Rs(V.vg,1) = rs*P(V.vg);
   
   Bw = CMP.B0(1)./(1 + zc(1)*(P - Pb));
   Bo = (CMP.B0(2) + zcb*Rs)./(1 + zc(2)*(P - Pb));
   Bg = CMP.B0(3)./(1 + zc(3)*(P - Pb));
   Mp = CMP.Mp0.*(1 + zc(4)*(P - CMP.P0));
-   
-  dBoP = - CMP.B0(2)*zc(2)./(1 + zc(2)*(P - Pb));
-  dBoPb = zcb*rs./(1 + zc(2)*(P - Pb)) - dBoP;
-  
-  Cosw = - Mp./Bo;
-  Cwsw = Mp./Bw;
     
+  dBoP = - CMP.B0(2)*zc(2)./(1 + zc(2)*(P - Pb));
+  dBoPb = zcb*rs./(1 + zc(2)*(P - Pb)) - dBoP;  
+  
+  Coso = Mp./Bo;
+  Cosw = - Coso;
+  Cwsw = Mp./Bw;
+   
   Cgsw(V.vg,1) = - Mp(V.vg)./Bg(V.vg);
   Cgso(V.vg,1) = - Bo(V.vg)./Bg(V.vg) + Rs(V.vg);
   Cgsw(V.vp,1) = - Mp(V.vp)./Bo(V.vp).*Rs(V.vp);

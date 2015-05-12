@@ -1,47 +1,35 @@
-function [CW,CO,CG,CP]=Potok_TubeBO(C,P,Sw,Cp,PR,fp,kms,L,r,c,n,CMP)
+function [CW,CO,CG,CORS,CP]=Potok_TubeBO(C,P,KWOG,Cp,PR,fp,kms,L,r,c,n,CMP,v)
 
-PW = P(:,1);
-PO = P(:,2);
-PG = P(:,3);
+Kwc=KWOG.w(v(c));
+Kwl=KWOG.w(v(r));
 
-ts=PR.ts;
-tw=PR.tw;
-Kc=PR.Kc;
+Koc=KWOG.o(v(c));
+Kol=KWOG.o(v(r));
 
-Kfw=Sat_tube(Sw,1,1,ts,tw); %water
-Kfo=Sat_tube(Sw,2,1,ts,tw); %oil
-Kfg=Sat_tube(Sw,3,1,ts,tw); %gas
+Kgc=KWOG.g(v(c));
+Kgl=KWOG.g(v(r));
 
-vPW = PW(c) - PW(r)>0; 
-vPO = PO(c) - PO(r)>0;
-vPG = PG(c) - PG(r)>0;
+Bw1 = CMP.Bw(v,2);
+Bo1 = CMP.Bo(v,2);
+Bg1 = CMP.Bg(v,2);
+Rs1 = CMP.Rs(v,2);
 
-Kwc=Kfw(c);
-Kwl=Kfw(r);
-
-Koc=Kfo(c);
-Kol=Kfo(r);
-
-Kgc=Kfg(c);
-Kgl=Kfg(r);
+vPw = P(c,1) - P(r,1)>0;
+vPo = P(c,2) - P(r,2)>0;
+vPg = P(c,3) - P(r,3)>0;
 
 Cpc=Cp(c);
 Cpl=Cp(r);
 
-Cpe=Cpc.*vPW+Cpl.*(vPW==0);
-Kfw=Kwc.*vPW+Kwl.*(vPW==0);
-Kfo=Koc.*vPO+Kol.*(vPO==0);
-Kfg=Kgc.*vPO+Kgl.*(vPO==0);
-
-Bw1 = CMP.Bw(:,2);
-Bo1 = CMP.Bo(:,2);
-Bg1 = CMP.Bg(:,2);
-Rs1 = CMP.Rs(:,2);
+Cpe=Cpc.*vPw(r)+Cpl.*(vPw(r)==0);
+Kfw=Kwc.*vPw(r)+Kwl.*(vPw(r)==0);
+Kfo=Koc.*vPo(r)+Kol.*(vPo(r)==0);
+Kfg=Kgc.*vPg(r)+Kgl.*(vPg(r)==0);
+Rs = Rs1(c).*vPo(r) + Rs1(r).*(vPo(r)==0);
 
 Bw = 0.5*(Bw1(c) + Bw1(r));
 Bo = 0.5*(Bo1(c) + Bo1(r));
 Bg = 0.5*(Bg1(c) + Bg1(r));
-Rs = 0.5*(Rs1(c) + Rs1(r));
 
 [CP,wmu]=poly_vis(Cpe,PR.mup,fp,Kfw,C,n,r,c,PR.mu(1));
 
@@ -53,15 +41,17 @@ Tg = C.*Kfg./Bg/PR.mu(3);      %//////////
 if kms~=0
      dPL=abs(dP./L((r+(c-1)*n)));
     %     проверить првильность задания плотности
-    [Tw] = Forh(Tw,kms, PR.Ro(1), Kfw, Kc, PR.mu(1), dPL);
-    [To] = Forh(To,kms, PR.Ro(2), Kfo, Kc, PR.mu(2), dPL);
+    [Tw] = Forh(Tw,kms, PR.Ro(1), Kfw, PR.Kc, PR.mu(1), dPL);
+    [To] = Forh(To,kms, PR.Ro(2), Kfo, PR.Kc, PR.mu(2), dPL);
 end;
 
-Tw = sparse(r,c,Tw,n,n);       Tw = Tw + Tw';
-To = sparse(r,c,To,n,n);       To = To + To';
-Tg = sparse(r,c,Tg,n,n);       Tg = Tg + Tg'; 
+TW = sparse(r,c,Tw,n,n);       TW = TW + TW';
+TORS = sparse(r,c,To.*Rs,n,n); TORS = TORS + TORS';
+TO = sparse(r,c,To,n,n);       TO = TO + TO';
+TG = sparse(r,c,Tg,n,n);       TG = TG + TG'; 
 
-CW = Tw - sparse(1:n,1:n,sum(Tw,2),n,n);
-CO = To - sparse(1:n,1:n,sum(To,2),n,n);
-CG = Tg - sparse(1:n,1:n,sum(Tg,2),n,n);
+CW = TW - sparse(1:n,1:n,sum(TW,2),n,n);
+CO = TO - sparse(1:n,1:n,sum(TO,2),n,n);
+CORS = TORS - sparse(1:n,1:n,sum(TORS,2),n,n);
+CG = TG - sparse(1:n,1:n,sum(TG,2),n,n);
 

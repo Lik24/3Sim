@@ -1,4 +1,4 @@
-function [Pi,Phi,SW,SW0,Pw,CMP,i,QQ]=fun2(RC,Pi,Phi,SW,Cp,PR,TRM,M2FR,WELL,Pw,dt,CR_rc,Qz,Qf,ndt,GEOM,Lc,CMP,ft,QQ,KWOG)
+function [Pi,Phi,SW,SW0,Pw,CMP,i,QQ,Qc2,Qg2]=fun2(RC,Pi,Phi,SW,Cp,PR,TRM,M2FR,WELL,Pw,dt,CR_rc,Qf,ndt,GEOM,Lc,CMP,ft,QQ,KWOG)
                                                                               
 as=PR.as;
 aw=PR.aw;
@@ -13,8 +13,7 @@ Na=RC.na;
 nc=RC.nc;
 ng=RC.ng;
 Nd=RC.nd;
-Uf = WELL.Uf(:,ft+1);
-CpW = WELL.CpW(:,ft+1);
+
 %C2G=sparse(nc,ng);     C2GL=C2G;  C2GW=C2G;
 
 [v1,vc1,wom,r1,c1,r2,c2,rc_gy,rc_in_h,T_gy,T_in]=ext_cr(CR_rc(1,1));
@@ -47,10 +46,10 @@ MBo=CMP.Bo(v_a,:);                         DBo=CMP.Bo(v_d,:);
 
 dVa(v1~=1)=[];   dVd(v2~=1)=[];
 
-Qz=Qz/dt;
+Qz=Qf;%/dt;
 nw=size(Qz,1);
 Qf1 = Qf;
-Qf=Qf(wom(:,3));
+Qf=Qf(unique(wom(:,3)));
 
 %%
 vP1=Pa(RC.ACr)>=Pc(RC.ACc);
@@ -141,7 +140,7 @@ while fl2<2%i<ndt
     CMPF.Bo(:,1) = CMPF.Bo(:,2);
     CMPF.Mp(:,1) = CMPF.Mp(:,2);
      
-    while flag_gim==1 && kj<1
+    while flag_gim==1 && kj<10
         kj=kj+1;
         [SGMF,CMPF]=SGim2([dVa;dVc;dVg;dVd],Sw,zc,Pj,dPj,dt/ndt,CMPF);
         CMP.Bo([v_a(v1==1),v_c,v_g,v_d(v2==1)],2) = CMPF.Bo([va,vc,vg,vd],2);
@@ -153,8 +152,8 @@ while fl2<2%i<ndt
         [vPa1,vPc1,vPg1,vPd1,dPa,dPc,dPg,dPd]=pre_potok_2(Phi,Phj,RC,rc_in_h,rc_in_hd,Na,Nd,na,nd);
 
         [TW,TO,TP]=Potok_MKTF2(T_in,vPa1,Cp(v_a),mu,rc_in_h,Na,KfwM,KfoM,kms(1),dPa,GEOM.L,Ro,Ke,CMP,v1,v_a);
-        [CW,CO]=Potok_TubeF2(TRM.TC,Pc,vPc1,kfw(vc),kfo(vc),Cp(v_c),PR,RC.Cr2,RC.Cc2,kms(2),dPc,Lc,nc,CMP,vc);
-        [GW,GO]=Potok_TubeF2(TRM.TG,Pg,vPg1,kfw(vg),kfo(vg),Cp(v_g),PR,RC.Gr2,RC.Gc2,kms(3),dPg,GEOM.Lg,ng,CMP,vg);
+        [CW,CO]=Potok_TubeF2(TRM.TC,vPc1,kfw(vc),kfo(vc),Cp(v_c),PR,RC.Cr2,RC.Cc2,kms(2),dPc,Lc,nc,CMP,v_c);
+        [GW,GO]=Potok_TubeF2(TRM.TG,vPg1,kfw(vg),kfo(vg),Cp(v_g),PR,RC.Gr2,RC.Gc2,kms(3),dPg,GEOM.Lg,ng,CMP,v_g);
         [DW,DO,DP]=Potok_MKTF2(TD_in,vPd1,Cp(v_d),mu,rc_in_hd,Nd,KfwD,KfoD,kms(4),dPd,GEOM.L,Ro,Ke,CMP,v2,v_d);
   
         [A2CW,A2CO,~]=Obmen_T2MF2(TRM.TA2C,Phj(va,:),Phic,mu,Cp(v_a(v1==1)),Cp(v_c),r1,RC.ACc,KFA,KFC,CMPF,va,vc);
@@ -164,10 +163,10 @@ while fl2<2%i<ndt
         [D2CW,D2CO,~]=Obmen_T2MF2(TRM.TD2C,Phj(vd,:),Phic,mu,Cp(v_d(v2==1)),Cp(v_c),r1d,RC.DCc,KFD,KFC,CMPF,vd,vc);
         [D2GW,D2GO,~]=Obmen_T2MF2(TRM.TD2G,Phj(vd,:),Phig,mu,Cp(v_d(v2==1)),Cp(v_g),r2d,RC.DGc,KFD,KFG,CMPF,vd,vg);
         
-        [W1,W6,Wo,W7]=Well_MKTF2(wom(:,2),wom(:,1),Uf(wom(:,3)),Cp(v_a(v1==1)),mu,CpW(wom(:,3)),kfw(va),kfo(va),CMP,CMPF);
-        [W1C,W6C,WoC,W7C]=Well_MKTF2(WELL.WonC(:,2),WELL.WonC(:,1),Uf(WELL.WonC(:,3)),Cp(v_c),mu,CpW(WELL.WonC(:,3)),kfw(vc),kfo(vc),CMP,CMPF);
-        [W1G,W6G,WoG,W7G]=Well_MKTF2(WELL.WonG(:,2),WELL.WonG(:,1),Uf(WELL.WonG(:,3)),Cp(v_g),mu,CpW(WELL.WonG(:,3)),kfw(vg),kfo(vg),CMP,CMPF);
-        [W1D,W6D,WoD,W7D]=Well_MKTF2(wod(:,2),wod(:,1),Uf(wod(:,3)),Cp(v_d(v2==1)),mu,CpW(wod(:,3)),kfw(vd),kfo(vd),CMP,CMPF);
+        [W1,W6,Wo,W7]=Well_MKTF2(wom(:,2),wom(:,1),WELL.Uf(wom(:,3),ft),Cp(v_a(v1==1)),mu,WELL.CpW(wom(:,3),ft),kfw(va),kfo(va),CMPF,va);
+        [W1C,W6C,WoC,W7C]=Well_MKTF2(WELL.WonC(:,2),WELL.WonC(:,1),WELL.Uf(WELL.WonC(:,3),ft),Cp(v_c),mu,WELL.CpW(WELL.WonC(:,3),ft),kfw(vc),kfo(vc),CMPF,vc);
+        [W1G,W6G,WoG,W7G]=Well_MKTF2(WELL.WonG(:,2),WELL.WonG(:,1),WELL.Uf(WELL.WonG(:,3),ft),Cp(v_g),mu,WELL.CpW(WELL.WonG(:,3),ft),kfw(vg),kfo(vg),CMPF,vg);
+        [W1D,W6D,WoD,W7D]=Well_MKTF2(wod(:,2),wod(:,1),WELL.Uf(wod(:,3),ft),Cp(v_d(v2==1)),mu,WELL.CpW(wod(:,3),ft),kfw(vd),kfo(vd),CMPF,vg);
                 
         AW1=TW-sparse(1:na,1:na,sum(A2CW,2)+sum(A2GW,2)+sum(A2DW,2),na,na);
         CW1=CW-sparse(1:nc,1:nc,sum(A2CW,1)+sum(D2CW,1),nc,nc);
@@ -213,9 +212,9 @@ while fl2<2%i<ndt
         WM3=-sparse(1:nw,1:nw,W3vec,nw,nw);
         %WM1(Qz~=0,:)
         % full([Qz(wn(Qf~=0)),W3vec(wn(Qf~=0)),Pw(wn(Qf~=0))])
-        WM1=WM1(wom(Qf~=0,3),:);
-        WM2=WM2(:,wom(Qf~=0,3));
-        WM3=WM3(wom(Qf~=0,3),wom(Qf~=0,3));
+        WM1=WM1(wna(Qf~=0),:);
+        WM2=WM2(:,wna(Qf~=0));
+        WM3=WM3(wna(Qf~=0),wna(Qf~=0));
         
         ba1=sparse(wom(:,1),ones(1,size(wom,1)),-W1.*dPw(wom(:,3)),na,1);
         bc1=sparse(WELL.WonC(:,1),ones(1,size(WELL.WonC,1)),-W1C.*dPw(WELL.WonC(:,3)),nc,1);
@@ -242,11 +241,11 @@ while fl2<2%i<ndt
         dPhj = Awater*Phj(:,1) + AMO*Phj(:,2);
         
         BC = [ba1 - ql;bc1;bg1;bd1 - qld] + dItime - dPhj;
-       
+   
         Qz1 = sparse(wna(Qf~=0),ones(1,size(wna(Qf~=0),1)),Qz(wna(Qf~=0)),nw,1);
-        Qm1 = sparse(wna(Qf1(wna)~=0),ones(1,size(wna(Qf1(wna)~=0),1)),QQm(wom(Qf1(wna)~=0,1)),nw,1);
-        Qc1 = sparse(wnc(Qf1(wnc)~=0),ones(1,size(wnc(Qf1(wnc)~=0),1)),QQ.QQc(WELL.WonC(Qf1(wnc)~=0,1)),nw,1);
-        Qg1 = sparse(wng(Qf1(wng)~=0),ones(1,size(wng(Qf1(wng)~=0),1)),QQ.QQg(WELL.WonC(Qf1(WELL.WonG(:,3))~=0,1)),nw,1);
+        Qm1 = sparse(wom(Qf1(wom(:,3))~=0,3),ones(1,size(wna(Qf1(wna)~=0),1)),QQm(wom(Qf1(wom(:,3))~=0,1)),nw,1);
+        Qc1 = sparse(WELL.WonC(Qf1(WELL.WonC(:,3))~=0,3),ones(1,size(wnc(Qf1(wnc)~=0),1)),QQ.QQc(WELL.WonC(Qf1(WELL.WonC(:,3))~=0,1)),nw,1);
+        Qg1 = sparse(wng(Qf1(wng)~=0),ones(1,size(wng(Qf1(wng)~=0),1)),QQ.QQg(WELL.WonC(Qf1(wng)~=0,1)),nw,1);
         Qd1 = sparse(wnd(Qf1(wnd)~=0),ones(1,size(wnd(Qf1(wnd)~=0),1)),QQd(wod(Qf1(wnd)~=0,1)),nw,1);
         
         Q11 = -Qz1+Qm1+Qc1+Qg1+Qd1;
@@ -256,7 +255,7 @@ while fl2<2%i<ndt
         dPj(:,1)=dPt(1:na+nc+ng+nd);
         dPA(v1==1)=dPj(va);
         dPD(v2==1)=dPj(vd);
-        dPw(wom(Qf~=0,3))=dPt(na+nc+ng+nd+1:end);
+        dPw(wna(Qf~=0))=dPt(na+nc+ng+nd+1:end);
         
         Phj(1:na+nc+ng+nd,1) = Phj(1:na+nc+ng+nd,1) + dPj;   %//////////////
         Phj(1:na+nc+ng+nd,2) = Phj(1:na+nc+ng+nd,2) + dPj;
@@ -290,11 +289,13 @@ while fl2<2%i<ndt
         
     end
     
-    [~,~,~,~,QQm,QQmwo]=Well_MKTF20(Pj(va),Pw(wom(:,3)),wom(:,2),wom(:,1),Uf(wom(:,3)),Cp(v_a(v1==1)),mu,CpW(wom(:,3)),kfw(va),kfo(va),SGMF,CMP);
-    [~,~,~,~,QQ.QQc,QQ.QQcwo]=Well_MKTF20(Pj(vc),Pw(WELL.WonC(:,3)),WELL.WonC(:,2),WELL.WonC(:,1),Uf(WELL.WonC(:,3)),Cp(v_c),mu,CpW(WELL.WonC(:,3)),kfw(vc),kfo(vc),SGMF,CMP);
-    [~,~,~,~,QQ.QQg,QQ.QQgwo]=Well_MKTF20(Pj(vg),Pw(WELL.WonG(:,3)),WELL.WonG(:,2),WELL.WonG(:,1),Uf(WELL.WonG(:,3)),Cp(v_g),mu,CpW(WELL.WonG(:,3)),kfw(vg),kfo(vg),SGMF,CMP);
-    [~,~,~,~,QQd,QQdwo]=Well_MKTF20(Pj(vd),Pw(wod(:,3)),wod(:,2),wod(:,1),Uf(wod(:,3)),Cp(v_d(v2==1)),mu,CpW(wod(:,3)),kfw(vd),kfo(vd),SGMF,CMP);
+    [~,~,~,~,QQm,QQmwo]=Well_MKTF20(Pj(va),Pw(wom(:,3)),wom(:,2),wom(:,1),WELL.Uf(wom(:,3),ft),Cp(v_a(v1==1)),mu,WELL.CpW(wom(:,3),ft),kfw(va),kfo(va),CMPF,va);
+    [W1C,~,~,~,QQ.QQc,QQ.QQcwo]=Well_MKTF20(Pj(vc),Pw(WELL.WonC(:,3)),WELL.WonC(:,2),WELL.WonC(:,1),WELL.Uf(WELL.WonC(:,3),ft),Cp(v_c),mu,WELL.CpW(WELL.WonC(:,3),ft),kfw(vc),kfo(vc),CMPF,vc);
+    [W1G,~,~,~,QQ.QQg,QQ.QQgwo]=Well_MKTF20(Pj(vg),Pw(WELL.WonG(:,3)),WELL.WonG(:,2),WELL.WonG(:,1),WELL.Uf(WELL.WonG(:,3),ft),Cp(v_g),mu,WELL.CpW(WELL.WonG(:,3),ft),kfw(vg),kfo(vg),CMPF,vg);
+    [~,~,~,~,QQd,QQdwo]=Well_MKTF20(Pj(vd),Pw(wod(:,3)),wod(:,2),wod(:,1),WELL.Uf(wod(:,3),ft),Cp(v_d(v2==1)),mu,WELL.CpW(wod(:,3),ft),kfw(vd),kfo(vd),CMPF,vd);
     
+    Qc2 = QBild(QQ.QQc(WELL.WonC(:,1)),QQ.QQcwo(WELL.WonC(:,1),:),WELL.Uf(WELL.WonC(:,3),ft),WELL.WonC(:,1),dt,WELL.WonC(:,3),nw,W1C);
+    Qg2 = QBild(QQ.QQg(WELL.WonG(:,1)),QQ.QQgwo(WELL.WonG(:,1),:),WELL.Uf(WELL.WonG(:,3),ft),WELL.WonG(:,1),dt,WELL.WonG(:,3),nw,W1G);
     SW0([v_c,v_g])=Sw0([vc,vg]);
     SW([v_c,v_g])=Sw([vc,vg]);
     
@@ -303,7 +304,7 @@ while fl2<2%i<ndt
     ndtI(i)=ndt;
     CL = sparse(1:nc,1:nc,CMPF.Cw(vc),nc,nc)*CW + CO;
     GL = sparse(1:ng,1:ng,CMPF.Cw(vg),ng,ng)*GW + GO;
-    [ndt,j_ndt,fl]=vibor_t(ndt,Fl,Pc,Pg,Pw,PR,RC,dt,SW([v_c,v_g]),SW0([v_c,v_g]),CL,GL,dVc,dVg,W1C,W1G,...
+    [ndt,j_ndt,fl]=vibor_t(ndt,Fl,Pc,Pg,Pw,PR,RC,dt,SW([v_c,v_g]),SW0([v_c,v_g]),CL(RC.Cr2 + (RC.Cc2 - 1)*RC.nc),GL(RC.Gr2 + (RC.Gc2 - 1)*RC.ng),dVc,dVg,W1C,W1G,...
         WELL.WonC,WELL.WonG,0,j_ndt);
     if fl==0
         fl2=fl2+1;

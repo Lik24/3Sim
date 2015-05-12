@@ -1,13 +1,11 @@
-function [Pi,Sw,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(Pi,Sw,Phi,Sw0,Pw,Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,M2FR,ft,PR,BXYZ,dt,t,Qf,Qz,GYData,BB,QQ,QQBND,QQoBND,ndt)
+function [Pi,Sw,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(Pi,Sw,Phi,Sw0,Pw,Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,M2FR,ft,PR,BXYZ,dt,Qf,GYData,BB,QQ,QQBND,QQoBND,ndt)
   na = RC.na;
   nc = RC.nc;
   ng = RC.ng;
   nd = RC.nd;
   nb = RC.nb;
-  nw = size(Qz(:,1),1);
+  nw = size(Qf,1);
   Nsum = na+nc+ng+nd+nb;
-  Uf = WELL.Uf(:,ft+1);
-  CpW = WELL.CpW(:,ft+1);
   b1wb=sparse(nb,1);
   dPw = zeros(nw,1);
   dPt = zeros(Nsum,1);
@@ -37,10 +35,10 @@ function [Pi,Sw,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(
         %Wf=Wf0.*(1-0.0001*(P0(Won)-Pi(Won))).^3;
    [WBND,QQBND]=GY_bild2(GYData,Pi(:,1),dPt(:,1),KWOG_GY,Cp(:,1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,CMP,VEC,QQBND);
       
-   [W1,W6,Wo,W7]=Well_MKT2(WELL.Won,Uf(WELL.Won(:,3)),Cp(VEC.va),PR,CpW(WELL.Won(:,3)),CMP,KWOG,VEC.va);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
-   [W1C,W6C,WoC,W7C]=Well_MKT2(WELL.WonC,Uf(WELL.WonC(:,3)),Cp(VEC.vc),PR,CpW(WELL.WonC(:,3)),CMP,KWOG,VEC.vc);
-   [W1G,W6G,WoG,W7G]=Well_MKT2(WELL.WonG,Uf(WELL.WonG(:,3)),Cp(VEC.vg),PR,CpW(WELL.WonG(:,3)),CMP,KWOG,VEC.vg);
-   [W1D,W6D,WoD,W7D]=Well_MKT2(WELL.WonD,Uf(WELL.WonD(:,3)),Cp(VEC.vd),PR,CpW(WELL.WonD(:,3)),CMP,KWOG,VEC.vd);
+   [W1,W6,Wo,W7]=Well_MKT2(WELL.Won,WELL.Uf(WELL.Won(:,3),ft),Cp(VEC.va),PR,WELL.CpW(WELL.Won(:,3),ft),CMP,KWOG,VEC.va);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
+   [W1C,W6C,WoC,W7C]=Well_MKT2(WELL.WonC,WELL.Uf(WELL.WonC(:,3),ft),Cp(VEC.vc),PR,WELL.CpW(WELL.WonC(:,3),ft),CMP,KWOG,VEC.vc);
+   [W1G,W6G,WoG,W7G]=Well_MKT2(WELL.WonG,WELL.Uf(WELL.WonG(:,3),ft),Cp(VEC.vg),PR,WELL.CpW(WELL.WonG(:,3),ft),CMP,KWOG,VEC.vg);
+   [W1D,W6D,WoD,W7D]=Well_MKT2(WELL.WonD,WELL.Uf(WELL.WonD(:,3),ft),Cp(VEC.vd),PR,WELL.CpW(WELL.WonD(:,3),ft),CMP,KWOG,VEC.vd);
         
    A1= -sparse(WELL.Won(:,1),WELL.Won(:,1),W1,na,na)-sparse(1:na,1:na,SGM.Clp(VEC.va)+sum(WBND.b1gm(:,1:2),2),na,na);  %Матрица коэф. для пор
    C1= -sparse(1:nc,1:nc,SGM.Clp(VEC.vc)',nc,nc)-sparse(WELL.WonC(:,1),WELL.WonC(:,1),W1C,nc,nc);                       %Матрица коэф. для вертикальных трещ.
@@ -127,7 +125,7 @@ function [Pi,Sw,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(
       
     AM = AM + Awater + AMO; 
     
-    Qz1 = sparse(WELL.Won(Qf~=0,3),ones(1,size(WELL.Won(Qf~=0),1)),Qz(Qf~=0,ft+1),nw,1);
+    Qz1 = sparse(WELL.Won(Qf~=0,3),ones(1,size(WELL.Won(Qf~=0),1)),Qf(Qf~=0),nw,1);
     Qm1 = sparse(WELL.Won(Qf~=0,3),ones(1,size(WELL.Won(Qf~=0),1)),QQ.QQm(WELL.Won(Qf~=0),1),nw,1);
     Qc1 = sparse(WELL.WonC(Qf(WELL.WonC(:,3))~=0,3),ones(1,size(WELL.WonC(Qf(WELL.WonC(:,3))~=0,3),1)),QQ.QQc(WELL.WonC(Qf(WELL.WonC(:,3))~=0,1)),nw,1);
     Qg1 = sparse(WELL.WonG(Qf(WELL.WonG(:,3))~=0,3),ones(1,size(WELL.WonG(Qf(WELL.WonG(:,3))~=0,3),1)),QQ.QQg(WELL.WonG(Qf(WELL.WonG(:,3))~=0,1)),nw,1);
@@ -150,24 +148,16 @@ function [Pi,Sw,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(
     Phi(1:Nsum,2) = Phi(1:Nsum,2) + dPt(1:Nsum); 
     Pi(1:Nsum,1) = Pi(1:Nsum,1) + dPt(1:Nsum);  
     Pw = Pw + dPw;  
-%   if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
-%    flag_gim = 0;
- %   QQ.QQm = QQ.QQm + sparse(WELL.Won(:,1),ones(1,nw),W1.*(dPw(WELL.Won(:,3))-dPt(VEC.va(WELL.Won(:,1)))),na,1);
-%    QQ.QQc = QQ.QQc + sparse(WELL.WonC(:,1),ones(1,size(W1C,1)),W1C.*(dPw(WELL.WonC(:,3))-dPt(VEC.vc(WELL.WonC(:,1)))),nc,1);
-%    QQ.QQg = QQ.QQg + sparse(WELL.WonG(:,1),ones(1,size(W1G,1)),W1G.*(dPw(WELL.WonG(:,3))-dPt(VEC.vg(WELL.WonG(:,1)))),ng,1);
-%    QQ.QQd = QQ.QQd + sparse(WELL.WonD(:,1),ones(1,size(W1D,1)),W1D.*(dPw(WELL.WonD(:,3))-dPt(VEC.vd(WELL.WonD(:,1)))),nd,1);
- %   [~,QQBND]=GY_bild2(GYData,Pi(:,1),dPt(:,1),KWOG_GY,Cp(:,1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,CMP,VEC,QQBND); 
- %  else
        
-     Fwater = AMW*Phi(1:Nsum,1) - dItimeW + [QQ.QQmwo(:,1);QQ.QQcwo(:,1);QQ.QQgwo(:,1);QQ.QQdwo(:,1);zeros(nb,1)] + [QQoBND.Qmw;zeros(nc,1);zeros(ng,1);QQoBND.Qdw;zeros(nb,1)];
+    Fwater = AMW*Phi(1:Nsum,1) - dItimeW + [QQ.QQmwo(:,1);QQ.QQcwo(:,1);QQ.QQgwo(:,1);QQ.QQdwo(:,1);zeros(nb,1)] + [QQoBND.Qmw;zeros(nc,1);zeros(ng,1);QQoBND.Qdw;zeros(nb,1)];
    
-     Sw = Sw + (Fwater - SGM.Cwp.*dPt(1:Nsum))./SGM.Cwsw;
+    Sw = Sw + (Fwater - SGM.Cwp.*dPt(1:Nsum))./SGM.Cwsw;
        
-     Qm2 = QBild(QQ.QQm(WELL.Won(:,1)),QQ.QQmwo(WELL.Won(:,1),:),WELL.Uf(WELL.Won(:,3),ft+1),WELL.Won(:,1),dt,WELL.Won(:,3),nw,W1);
-     Qc2 = QBild(QQ.QQc(WELL.WonC(:,1)),QQ.QQcwo(WELL.WonC(:,1),:),WELL.Uf(WELL.WonC(:,3),ft+1),WELL.WonC(:,1),dt,WELL.WonC(:,3),nw,W1C);
-     Qg2 = QBild(QQ.QQg(WELL.WonG(:,1)),QQ.QQgwo(WELL.WonG(:,1),:),WELL.Uf(WELL.WonG(:,3),ft+1),WELL.WonG(:,1),dt,WELL.WonG(:,3),nw,W1G);
-     Qd2 = QBild(QQ.QQd(WELL.WonD(:,1)),QQ.QQdwo(WELL.WonD(:,1),:),WELL.Uf(WELL.WonD(:,3),ft+1),WELL.WonD(:,1),dt,WELL.WonD(:,3),nw,W1D);  
-     flag_gim=sum(abs(dPt(1:na+nc+ng+nd)./Pi(1:na+nc+ng+nd))>=1e-6)~=0; 
+    Qm2 = QBild(QQ.QQm(WELL.Won(:,1)),QQ.QQmwo(WELL.Won(:,1),:),WELL.Uf(WELL.Won(:,3),ft),WELL.Won(:,1),dt,WELL.Won(:,3),nw,W1);
+    Qc2 = QBild(QQ.QQc(WELL.WonC(:,1)),QQ.QQcwo(WELL.WonC(:,1),:),WELL.Uf(WELL.WonC(:,3),ft),WELL.WonC(:,1),dt,WELL.WonC(:,3),nw,W1C);
+    Qg2 = QBild(QQ.QQg(WELL.WonG(:,1)),QQ.QQgwo(WELL.WonG(:,1),:),WELL.Uf(WELL.WonG(:,3),ft),WELL.WonG(:,1),dt,WELL.WonG(:,3),nw,W1G);
+    Qd2 = QBild(QQ.QQd(WELL.WonD(:,1)),QQ.QQdwo(WELL.WonD(:,1),:),WELL.Uf(WELL.WonD(:,3),ft),WELL.WonD(:,1),dt,WELL.WonD(:,3),nw,W1D);  
+    flag_gim=sum(abs(dPt(1:na+nc+ng+nd)./Pi(1:na+nc+ng+nd))>=1e-6)~=0; 
    end;
   %end; 
   TL = sparse(1:na,1:na,CMP.Cw(VEC.va),na,na)*TW + TO;

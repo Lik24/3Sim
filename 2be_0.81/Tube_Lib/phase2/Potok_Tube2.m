@@ -1,14 +1,7 @@
 function [CW,CO,CP]=Potok_Tube2(C,P,KWOG,Cp,PR,fp,kms,L,r,c,n,CMP,v)
 
-PW = P(:,1);
-PO = P(:,2);
-
-ts=PR.ts;
-tw=PR.tw;
-Kc=PR.Kc;
-
-vPW = PW(c) - PW(r)>0; 
-vPO = PO(c) - PO(r)>0;
+vPW = P(c,1) - P(r,1)>0; 
+vPO = P(c,2) - P(r,2)>0;
 
 Kwc=KWOG.w(v(c));
 Kwl=KWOG.w(v(r));
@@ -19,9 +12,9 @@ Kol=KWOG.o(v(r));
 Cpc=Cp(c);
 Cpl=Cp(r);
 
-Cpe=Cpc.*vPW+Cpl.*(vPW==0);
-Kfw=Kwc.*vPW+Kwl.*(vPW==0);
-Kfo=Koc.*vPO+Kol.*(vPO==0);
+Cpe=Cpc.*vPW(r)+Cpl.*(vPW(r)==0);
+Kfw=Kwc.*vPW(r)+Kwl.*(vPW(r)==0);
+Kfo=Koc.*vPO(r)+Kol.*(vPO(r)==0);
 
 Bw1 = CMP.Bw(:,2);
 Bo1 = CMP.Bo(:,2);
@@ -38,10 +31,9 @@ To = C.*Kfo./Bo/PR.mu(2);
 if kms~=0
      dPL=abs(dP./L((r+(c-1)*n)));
     %     проверить првильность задания плотности
-    [Tw] = Forh(Tw,kms, PR.Ro(1), Kfw, Kc, PR.mu(1), dPL);
-    [To] = Forh(To,kms, PR.Ro(2), Kfo, Kc, PR.mu(2), dPL);
+    [Tw] = Forh(Tw,kms, PR.Ro(1), Kfw, PR.Kc, PR.mu(1), dPL);
+    [To] = Forh(To,kms, PR.Ro(2), Kfo, PR.Kc, PR.mu(2), dPL);
 end;
-
 
 Tw = sparse(r,c,Tw,n,n);       Tw = Tw + Tw';
 To = sparse(r,c,To,n,n);       To = To + To';
