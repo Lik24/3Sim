@@ -193,12 +193,12 @@ Pwt(:,1)=Pw(:,1);
 
 TL = ones(na,na);
 DL = ones(nd,nd);
-
+ 
  BXYZ.mxy = find(TRM.Txyz_GY_A(:,1));
  BXYZ.dxy = find(TRM.Txyz_GY_D(:,1));
  BXYZ.mz = find(TRM.Txyz_GY_A(:,2));
  BXYZ.dz = find(TRM.Txyz_GY_A(:,2)); 
-       
+    
 while t_flag==1
     t=t+1;  
 %    if t==1 && dtt==0
@@ -219,20 +219,17 @@ while t_flag==1
     CMP.Bw(:,1) = CMP.Bw(:,2);
     CMP.Bo(:,1) = CMP.Bo(:,2);
     CMP.Bg(:,1) = CMP.Bg(:,2);
-    CMP.Mp(:,1) = CMP.Mp(:,2);
-    
-    [KWOG.w,KWOG.o,KWOG.g]=Sat_calBO(Sw,So,1,as,aw); %water
-  
-   [W1,~,~,~,~,QQ.QQm,QQ.QQmwog]=Well_MKTBO0(Pi(VEC.va),Pwt(WELL.Won(:,3),t),WELL.Won,WELL.Uf(WELL.Won(:,3)),Cp(VEC.va),PR,WELL.CpW(WELL.Won(:,3)),CMP,KWOG,VEC.va,na);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
-   [W1C,~,~,~,~,QQ.QQc,QQ.QQcwog]=Well_MKTBO0(Pi(VEC.vc),Pwt(WELL.WonC(:,3),t),WELL.WonC,WELL.Uf(WELL.WonC(:,3)),Cp(VEC.vc),PR,WELL.CpW(WELL.WonC(:,3)),CMP,KWOG,VEC.vc,nc);
-   [W1G,~,~,~,~,QQ.QQg,QQ.QQgwog]=Well_MKTBO0(Pi(VEC.vg),Pwt(WELL.WonG(:,3),t),WELL.WonG,WELL.Uf(WELL.WonG(:,3)),Cp(VEC.vg),PR,WELL.CpW(WELL.WonG(:,3)),CMP,KWOG,VEC.vg,ng);
-   [W1D,~,~,~,~,QQ.QQd,QQ.QQdwog]=Well_MKTBO0(Pi(VEC.vd),Pwt(WELL.WonD(:,3),t),WELL.WonD,WELL.Uf(WELL.WonD(:,3)),Cp(VEC.vd),PR,WELL.CpW(WELL.WonD(:,3)),CMP,KWOG,VEC.vd,nd);
-   
+    CMP.Mp(:,1) = CMP.Mp(:,2); 
    [WBND,QQBND,QQwoBND,KWOG_GY]=GY_bildBO0(GYData,Pi([VEC.va,VEC.vd],1),Sw([VEC.va,VEC.vd],1),So([VEC.va,VEC.vd],1),Cp([VEC.va,VEC.vd],1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,CMP,BXYZ,VEC);
-  
+   [KWOG.w,KWOG.o,KWOG.g,KWOG.dwds,KWOG.dodsw,KWOG.dodsg,KWOG.dgds]=Sat_calSeq(Sw,So,1,as,aw,VSAT);    
+   [W1,~,~,~,~,QQ.QQm,QQ.QQmwog]=Well_MKTSeqBO0(Pi(VEC.va),Pwt(WELL.Won(:,3),1),WELL.Won,WELL.Uf(WELL.Won(:,3)),Cp(VEC.va),PR,WELL.CpW(WELL.Won(:,3)),CMP,KWOG,VEC.va,na);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
+   [W1C,~,~,~,~,QQ.QQc,QQ.QQcwog]=Well_MKTSeqBO0(Pi(VEC.vc),Pwt(WELL.WonC(:,3),1),WELL.WonC,WELL.Uf(WELL.WonC(:,3)),Cp(VEC.vc),PR,WELL.CpW(WELL.WonC(:,3)),CMP,KWOG,VEC.vc,nc);
+   [W1G,~,~,~,~,QQ.QQg,QQ.QQgwog]=Well_MKTSeqBO0(Pi(VEC.vg),Pwt(WELL.WonG(:,3),1),WELL.WonG,WELL.Uf(WELL.WonG(:,3)),Cp(VEC.vg),PR,WELL.CpW(WELL.WonG(:,3)),CMP,KWOG,VEC.vg,ng);
+   [W1D,~,~,~,~,QQ.QQd,QQ.QQdwog]=Well_MKTSeqBO0(Pi(VEC.vd),Pwt(WELL.WonD(:,3),1),WELL.WonD,WELL.Uf(WELL.WonD(:,3)),Cp(VEC.vd),PR,WELL.CpW(WELL.WonD(:,3)),CMP,KWOG,VEC.vd,nd);   
+   
    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,WELL,Pwt(:,t),na,PR,st,Ta,Sw,Sw0,dt,Nl,va,vd,DL,W1D,nd,dV1,dV2);   
 
-   [Pi,Pb,Sw,So,Pw(:,ft),TL,DL,Phi,CMP,sQm2,sQc2,sQg2,sQd2,VSAT,QQ,QQBND,QQwoBND,kj]=PressureCalcBO(Pi,Sw,So,Phi,Sw0,So0,Pb,Pwt(:,t),Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,Qf,VSAT,GYData,BB,QQ,QQBND,QQwoBND);
+   [Pi,Pb,Sw,So,Pw(:,ft),TL,DL,Phi,CMP,sQm2,sQc2,sQg2,sQd2,VSAT,QQ,QQBND,QQwoBND,kj]=PressureCalcSeqBO(Pi,Sw,So,Phi,Sw0,So0,Pb,Pwt(:,t),Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,Qf,VSAT,GYData,BB,QQ,QQBND,QQwoBND);
  
  %   if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
  %       Sw = Sw0;

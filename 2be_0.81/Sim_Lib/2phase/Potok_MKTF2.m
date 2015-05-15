@@ -1,4 +1,4 @@
-function [TW,TO,TP]=Potok_MKTF2(T,vP,Cp,mu,sd,na,kfw,kfo,kms,dP,L,Ro,Ke,CMP,v1,v)
+function [TW,TO,TP]=Potok_MKTF2(T,vP,Cp,mu,sd,na,kfw,kfo,kms,dP,L,Ro,Ke,CMP,v)
 
 Kwl=kfw(sd(:,1)); %water
 Kwc=kfw(sd(:,2)); %water
@@ -31,12 +31,6 @@ end;
 TW=sparse(sd(:,1),sd(:,2),TW,na,na);  TW=TW+TW';
 TO=sparse(sd(:,1),sd(:,2),TO,na,na);  TO=TO+TO';
 
-TW=TW(:,v1==1);
-TW=TW(v1==1,:);
-
-TO=TO(:,v1==1);
-TO=TO(v1==1,:);
-n = size(TO,1);
-TW = TW - sparse(1:n,1:n,sum(TW,2),n,n);
-TO = TO - sparse(1:n,1:n,sum(TO,2),n,n);
+TW = TW - sparse(1:na,1:na,sum(TW,2),na,na);
+TO = TO - sparse(1:na,1:na,sum(TO,2),na,na);
 

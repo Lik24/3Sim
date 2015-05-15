@@ -6,8 +6,8 @@ TW=KWOG.w(v(Won(:,1)))./CMP.Bw(v(Won(:,1)),2)./wmu;
 TO=KWOG.o(v(Won(:,1)))./CMP.Bo(v(Won(:,1)),2)/PR.mu(2);
 TP=KWOG.w(v(Won(:,1)))./wmu.*Cp(Won(:,1));
 
-Tiw=(1-Cpin)./wmu;
-Tip=Cpin./wmu;
+Tiw=(1-Cpin)./CMP.Bw(v(Won(:,1)),2)./wmu;
+Tip=Cpin./CMP.Bw(v(Won(:,1)),2)./wmu;
 
 W6 = Won(:,2).*(TW.*(Uf==1)+(Tiw+Tip).*(Uf==-1));
 Wo = Won(:,2).*TO.*(Uf==1);

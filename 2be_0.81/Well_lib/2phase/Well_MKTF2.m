@@ -4,8 +4,8 @@ TW=kfw(Won)./CMP.Bw(v(Won),2)/mu(1);
 TO=kfo(Won)./CMP.Bo(v(Won),2)/mu(2);
 TP=kfw(Won)/mu(4).*Cp(Won);
 
-Tiw=(1-Cpin)/mu(1);
-Tip=Cpin/mu(4);
+Tiw=(1-Cpin)./CMP.Bw(v(Won),2)/mu(1);
+Tip=Cpin./CMP.Bw(v(Won),2)/mu(4);
 
 Wo = Wf.*TO.*(Uf==1);
 W6 = Wf.*(TW.*(Uf==1)+(Tiw+Tip).*(Uf==-1));

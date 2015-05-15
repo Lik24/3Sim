@@ -48,7 +48,7 @@ if dt==0
         dv=dV2(:,1).*(v2==0)+dV2(:,2).*v2;
         dt3=1./max(abs(Dl.*dP2./dv));
         dt4=1./max(abs(W1D.*dPw2./dVd(WELL.WonD(:,1))));
-        dt34=min([dt3,dt4])/Fc2;
+        dt34=min([dt3,dt4])/Fc;
         
         dt=min([dt12;dt34(:,1)]);
     end;

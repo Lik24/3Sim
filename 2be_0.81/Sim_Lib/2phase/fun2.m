@@ -109,6 +109,8 @@ wna=unique(wom(:,3));
 wnc=unique(WELL.WonC(:,3));
 wng=unique(WELL.WonG(:,3));
 wnd=unique(wod(:,3));
+rad(:,1) = va(ismember(v_a(v1==1)',rc_in_h(:,1)));
+rad(:,2) = va(ismember(v_a(v1==1)',rc_in_h(:,2)));
 
 fl=1;
 i=0;
@@ -121,11 +123,9 @@ while fl2<2%i<ndt
     dPw = zeros(size(Qz(:,1),1),1);
     kj = 0;
     flag_gim = 1;
-    kfw(va)=Sat_cal(Sw(va),1-Sw(va),1,1,as,aw); %water
-    kfo(va)=Sat_cal(Sw(va),1-Sw(va),2,1,as,aw); %oil
-   
-    kfw([vc,vg,vd])=Sat_cal(Sw([vc,vg,vd]),1-Sw([vc,vg,vd]),1,1,ts,tw); %water
-    kfo([vc,vg,vd])=Sat_cal(Sw([vc,vg,vd]),1-Sw([vc,vg,vd]),2,1,ts,tw); %oil
+    [kfw(va),kfo(va)]=Sat_cal(Sw(va),1,as,aw); %water
+    
+    [kfw([vc,vg,vd]),kfo([vc,vg,vd])]=Sat_cal(Sw([vc,vg,vd]),1,ts,tw); %water
     
     KfwM(v1==1)=kfw(va);      KfoM(v1==1)=kfo(va);
     KfwD(v2==1)=kfw(vd);      KfoD(v2==1)=kfo(vd);
@@ -135,7 +135,7 @@ while fl2<2%i<ndt
     KFG=[kfw(vg),kfo(vg)];
     KFD=[kfw(vd),kfo(vd)];
     Sw0=Sw;
-
+   
     CMPF.Bw(:,1) = CMPF.Bw(:,2);
     CMPF.Bo(:,1) = CMPF.Bo(:,2);
     CMPF.Mp(:,1) = CMPF.Mp(:,2);
@@ -149,12 +149,12 @@ while fl2<2%i<ndt
         CMP.Cw([v_a(v1==1),v_c,v_g,v_d(v2==1)]) = CMPF.Cw([va,vc,vg,vd]);
         
         PjOld = Pj;
-        [vPa1,vPc1,vPg1,vPd1,dPa,dPc,dPg,dPd]=pre_potok_2(Phi,Phj,RC,rc_in_h,rc_in_hd,Na,Nd,na,nd);
-
-        [TW,TO,TP]=Potok_MKTF2(T_in,vPa1,Cp(v_a),mu,rc_in_h,Na,KfwM,KfoM,kms(1),dPa,GEOM.L,Ro,Ke,CMP,v1,v_a);
+        [vPa1,vPc1,vPg1,vPd1,dPa,dPc,dPg,dPd]=pre_potok_2(Phi,Phj,RC,rc_in_h,rc_in_h,Na,Nd,na,nd);
+        
+        [TW,TO,TP]=Potok_MKTF2(T_in,vPa1,Cp(v_a),mu,rad,na,kfw(va),kfo(va),kms(1),dPa,GEOM.L,Ro,Ke,CMPF,va);
         [CW,CO]=Potok_TubeF2(TRM.TC,vPc1,kfw(vc),kfo(vc),Cp(v_c),PR,RC.Cr2,RC.Cc2,kms(2),dPc,Lc,nc,CMP,v_c);
         [GW,GO]=Potok_TubeF2(TRM.TG,vPg1,kfw(vg),kfo(vg),Cp(v_g),PR,RC.Gr2,RC.Gc2,kms(3),dPg,GEOM.Lg,ng,CMP,v_g);
-        [DW,DO,DP]=Potok_MKTF2(TD_in,vPd1,Cp(v_d),mu,rc_in_hd,Nd,KfwD,KfoD,kms(4),dPd,GEOM.L,Ro,Ke,CMP,v2,v_d);
+        [DW,DO,DP]=Potok_MKTF2(T_in,vPd1,Cp(v_d),mu,rad,na,kfw(vd),kfo(vd),kms(4),dPd,GEOM.L,Ro,Ke,CMPF,vd);
   
         [A2CW,A2CO,~]=Obmen_T2MF2(TRM.TA2C,Phj(va,:),Phic,mu,Cp(v_a(v1==1)),Cp(v_c),r1,RC.ACc,KFA,KFC,CMPF,va,vc);
         [A2GW,A2GO,~]=Obmen_T2MF2(TRM.TA2G,Phj(va,:),Phig,mu,Cp(v_a(v1==1)),Cp(v_g),r2,RC.AGc,KFA,KFG,CMPF,va,vg);
@@ -166,7 +166,7 @@ while fl2<2%i<ndt
         [W1,W6,Wo,W7]=Well_MKTF2(wom(:,2),wom(:,1),WELL.Uf(wom(:,3),ft),Cp(v_a(v1==1)),mu,WELL.CpW(wom(:,3),ft),kfw(va),kfo(va),CMPF,va);
         [W1C,W6C,WoC,W7C]=Well_MKTF2(WELL.WonC(:,2),WELL.WonC(:,1),WELL.Uf(WELL.WonC(:,3),ft),Cp(v_c),mu,WELL.CpW(WELL.WonC(:,3),ft),kfw(vc),kfo(vc),CMPF,vc);
         [W1G,W6G,WoG,W7G]=Well_MKTF2(WELL.WonG(:,2),WELL.WonG(:,1),WELL.Uf(WELL.WonG(:,3),ft),Cp(v_g),mu,WELL.CpW(WELL.WonG(:,3),ft),kfw(vg),kfo(vg),CMPF,vg);
-        [W1D,W6D,WoD,W7D]=Well_MKTF2(wod(:,2),wod(:,1),WELL.Uf(wod(:,3),ft),Cp(v_d(v2==1)),mu,WELL.CpW(wod(:,3),ft),kfw(vd),kfo(vd),CMPF,vg);
+        [W1D,W6D,WoD,W7D]=Well_MKTF2(wod(:,2),wod(:,1),WELL.Uf(wod(:,3),ft),Cp(v_d(v2==1)),mu,WELL.CpW(wod(:,3),ft),kfw(vd),kfo(vd),CMPF,vd);
                 
         AW1=TW-sparse(1:na,1:na,sum(A2CW,2)+sum(A2GW,2)+sum(A2DW,2),na,na);
         CW1=CW-sparse(1:nc,1:nc,sum(A2CW,1)+sum(D2CW,1),nc,nc);

@@ -1,4 +1,4 @@
-function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=PressureCalcBO(Pi,Sw,So,Phi,Sw0,So0,Pb,Pw,Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,Qf,VSAT,GYData,BB,QQ,QQBND,QQwoBND)
+function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND,kj]=PressureCalcBO(Pi,Sw,So,Phi,Sw0,So0,Pb,Pw,Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,Qf,VSAT,GYData,BB,QQ,QQBND,QQwoBND)
   na = NCELL.na;
   nc = NCELL.nc;
   ng = NCELL.ng;
@@ -45,7 +45,6 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=Pr
    [W1G,W6G,WoG,WgG,W7G]=Well_MKTBO(WELL.WonG,WELL.Uf(WELL.WonG(:,3),ft),Cp(VEC.vg),PR,WELL.CpW(WELL.WonG(:,3),ft),CMP,KWOG,VEC.vg);
    [W1D,W6D,WoD,WgD,W7D]=Well_MKTBO(WELL.WonD,WELL.Uf(WELL.WonD(:,3),ft),Cp(VEC.vd),PR,WELL.CpW(WELL.WonD(:,3),ft),CMP,KWOG,VEC.vd);
         
- %  A1= -sparse(WELL.Won(:,1),WELL.Won(:,1),W1 - PR.rs*CMP.Cg(WELL.Won(:,1)).*QQ.QQmwog(WELL.Won(:,1),2),na,na)-sparse(1:na,1:na,SGM.Clp(VEC.va)+sum(WBND.b1gm(:,1:2),2),na,na);  %Матрица коэф. для пор
    A1= -sparse(WELL.Won(:,1),WELL.Won(:,1),W1,na,na)-sparse(1:na,1:na,SGM.Clp(VEC.va)+sum(WBND.b1gm(:,1:2),2),na,na);
    C1= -sparse(1:nc,1:nc,SGM.Clp(VEC.vc)',nc,nc)-sparse(WELL.WonC(:,1),WELL.WonC(:,1),W1C,nc,nc);                       %Матрица коэф. для вертикальных трещ.
    G1= -sparse(1:ng,1:ng,SGM.Clp(VEC.vg)',ng,ng)-sparse(WELL.WonG(:,1),WELL.WonG(:,1),W1G,ng,ng);                       %Матрица коэф. для гориз. трещ.
@@ -183,7 +182,7 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=Pr
     Phi(1:Nsum,3) = Phi(1:Nsum,3) + dPt(1:Nsum);
     Pi(1:Nsum,1) = Pi(1:Nsum,1) + dPt(1:Nsum); 
     Pw = Pw + dPw;
-  
+ 
     Fwater = AMW*Phi(1:Nsum,1) - dItimeW + [QQ.QQmwog(:,1);QQ.QQcwog(:,1);QQ.QQgwog(:,1);QQ.QQdwog(:,1);zeros(nb,1)] + [QQwoBND.Qmw;zeros(nc,1);zeros(ng,1);QQwoBND.Qdw;QQBND.Qb - WBND.b1gb.*dPt(VEC.vb)];
     FoilRs = AMORS*Phi(1:Nsum,2) - dItimeORs + CMP.Rs(:,2).*([QQ.QQmwog(:,2);QQ.QQcwog(:,2);QQ.QQgwog(:,2);QQ.QQdwog(:,2);zeros(nb,1)] + [QQwoBND.Qmo;zeros(nc,1);zeros(ng,1);QQwoBND.Qdo;QQBND.Qb - WBND.b1gb.*dPt(VEC.vb)]);
     Foil = AMO*Phi(1:Nsum,2) - dItimeO + [QQ.QQmwog(:,2);QQ.QQcwog(:,2);QQ.QQgwog(:,2);QQ.QQdwog(:,2);zeros(nb,1)] + [QQwoBND.Qmo;zeros(nc,1);zeros(ng,1);QQwoBND.Qdo;zeros(nb,1)];

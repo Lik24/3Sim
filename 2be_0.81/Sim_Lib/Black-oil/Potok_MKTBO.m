@@ -49,14 +49,12 @@ end;
 
 Tw = sparse(r,c,Tw,n,n);    Tw = Tw + Tw';
 ToRs = sparse(r,c,To.*Rs,n,n);     ToRs = ToRs + ToRs';
-%Trs = sparse(r,c,0.5*PR.rs.*To.*(PO(r)-PO(c)),n,n); Trs = Trs - Trs';
 To = sparse(r,c,To,n,n);       To = To + To';
 Tg = sparse(r,c,Tg,n,n);       Tg = Tg + Tg';     %//////////
 
 TW = Tw - sparse(1:n,1:n,sum(Tw,2),n,n);
 TO = To - sparse(1:n,1:n,sum(To,2),n,n);
 TORS = ToRs - sparse(1:n,1:n,sum(ToRs,2),n,n);
-%Trs = Trs + sparse(1:n,1:n,sum(Trs,2),n,n);
 TG = Tg - sparse(1:n,1:n,sum(Tg,2),n,n);
 
 % TP=Tp-sparse(1:n,1:n,sum(Tp,2),n,n);

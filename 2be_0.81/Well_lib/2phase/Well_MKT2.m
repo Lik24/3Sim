@@ -10,8 +10,8 @@ TP=KWOG.w(v(Won(:,1)))./wmu.*Cp(Won(:,1));
 % TO=kfo(Won),2,1,as,aw)/mu(2);
 % TP=Sat_cal(Sw(Won),1,1,as,aw)/mu(4).*Cp(Won);
 
-Tiw=(1-Cpin)./wmu;
-Tip=Cpin./wmu;
+Tiw=(1-Cpin)./CMP.Bw(v(Won(:,1)),2)./wmu;
+Tip=Cpin./CMP.Bw(v(Won(:,1)),2)./wmu;
 
 W6 = Won(:,2).*(TW.*(Uf==1)+(Tiw+Tip).*(Uf==-1));
 Wo = Won(:,2).*TO.*(Uf==1);

@@ -14,7 +14,7 @@ function [Pi,Sw,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalcF2
   Qd2=zeros(nw,5);
   kj = 0;
   flag_gim = 1;
-  while flag_gim==1 && kj<1
+  while flag_gim==1 && kj<5
    kj=kj+1; 
    [SGM,CMP]=SGimF2(GEOM.dV,Sw,PR.zc,Pi,dPt(1:Nsum),dt,CMP,[VEC.va,VEC.vd],[VEC.vc,VEC.vg],ndt);
    [TW,TO,TP]=Potok_MKT2(TRM.TTM,Phi(VEC.va,:),KWOG,Cp(VEC.va,1),PR,RC.Arc2,fp,PR.kms(1),GEOM.L,CMP);  %проводимости по фазам

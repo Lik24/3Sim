@@ -30,16 +30,12 @@ SwT = GY_Swxy.*vP+MSw.*(vP==0);
 SoT = (1-GY_Swxy).*vP+MSo.*(vP==0);
 MCpT = 0.*vP+MCp.*(vP==0);
 
-KWOG_GY.Kfw_xyM=Sat_cal(SwT,SoT,1,1,as,aw); %water
-KWOG_GY.Kfo_xyM=Sat_cal(SwT,SoT,2,1,as,aw); %oil
-KWOG_GY.Kfg_xyM=Sat_cal(SwT,SoT,3,1,as,aw); %gas
+[KWOG_GY.Kfw_xyM,KWOG_GY.Kfo_xyM,KWOG_GY.Kfg_xyM]=Sat_calBO(SwT,SoT,1,as,aw); %water
 
 vP=GY_Pz>=Pi(V.va);
 SwT=GY_Swz.*vP+MSw.*(vP==0);
 
-KWOG_GY.Kfw_zM=Sat_cal(SwT,SoT,1,1,as,aw); %water
-KWOG_GY.Kfo_zM=Sat_cal(SwT,SoT,2,1,as,aw); %oil
-KWOG_GY.Kfg_zM=Sat_cal(SwT,SoT,3,1,as,aw); %gas
+[KWOG_GY.Kfw_zM,KWOG_GY.Kfo_zM,KWOG_GY.Kfg_zM]=Sat_calBO(SwT,SoT,1,as,aw); %water
 
 %% Для двойной среды
 vP=GY_Pxy(vad)>=Pi(V.vd);
@@ -47,16 +43,13 @@ SwT=GY_Swxy(vad).*vP+DSw.*(vP==0);
 SoT = DSo.*(vP==0);
 DCpT=0.*vP+DCp.*(vP==0);
 
-KWOG_GY.Kfw_xyD=Sat_cal(SwT,SoT,1,1,ts,tw); %water
-KWOG_GY.Kfo_xyD=Sat_cal(SwT,SoT,2,1,ts,tw); %oil
-KWOG_GY.Kfg_xyD=Sat_cal(SwT,SoT,3,1,ts,tw); %gas
+[KWOG_GY.Kfw_xyD,KWOG_GY.Kfo_xyD,KWOG_GY.Kfg_xyD]=Sat_calBO(SwT,SoT,1,ts,tw); %water
 
 vP=GY_Pz(vad)>=Pi(V.vd);
 SwT=GY_Swz(vad).*vP+DSw.*(vP==0);
 
-KWOG_GY.Kfw_zD=Sat_cal(SwT,SoT,1,1,ts,tw); %water
-KWOG_GY.Kfo_zD=Sat_cal(SwT,SoT,2,1,ts,tw); %oil
-KWOG_GY.Kfg_zD=Sat_cal(SwT,SoT,3,1,ts,tw); %gas
+[KWOG_GY.Kfw_zD,KWOG_GY.Kfo_zD,KWOG_GY.Kfg_zD]=Sat_calBO(SwT,SoT,1,ts,tw); %water
+
 %%
 WBND.b1gm=Abra_GY(T_GY_A,KWOG_GY.Kfw_xyM,KWOG_GY.Kfo_xyM,KWOG_GY.Kfg_xyM,KWOG_GY.Kfw_zM,KWOG_GY.Kfo_zM,KWOG_GY.Kfg_zM,mu,MCpT,CMP,V.va);
 WBND.b1gd=Abra_GY(T_GY_D,KWOG_GY.Kfw_xyD,KWOG_GY.Kfo_xyD,KWOG_GY.Kfg_xyD,KWOG_GY.Kfw_zD,KWOG_GY.Kfo_zD,KWOG_GY.Kfg_zD,mu,DCpT,CMP,V.vd);

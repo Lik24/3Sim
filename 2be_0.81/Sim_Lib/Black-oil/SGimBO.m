@@ -20,11 +20,18 @@ function [SGM,CMP]=SGimBO(dV,Sw,So,zc,rs,P,Pb,dPb,dPt,dt,V,CMP)
 % Rs(V.vg,1) = CMP.Rs(V.vg,2) + rs*dPt(V.vg);
 % Rs(V.vp,1) = CMP.Rs(V.vp,2) + rs*dPb(V.vp);
    
-  SGM.Cwp = dV/dt.*Sw.*(CMP.Mp0*zc(4)./Bw + Mp.*zc(1)./CMP.B0(1));
-  SGM.Cop = dV/dt.*So.*(CMP.Mp0*zc(4)./Bo + Mp.*zc(2)./CMP.B0(2));
+  SGM.Cwp = dV/dt.*Sw.*(CMP.Mp0*zc(4)./Bw - Mp.*dBwP./Bw./Bw);
+  SGM.Cop = dV/dt.*So.*(CMP.Mp0*zc(4)./Bo - Mp.*dBoP./Bo./Bo);
   SGM.Cgp(V.vg,1) = dV(V.vg)/dt.*(CMP.Mp0(V.vg)*zc(4).*((1-Sw(V.vg)-So(V.vg))./Bg(V.vg) + ...
-  Rs(V.vg).*So(V.vg)./Bo(V.vg)) + Mp(V.vg).*((1-Sw(V.vg)-So(V.vg)).*zc(3)./CMP.B0(3) + So(V.vg).*(Rs(V.vg).*zc(2)./CMP.B0(2) + rs./Bo(V.vg))));
-  SGM.Cgp(V.vp,1) = dV(V.vp)/dt.*(CMP.Mp0(V.vp).*zc(4).*Rs(V.vp).*So(V.vp)./Bo(V.vp) + Mp(V.vp).*So(V.vp).*Rs(V.vp).*zc(2)./CMP.B0(2));  
+  Rs(V.vg).*So(V.vg)./Bo(V.vg)) + Mp(V.vg).*(-(1-Sw(V.vg)-So(V.vg)).*dBgP(V.vg)./Bg(V.vg)./Bg(V.vg) + So(V.vg).*(-Rs(V.vg).*dBoP(V.vg)./Bo(V.vg)./Bo(V.vg) + rs./Bo(V.vg))));
+  SGM.Cgp(V.vp,1) = dV(V.vp)/dt.*(CMP.Mp0(V.vp).*zc(4).*Rs(V.vp).*So(V.vp)./Bo(V.vp) - Mp(V.vp).*So(V.vp).*Rs(V.vp).*dBoP(V.vp)./Bo(V.vp)./Bo(V.vp));  
+   
+ 
+% SGM.Cwp = dV/dt.*Sw.*(CMP.Mp0*zc(4)./Bw + Mp.*zc(1)./CMP.B0(1));
+ % SGM.Cop = dV/dt.*So.*(CMP.Mp0*zc(4)./Bo + Mp.*zc(2)./CMP.B0(2));
+ % SGM.Cgp(V.vg,1) = dV(V.vg)/dt.*(CMP.Mp0(V.vg)*zc(4).*((1-Sw(V.vg)-So(V.vg))./Bg(V.vg) + ...
+ % Rs(V.vg).*So(V.vg)./Bo(V.vg)) + Mp(V.vg).*((1-Sw(V.vg)-So(V.vg)).*zc(3)./CMP.B0(3) + So(V.vg).*(Rs(V.vg).*zc(2)./CMP.B0(2) + rs./Bo(V.vg))));
+ % SGM.Cgp(V.vp,1) = dV(V.vp)/dt.*(CMP.Mp0(V.vp).*zc(4).*Rs(V.vp).*So(V.vp)./Bo(V.vp) + Mp(V.vp).*So(V.vp).*Rs(V.vp).*zc(2)./CMP.B0(2));  
   
   Coso = Mp./Bo;
   Cosw = - Coso;

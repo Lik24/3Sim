@@ -17,6 +17,7 @@ function [Pi,Sw,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(
   while flag_gim==1 && kj<5
    kj=kj+1; 
    [SGM,CMP]=SGim2(GEOM.dV,Sw,PR.zc,Pi,dPt(1:Nsum),dt,CMP);
+  
    [TW,TO,TP]=Potok_MKT2(TRM.TTM,Phi(VEC.va,:),KWOG,Cp(VEC.va,1),PR,RC.Arc2,fp,PR.kms(1),GEOM.L,CMP);  %проводимости по фазам
    [CW,CO,~]=Potok_Tube2(TRM.TC,Phi(VEC.vc,:),KWOG,Cp(VEC.vc),PR,fp,PR.kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,CMP,VEC.vc);
    [GW,GO,~]=Potok_Tube2(TRM.TG,Phi(VEC.vg,:),KWOG,Cp(VEC.vg),PR,fp,PR.kms(3),GEOM.Lg,RC.Gr2,RC.Gc2,ng,CMP,VEC.vg);
@@ -152,14 +153,14 @@ function [Pi,Sw,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalc2(
     Fwater = AMW*Phi(1:Nsum,1) - dItimeW + [QQ.QQmwo(:,1);QQ.QQcwo(:,1);QQ.QQgwo(:,1);QQ.QQdwo(:,1);zeros(nb,1)] + [QQoBND.Qmw;zeros(nc,1);zeros(ng,1);QQoBND.Qdw;zeros(nb,1)];
    
     Sw = Sw + (Fwater - SGM.Cwp.*dPt(1:Nsum))./SGM.Cwsw;
-       
-    Qm2 = QBild(QQ.QQm(WELL.Won(:,1)),QQ.QQmwo(WELL.Won(:,1),:),WELL.Uf(WELL.Won(:,3),ft),WELL.Won(:,1),dt,WELL.Won(:,3),nw,W1);
-    Qc2 = QBild(QQ.QQc(WELL.WonC(:,1)),QQ.QQcwo(WELL.WonC(:,1),:),WELL.Uf(WELL.WonC(:,3),ft),WELL.WonC(:,1),dt,WELL.WonC(:,3),nw,W1C);
-    Qg2 = QBild(QQ.QQg(WELL.WonG(:,1)),QQ.QQgwo(WELL.WonG(:,1),:),WELL.Uf(WELL.WonG(:,3),ft),WELL.WonG(:,1),dt,WELL.WonG(:,3),nw,W1G);
-    Qd2 = QBild(QQ.QQd(WELL.WonD(:,1)),QQ.QQdwo(WELL.WonD(:,1),:),WELL.Uf(WELL.WonD(:,3),ft),WELL.WonD(:,1),dt,WELL.WonD(:,3),nw,W1D);  
+         
     flag_gim=sum(abs(dPt(1:na+nc+ng+nd)./Pi(1:na+nc+ng+nd))>=1e-6)~=0; 
    end;
   %end; 
+   Qm2 = QBild(QQ.QQm(WELL.Won(:,1)),QQ.QQmwo(WELL.Won(:,1),:),WELL.Uf(WELL.Won(:,3),ft),WELL.Won(:,1),dt,WELL.Won(:,3),nw,W1);
+   Qc2 = QBild(QQ.QQc(WELL.WonC(:,1)),QQ.QQcwo(WELL.WonC(:,1),:),WELL.Uf(WELL.WonC(:,3),ft),WELL.WonC(:,1),dt,WELL.WonC(:,3),nw,W1C);
+   Qg2 = QBild(QQ.QQg(WELL.WonG(:,1)),QQ.QQgwo(WELL.WonG(:,1),:),WELL.Uf(WELL.WonG(:,3),ft),WELL.WonG(:,1),dt,WELL.WonG(:,3),nw,W1G);
+   Qd2 = QBild(QQ.QQd(WELL.WonD(:,1)),QQ.QQdwo(WELL.WonD(:,1),:),WELL.Uf(WELL.WonD(:,3),ft),WELL.WonD(:,1),dt,WELL.WonD(:,3),nw,W1D);
   TL = sparse(1:na,1:na,CMP.Cw(VEC.va),na,na)*TW + TO;
   DL = sparse(1:nd,1:nd,CMP.Cw(VEC.vd),nd,nd)*DW + DO;
   

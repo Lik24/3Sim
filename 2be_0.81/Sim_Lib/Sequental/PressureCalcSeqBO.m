@@ -1,4 +1,4 @@
-function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=PressureCalcBO(Pi,Sw,So,Phi,Sw0,So0,Pb,Pw,Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,Qf,VSAT,GYData,BB,QQ,QQBND,QQwoBND)
+function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND,kj]=PressureCalcSeqBO(Pi,Sw,So,Phi,Sw0,So0,Pb,Pw,Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,Qf,VSAT,GYData,BB,QQ,QQBND,QQwoBND)
   na = NCELL.na;
   nc = NCELL.nc;
   ng = NCELL.ng;
@@ -10,7 +10,7 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=Pr
   vad = RC.ADr;
   dPw = zeros(size(Qf,1),1);
   dPt = zeros(Nsum,1);
-  dPb = zeros(Nsum,1);
+  dSw = zeros(Nsum,1);
   Qm2=zeros(nw,5);
   Qd2=zeros(nw,5);
   kj = 0;
@@ -20,9 +20,9 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=Pr
    Pbl = Pb;
    Sol = So;
    Swl = Sw;
-   [SGM,CMP]=SGimBO(GEOM.dV,Sw,So,PR.zc,PR.rs,Pi,Pb,Pb-Pbl,dPt(1:Nsum),dt,VSAT,CMP);
-   
-   [TW,TO,TGG,TORS,TP]=Potok_MKTBO(TRM.TTM,Phi(VEC.va,:),KWOG,Cp(VEC.va,1),PR,RC.Arc2,fp,PR.kms(1),GEOM.L,CMP);  %проводимости по фазам
+   [SGM,CMP]=SGimSeqBO(GEOM.dV,Sw,So,PR.zc,PR.rs,Pi,Pb,Pb-Pbl,dPt(1:Nsum),dt,VSAT,CMP);
+   [KWOG.w,KWOG.o,KWOG.g,KWOG.dwds,KWOG.dodsw,KWOG.dodsg,KWOG.dgds]=Sat_calSeq(Sw,So,1,PR.as,PR.aw,VSAT);
+   [TW,TO,TGG,TORS,Twl,Tol,Trsl,Tgl,TSw,TSo,TPb,ToSw,TRoSw,TP]=Potok_MKTSeqBO(TRM.TTM,Phi(VEC.va,:),KWOG,Cp(VEC.va,1),PR,RC.Arc2,fp,PR.kms(1),GEOM.L,CMP,SGM);  %проводимости по фазам
    [CW,CO,CG,CORS,~]=Potok_TubeBO(TRM.TC,Phi(VEC.vc,:),KWOG,Cp(VEC.vc),PR,fp,PR.kms(2),DATA.Lc,RC.Cr2,RC.Cc2,nc,CMP,VEC.vc);
    [GW,GO,GG,GORS,~]=Potok_TubeBO(TRM.TG,Phi(VEC.vg,:),KWOG,Cp(VEC.vg),PR,fp,PR.kms(3),GEOM.Lg,RC.Gr2,RC.Gc2,ng,CMP,VEC.vg);
    [DW,DO,DG,DORS,DP]=Potok_TubeBO(TRM.TD,Phi(VEC.vd,:),KWOG,Cp(VEC.vd),PR,fp,PR.kms(4),GEOM.Ld,RC.Dr2,RC.Dc2,nd,CMP,VEC.vd);
@@ -39,19 +39,23 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=Pr
         
         %Wf=Wf0.*(1-0.0001*(P0(Won)-Pi(Won))).^3;
    [WBND,QQBND]=GY_bildBO(GYData,Pi([VEC.va,VEC.vd],1),dPt([VEC.va,VEC.vd],1),KWOG_GY,Cp([VEC.va,VEC.vd],1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,CMP,VEC,QQBND);
-      
-   [W1,W6,Wo,Wg,W7]=Well_MKTBO(WELL.Won,WELL.Uf(WELL.Won(:,3),ft),Cp(VEC.va),PR,WELL.CpW(WELL.Won(:,3),ft),CMP,KWOG,VEC.va);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
-   [W1C,W6C,WoC,WgC,W7C]=Well_MKTBO(WELL.WonC,WELL.Uf(WELL.WonC(:,3),ft),Cp(VEC.vc),PR,WELL.CpW(WELL.WonC(:,3),ft),CMP,KWOG,VEC.vc);
-   [W1G,W6G,WoG,WgG,W7G]=Well_MKTBO(WELL.WonG,WELL.Uf(WELL.WonG(:,3),ft),Cp(VEC.vg),PR,WELL.CpW(WELL.WonG(:,3),ft),CMP,KWOG,VEC.vg);
-   [W1D,W6D,WoD,WgD,W7D]=Well_MKTBO(WELL.WonD,WELL.Uf(WELL.WonD(:,3),ft),Cp(VEC.vd),PR,WELL.CpW(WELL.WonD(:,3),ft),CMP,KWOG,VEC.vd);
-        
- %  A1= -sparse(WELL.Won(:,1),WELL.Won(:,1),W1 - PR.rs*CMP.Cg(WELL.Won(:,1)).*QQ.QQmwog(WELL.Won(:,1),2),na,na)-sparse(1:na,1:na,SGM.Clp(VEC.va)+sum(WBND.b1gm(:,1:2),2),na,na);  %Матрица коэф. для пор
+       
+   [W1,W6,Wo,Wg,W6S,WoSo,WoSw,W7]=Well_MKTSeqBO(WELL.Won,WELL.Uf(WELL.Won(:,3),ft),Cp(VEC.va),PR,WELL.CpW(WELL.Won(:,3),ft),CMP,KWOG,VEC.va,Pw,Pi(VEC.va));% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
+   [W1C,W6C,WoC,WgC,W6SC,WoSoC,WoSwC,W7C]=Well_MKTSeqBO(WELL.WonC,WELL.Uf(WELL.WonC(:,3),ft),Cp(VEC.vc),PR,WELL.CpW(WELL.WonC(:,3),ft),CMP,KWOG,VEC.vc,Pw,Pi(VEC.vc));
+   [W1G,W6G,WoG,WgG,W6SG,WoSoG,WoSwG,W7G]=Well_MKTSeqBO(WELL.WonG,WELL.Uf(WELL.WonG(:,3),ft),Cp(VEC.vg),PR,WELL.CpW(WELL.WonG(:,3),ft),CMP,KWOG,VEC.vg,Pw,Pi(VEC.vg));
+   [W1D,W6D,WoD,WgD,W6SD,WoSoD,WoSwD,W7D]=Well_MKTSeqBO(WELL.WonD,WELL.Uf(WELL.WonD(:,3),ft),Cp(VEC.vd),PR,WELL.CpW(WELL.WonD(:,3),ft),CMP,KWOG,VEC.vd,Pw,Pi(VEC.vd));
+   
    A1= -sparse(WELL.Won(:,1),WELL.Won(:,1),W1,na,na)-sparse(1:na,1:na,SGM.Clp(VEC.va)+sum(WBND.b1gm(:,1:2),2),na,na);
    C1= -sparse(1:nc,1:nc,SGM.Clp(VEC.vc)',nc,nc)-sparse(WELL.WonC(:,1),WELL.WonC(:,1),W1C,nc,nc);                       %Матрица коэф. для вертикальных трещ.
    G1= -sparse(1:ng,1:ng,SGM.Clp(VEC.vg)',ng,ng)-sparse(WELL.WonG(:,1),WELL.WonG(:,1),W1G,ng,ng);                       %Матрица коэф. для гориз. трещ.
    D1= -sparse(WELL.WonD(:,1),WELL.WonD(:,1),W1D,nd,nd)-sparse(1:nd,1:nd,SGM.Clp(VEC.vd)+sum(WBND.b1gd(:,1:2),2),nd,nd);                       %Матрица коэф. для двойной пор.
    B1= -sparse(1:nb,1:nb,SGM.Clp(VEC.vb)'+WBND.b1gb',nb,nb);  %Матрица коэф. для границ
-        
+   dBw = -SGM.dBwP./CMP.Bw(:,2).*QQ.QQmwog(:,1);
+   dBo = -SGM.dBoP./CMP.Bo(:,2).*QQ.QQmwog(:,2);
+   dBg = -SGM.dBgP./CMP.Bg(:,2).*QQ.QQmwog(:,3);
+   dBors = (-CMP.Rs(:,2).*SGM.dBoP./CMP.Bo(:,2)+PR.rs).*QQ.QQmwog(:,2);
+   A1 = A1 + sparse(1:na,1:na,CMP.Cw(VEC.va).*dBw+CMP.Cg(VEC.va).*dBg+CMP.Co(VEC.va).*dBo+CMP.Cor(VEC.va).*dBors);
+     
    AG1=TGG-sparse(1:na,1:na,sum(A2CG,2)+sum(A2GG,2)+sum(A2BG,2)+sum(A2DG,2),na,na);  
    CG1=CG-sparse(1:nc,1:nc,sum(A2CG,1)+sum(D2CG,1),nc,nc);                       
    GG1=GG-sparse(1:ng,1:ng,sum(A2GG,1)+sum(D2GG,1),ng,ng);   
@@ -112,11 +116,16 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=Pr
      %       qfSize = size(Qf~=0);
      %       PwNl=repmat(Pw(:,ft+1),Nl,1);
             % PwNl=PwNl(ka1==1);
-   
-    Aw = sparse(1:Nsum,1:Nsum,CMP.Cw,Nsum,Nsum)*AMW;
-    Aoil = sparse(1:Nsum,1:Nsum,CMP.Co,Nsum,Nsum)*AMO;
-    Aoilrs = sparse(1:Nsum,1:Nsum,CMP.Cor,Nsum,Nsum)*AMORS;
-    Agas = sparse(1:Nsum,1:Nsum,CMP.Cg,Nsum,Nsum)*AMG;        
+  
+    Cw = sparse(1:Nsum,1:Nsum,CMP.Cw,Nsum,Nsum);
+    Co = sparse(1:Nsum,1:Nsum,CMP.Co,Nsum,Nsum);
+    Cor = sparse(1:Nsum,1:Nsum,CMP.Cor,Nsum,Nsum);
+    Cg = sparse(1:Nsum,1:Nsum,CMP.Cg,Nsum,Nsum);        
+          
+    Aw = Cw*AMW;
+    Aoil = Co*AMO;
+    Aoilrs = Cor*AMORS;
+    Agas = Cg*AMG;        
             
    [dItime,dItimeW,dItimeO,dItimeORs] = NR_TimeBO(GEOM.dV,Sw,So,Sw0,So0,CMP,dt);         
    dPhi = Aw*Phi(:,1) + (Aoil + Aoilrs)*Phi(:,2) + Agas*Phi(:,3);
@@ -132,10 +141,10 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=Pr
     b1wg=b1wg.*(sum(W2G(Qf==0,:),1)~=0)';
     b1wd=b1wd.*(sum(W2D(Qf==0,:),1)~=0)';
    
-    QQ.QQm = QQ.QQm + sparse(WELL.Won(:,1),ones(1,nw),W1.*(dPw(WELL.Won(:,3))-dPt(VEC.va(WELL.Won(:,1)))),na,1);
-    QQ.QQc = QQ.QQc + sparse(WELL.WonC(:,1),ones(1,size(W1C,1)),W1C.*(dPw(WELL.WonC(:,3))-dPt(VEC.vc(WELL.WonC(:,1)))),nc,1);
-    QQ.QQg = QQ.QQg + sparse(WELL.WonG(:,1),ones(1,size(W1G,1)),W1G.*(dPw(WELL.WonG(:,3))-dPt(VEC.vg(WELL.WonG(:,1)))),ng,1);
-    QQ.QQd = QQ.QQd + sparse(WELL.WonD(:,1),ones(1,size(W1D,1)),W1D.*(dPw(WELL.WonD(:,3))-dPt(VEC.vd(WELL.WonD(:,1)))),nd,1);
+    QQ.QQm = QQ.QQm + sparse(WELL.Won(:,1),ones(1,nw),W1.*(dPw(WELL.Won(:,3))-dPt(VEC.va(WELL.Won(:,1))))+WoSw.*dSw(VEC.va(WELL.Won(:,1))),na,1);
+    QQ.QQc = QQ.QQc + sparse(WELL.WonC(:,1),ones(1,size(W1C,1)),W1C.*(dPw(WELL.WonC(:,3))-dPt(VEC.vc(WELL.WonC(:,1))))+WoSwC.*dSw(VEC.vc(WELL.WonC(:,1))),nc,1);
+    QQ.QQg = QQ.QQg + sparse(WELL.WonG(:,1),ones(1,size(W1G,1)),W1G.*(dPw(WELL.WonG(:,3))-dPt(VEC.vg(WELL.WonG(:,1))))+WoSwG.*dSw(VEC.vg(WELL.WonG(:,1))),ng,1);
+    QQ.QQd = QQ.QQd + sparse(WELL.WonD(:,1),ones(1,size(W1D,1)),W1D.*(dPw(WELL.WonD(:,3))-dPt(VEC.vd(WELL.WonD(:,1))))+WoSwD.*dSw(VEC.vd(WELL.WonD(:,1))),nd,1);
    
     b1wm = b1wm - QQ.QQm;
     b1wc = b1wc - QQ.QQc;
@@ -154,7 +163,7 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=Pr
           zeros(nd,na), zeros(nd,nc), zeros(nd,ng), D1, zeros(nd,nb);
           zeros(nb,na), zeros(nb,nc), zeros(nb,ng), zeros(nb,nd), B1+BB];
       
-    AM = AM + Aw + Aoil + Aoilrs + Agas; 
+    AM = AM + Aw + Aoil + Aoilrs +Agas + Cw*Twl + Co*Tol +  Cor*Trsl+  Cg*Tgl; 
     
     Qz1 = sparse(WELL.Won(Qf~=0,3),ones(1,size(WELL.Won(Qf~=0),1)),Qf(Qf~=0),nw,1);
     Qm1 = sparse(WELL.Won(Qf~=0,3),ones(1,size(WELL.Won(Qf~=0),1)),QQ.QQm(WELL.Won(Qf~=0),1),nw,1);
@@ -170,10 +179,10 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=Pr
    
     [QQwoBND] = QIterGYBO(dPt,QQwoBND,WBND,BXYZ);
     
-    [QQ.QQmwog] = QIterBO(QQ.QQmwog,W6,Wo,dPt(VEC.va),WELL.Won(:,1),dPw(WELL.Won(:,3)),na); 
-    [QQ.QQcwog] = QIterBO(QQ.QQcwog,W6C,WoC,dPt(VEC.vc),WELL.WonC(:,1),dPw(WELL.WonC(:,3)),nc); 
-    [QQ.QQgwog] = QIterBO(QQ.QQgwog,W6G,WoG,dPt(VEC.vg),WELL.WonG(:,1),dPw(WELL.WonG(:,3)),ng); 
-    [QQ.QQdwog] = QIterBO(QQ.QQdwog,W6D,WoD,dPt(VEC.vd),WELL.WonD(:,1),dPw(WELL.WonD(:,3)),nd); 
+    [QQ.QQmwog] = QIterSeqBO(QQ.QQmwog,W6,Wo,Wg,dPt(VEC.va),WELL.Won(:,1),dPw(WELL.Won(:,3)),na); 
+    [QQ.QQcwog] = QIterSeqBO(QQ.QQcwog,W6C,WoC,WgC,dPt(VEC.vc),WELL.WonC(:,1),dPw(WELL.WonC(:,3)),nc); 
+    [QQ.QQgwog] = QIterSeqBO(QQ.QQgwog,W6G,WoG,WgG,dPt(VEC.vg),WELL.WonG(:,1),dPw(WELL.WonG(:,3)),ng); 
+    [QQ.QQdwog] = QIterSeqBO(QQ.QQdwog,W6D,WoD,WgD,dPt(VEC.vd),WELL.WonD(:,1),dPw(WELL.WonD(:,3)),nd); 
    
  %  if isempty(RC.Cr)~=0 || isempty(RC.Gr)~=0
  %    flag_gim = 0;
@@ -184,17 +193,46 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND]=Pr
     Pi(1:Nsum,1) = Pi(1:Nsum,1) + dPt(1:Nsum); 
     Pw = Pw + dPw;
   
-    Fwater = AMW*Phi(1:Nsum,1) - dItimeW + [QQ.QQmwog(:,1);QQ.QQcwog(:,1);QQ.QQgwog(:,1);QQ.QQdwog(:,1);zeros(nb,1)] + [QQwoBND.Qmw;zeros(nc,1);zeros(ng,1);QQwoBND.Qdw;QQBND.Qb - WBND.b1gb.*dPt(VEC.vb)];
-    FoilRs = AMORS*Phi(1:Nsum,2) - dItimeORs + CMP.Rs(:,2).*([QQ.QQmwog(:,2);QQ.QQcwog(:,2);QQ.QQgwog(:,2);QQ.QQdwog(:,2);zeros(nb,1)] + [QQwoBND.Qmo;zeros(nc,1);zeros(ng,1);QQwoBND.Qdo;QQBND.Qb - WBND.b1gb.*dPt(VEC.vb)]);
-    Foil = AMO*Phi(1:Nsum,2) - dItimeO + [QQ.QQmwog(:,2);QQ.QQcwog(:,2);QQ.QQgwog(:,2);QQ.QQdwog(:,2);zeros(nb,1)] + [QQwoBND.Qmo;zeros(nc,1);zeros(ng,1);QQwoBND.Qdo;zeros(nb,1)];
-     
-    Sw(VSAT.vg,1) = Swl(VSAT.vg) +  (Fwater(VSAT.vg) - SGM.Cwp(VSAT.vg).*dPt(VSAT.vg))./SGM.Cwsw(VSAT.vg);
-    So(VSAT.vg,1) = Sol(VSAT.vg) + (Foil(VSAT.vg) - SGM.Cop(VSAT.vg).*dPt(VSAT.vg))./SGM.Coso(VSAT.vg);
-    Pb(VSAT.vg) = Pi(VSAT.vg);
+   % Fwater = AMW*Phi(1:Nsum,1) - dItimeW + [QQ.QQmwog(:,1);QQ.QQcwog(:,1);QQ.QQgwog(:,1);QQ.QQdwog(:,1);zeros(nb,1)] + [QQwoBND.Qmw;zeros(nc,1);zeros(ng,1);QQwoBND.Qdw;QQBND.Qb - WBND.b1gb.*dPt(VEC.vb)];
+  %  FoilRs = AMORS*Phi(1:Nsum,2) - dItimeORs + CMP.Rs(:,2).*([QQ.QQmwog(:,2);QQ.QQcwog(:,2);QQ.QQgwog(:,2);QQ.QQdwog(:,2);zeros(nb,1)] + [QQwoBND.Qmo;zeros(nc,1);zeros(ng,1);QQwoBND.Qdo;QQBND.Qb - WBND.b1gb.*dPt(VEC.vb)]);
+ %   Foil = AMO*Phi(1:Nsum,2) - dItimeO + [QQ.QQmwog(:,2);QQ.QQcwog(:,2);QQ.QQgwog(:,2);QQ.QQdwog(:,2);zeros(nb,1)] + [QQwoBND.Qmo;zeros(nc,1);zeros(ng,1);QQwoBND.Qdo;zeros(nb,1)];
+   
+    Fwater = AMW*Phi(1:Nsum,1)+Twl*dPt(1:Nsum) - dItimeW + dBw.*dPt(1:Nsum) + [QQ.QQmwog(:,1);QQ.QQcwog(:,1);QQ.QQgwog(:,1);QQ.QQdwog(:,1);zeros(nb,1)] + [QQwoBND.Qmw;zeros(nc,1);zeros(ng,1);QQwoBND.Qdw;QQBND.Qb - WBND.b1gb.*dPt(VEC.vb)];
     
-    Sw(VSAT.vp) = Swl(VSAT.vp) + (Foil(VSAT.vp) - SGM.Cop(VSAT.vp).*dPt(VSAT.vp)).*SGM.Cgpb(VSAT.vp) - (FoilRs(VSAT.vp) - SGM.Cgp(VSAT.vp).*dPt(VSAT.vp)).*SGM.Copb(VSAT.vp);
+    BM = - Fwater + SGM.Cwp.*dPt(1:Nsum);
+    A1 = sparse(WELL.Won(:,1),WELL.Won(:,1),W6S,na,na)-sparse(1:na,1:na,SGM.Cwsw(VEC.va),na,na);
+    AM = A1 + TSw;
+    
+    dSw = BM'/AM;
+    dSw = dSw';
+    Sw = Swl + dSw;
+
+    QQ.QQmwog(:,2) = QQ.QQmwog(:,2) + sparse(WELL.Won(:,1),ones(1,size(WELL.Won,1)),WoSw,na,1).*dSw(VEC.va);
+    QQ.QQcwog(:,2) = QQ.QQcwog(:,2) + sparse(WELL.WonC(:,1),ones(1,size(WELL.WonC,1)),WoSwC,nc,1).*dSw(VEC.vc);
+    QQ.QQgwog(:,2) = QQ.QQgwog(:,2) + sparse(WELL.WonG(:,1),ones(1,size(WELL.WonG,1)),WoSwG,ng,1).*dSw(VEC.vg);
+    QQ.QQdwog(:,2) = QQ.QQdwog(:,2) + sparse(WELL.WonD(:,1),ones(1,size(WELL.WonD,1)),WoSwD,nd,1).*dSw(VEC.vd);
+    
+    FoilRs = AMORS*Phi(1:Nsum,2)+Trsl*dPt(1:Nsum) - dItimeORs + dBors.*dPt(1:Nsum) + CMP.Rs(:,2).*([QQ.QQmwog(:,2);QQ.QQcwog(:,2);QQ.QQgwog(:,2);QQ.QQdwog(:,2);zeros(nb,1)] + [QQwoBND.Qmo;zeros(nc,1);zeros(ng,1);QQwoBND.Qdo;QQBND.Qb - WBND.b1gb.*dPt(VEC.vb)]);
+    Foil = AMO*Phi(1:Nsum,2)+Tol*dPt(1:Nsum) - dItimeO + dBo.*dPt(1:Nsum) + [QQ.QQmwog(:,2);QQ.QQcwog(:,2);QQ.QQgwog(:,2);QQ.QQdwog(:,2);zeros(nb,1)] + [QQwoBND.Qmo;zeros(nc,1);zeros(ng,1);QQwoBND.Qdo;zeros(nb,1)];
+    bs = ToSw*dSw;
+    bsR = TRoSw*dSw;
+    BM(VSAT.vg) = - Foil(VSAT.vg) + SGM.Cop(VSAT.vg).*dPt(VSAT.vg) - bs(VSAT.vg);
+    BM(VSAT.vp) = - FoilRs(VSAT.vp) + SGM.Cgp(VSAT.vp).*dPt(VSAT.vp) + SGM.Cgsw(VSAT.vp).*dSw(VSAT.vp) - bsR(VSAT.vp);
+      
+    A1s = sparse(WELL.Won(:,1),WELL.Won(:,1),WoSo,na,na)-sparse(1:na,1:na,SGM.Coso(VEC.va),na,na);
+    A1p = sparse(1:na,1:na,(PR.rs-CMP.Rs(:,2).*SGM.dBoPb./CMP.Bo(:,2)./CMP.Bo(:,2)).*QQ.QQmwog(:,2) - SGM.Cgpb(VEC.va),na,na);
+    
+    AM(VSAT.vg,VSAT.vg) = A1s(VSAT.vg,VSAT.vg) + TSo(VSAT.vg,VSAT.vg);
+    AM(VSAT.vp,VSAT.vp) = A1p(VSAT.vp,VSAT.vp) + TPb(VSAT.vp,VSAT.vp);
+     
+    dS = BM'/AM;
+    dS = dS';
+ 
+    So(VSAT.vg) = Sol(VSAT.vg) + dS(VSAT.vg);   
+    Pb(VSAT.vp) = Pbl(VSAT.vp) + dS(VSAT.vp);
+
+    Pb(VSAT.vg) = Pi(VSAT.vg);
     So(VSAT.vp) = 1 - Sw(VSAT.vp);
-    Pb(VSAT.vp) = Pbl(VSAT.vp) + (FoilRs(VSAT.vp) - SGM.Cgp(VSAT.vp).*dPt(VSAT.vp)).*SGM.Cosw(VSAT.vp) - (Foil(VSAT.vp) - SGM.Cop(VSAT.vp).*dPt(VSAT.vp)).*SGM.Cgsw(VSAT.vp);
   
     vg1 = Pb > Pi + 1.e-10;
     vg = Pb(VSAT.vp) > Pi(VSAT.vp) + 1.e-10;     

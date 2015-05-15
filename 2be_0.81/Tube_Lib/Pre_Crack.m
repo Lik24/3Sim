@@ -1,5 +1,4 @@
-function [CR_rc]=Pre_Crack(RC,na,nd,TM,TD,A2C,A2G,D2C,D2G,A2D,Won,WonD,dZ)
-WonM=Won(:,1:3);
+function [CR_rc]=Pre_Crack(RC,na,nd,TM,TD,A2C,A2G,D2C,D2G,A2D,WonM,WonD,dZ)
 
  CR_rc(1,1)=conct2mat(na,RC.ACr,RC.AGr,RC.Arc(:,2),RC.Arc(:,1),TM,A2C,A2G,WonM,RC.Arc2(:,2),RC.Arc2(:,1));
  CR_rc(1,2)=conct2mat(nd,RC.DCr,RC.DGr,RC.Dc2,RC.Dr2,TD,D2C,D2G,WonD,RC.Dc2,RC.Dr2);
