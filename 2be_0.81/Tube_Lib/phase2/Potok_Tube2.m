@@ -1,5 +1,6 @@
 function [CW,CO,CP]=Potok_Tube2(C,P,KWOG,Cp,PR,fp,kms,L,r,c,n,CMP,v)
 
+if isempty(C)==0
 vPW = P(c,1) - P(r,1)>0; 
 vPO = P(c,2) - P(r,2)>0;
 
@@ -12,9 +13,9 @@ Kol=KWOG.o(v(r));
 Cpc=Cp(c);
 Cpl=Cp(r);
 
-Cpe=Cpc.*vPW(r)+Cpl.*(vPW(r)==0);
-Kfw=Kwc.*vPW(r)+Kwl.*(vPW(r)==0);
-Kfo=Koc.*vPO(r)+Kol.*(vPO(r)==0);
+Cpe=Cpc.*vPW+Cpl.*(vPW==0);
+Kfw=Kwc.*vPW+Kwl.*(vPW==0);
+Kfo=Koc.*vPO+Kol.*(vPO==0);
 
 Bw1 = CMP.Bw(:,2);
 Bo1 = CMP.Bo(:,2);
@@ -40,4 +41,10 @@ To = sparse(r,c,To,n,n);       To = To + To';
 
 CW = Tw - sparse(1:n,1:n,sum(Tw,2),n,n);
 CO = To - sparse(1:n,1:n,sum(To,2),n,n);
+else
+  CW=[];
+  CO=[];
+  CP=[];
+end;
+
 

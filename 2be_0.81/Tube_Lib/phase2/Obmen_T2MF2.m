@@ -6,23 +6,16 @@ if isempty(r)==0
 
     kaf=KFA(:,1);
     kaof=KFA(:,2);
-    
     kcf=KFC(:,1);
     kcof=KFC(:,2);
-
+    
     Bw = 0.5*(CMP.Bw(vc(c),2) + CMP.Bw(va(r),2));
     Bo = 0.5*(CMP.Bo(vc(c),2) + CMP.Bo(va(r),2));
     
     vP=Pm(r,:)>=Pt(c,:);
-
-    Kafc=kaf(r);
-    Kafl=kcf(c);
-    
-    Kaofc=kaof(r);
-    Kaofl=kcof(c);
       
-    Kwe=Kafc.*vP(:,1)+Kafl.*(vP(:,1)==0);
-    Koe=Kaofc.*vP(:,2)+Kaofl.*(vP(:,2)==0);
+    Kwe=kaf(r).*vP(:,1)+kcf(c).*(vP(:,1)==0);
+    Koe=kaof(r).*vP(:,2)+kaof(c).*(vP(:,2)==0);
     %% 
     Cpc=MCp(r);
     Cpl=CCp(c);

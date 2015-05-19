@@ -18,10 +18,12 @@ W1 = CMP.Cg(Won(:,1)).*Wg + (CMP.Rs(Won(:,1),2).*CMP.Cor(Won(:,1)) + CMP.Co(Won(
 W7=-Won(:,2).*CMP.Cw(Won(:,1)).*(TP.*(Uf==1)+Tip.*(Uf==-1));%
 
 dP = Pw - P(Won(:,1));
+qwo(:,3) = Wg.*dP;
 qwo(:,2) = Wo.*dP;
 qwo(:,1) = W6.*dP;
-QQ = CMP.Cg(Won(:,1)).*Wg.*dP + (CMP.Rs(Won(:,1),2).*CMP.Cor(Won(:,1)) + CMP.Co(Won(:,1))).*qwo(:,2) + CMP.Cw(Won(:,1)).*qwo(:,1);
+QQ = CMP.Cg(Won(:,1)).*qwo(:,3) + (CMP.Rs(Won(:,1),2).*CMP.Cor(Won(:,1)) + CMP.Co(Won(:,1))).*qwo(:,2) + CMP.Cw(Won(:,1)).*qwo(:,1);
 nw = size(Pw,1);
 QQ =  sparse(Won(:,1),ones(1,nw),QQ,n,1);
 QQwo(:,1) =  sparse(Won(:,1),ones(1,nw),qwo(:,1),n,1);
 QQwo(:,2) =  sparse(Won(:,1),ones(1,nw),qwo(:,2),n,1);
+%QQwo(:,3) =  sparse(Won(:,1),ones(1,nw),qwo(:,3),n,1);

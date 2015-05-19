@@ -7,7 +7,6 @@ c = rc(:,2);
 PW = P(:,1);
 PO = P(:,2);
 
-%vP = dP>0;
 vPW = PW(c) - PW(r)>0; 
 vPO = PO(c) - PO(r)>0;
 

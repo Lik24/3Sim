@@ -1,7 +1,7 @@
 function [CR_rc]=Pre_Crack(RC,na,nd,TM,TD,A2C,A2G,D2C,D2G,A2D,WonM,WonD,dZ)
 
  CR_rc(1,1)=conct2mat(na,RC.ACr,RC.AGr,RC.Arc(:,2),RC.Arc(:,1),TM,A2C,A2G,WonM,RC.Arc2(:,2),RC.Arc2(:,1));
- CR_rc(1,2)=conct2mat(nd,RC.DCr,RC.DGr,RC.Dc2,RC.Dr2,TD,D2C,D2G,WonD,RC.Dc2,RC.Dr2);
+ CR_rc(1,2)=conct2mat(nd,RC.DCr,RC.DGr,RC.Dc,RC.Dr,TD,D2C,D2G,WonD,RC.Dc2,RC.Dr2);
  
  v1=CR_rc(1,1).v;
  v2=CR_rc(1,2).v;
@@ -47,7 +47,6 @@ function [CR_rc,won]=conct2mat(n,inc,ing,c,r,T,A2C,A2G,WoM,ch,rh)
     end
     v=zeros(n,1);
     v(rcm)=1;
-
     Img2=sparse(r,c,v(c),n,n);
     [r1,c1]=find(Img2==1);
     la=ismember(r1,rcm);
@@ -64,8 +63,15 @@ function [CR_rc,won]=conct2mat(n,inc,ing,c,r,T,A2C,A2G,WoM,ch,rh)
     
     RC_IN=sparse(r_in,c_in,1,n,n);
     U=tril(RC_IN);
+    
     [r_in_h,c_in_h]=find(U);
-
+    va = 1:size(rcm,1);
+    ra_in_h=zeros(size(r_in_h,1),2);
+     for i=1:1:size(r_in_h,1)
+         ra_in_h(i,1) = va(find(r_in_h(i)==rcm)); 
+         ra_in_h(i,2) = va(find(c_in_h(i)==rcm));
+     end;
+ 
      T=sparse(rh,ch,T,n,n);
      T=T+T';
      
@@ -101,6 +107,7 @@ function [CR_rc,won]=conct2mat(n,inc,ing,c,r,T,A2C,A2G,WoM,ch,rh)
      CR_rc.c2=c2;
      CR_rc.rc_gy=rc_gy;
      CR_rc.rc_in_h=rc_in_h;
+     CR_rc.ra_in_h=ra_in_h;
      CR_rc.T_gy=T_gy;
      CR_rc.T_in_h=T_in_h;
      CR_rc.v=v;
@@ -114,6 +121,7 @@ function [CR_rc,won]=conct2mat(n,inc,ing,c,r,T,A2C,A2G,WoM,ch,rh)
      CR_rc.c2=zeros(0,1);
      CR_rc.rc_gy=zeros(0,2);
      CR_rc.rc_in_h=zeros(0,2);
+     CR_rc.ra_in_h=zeros(0,2);
      CR_rc.T_gy=zeros(0,1);
      CR_rc.T_in_h=zeros(0,1);
      CR_rc.v=zeros(0,1);

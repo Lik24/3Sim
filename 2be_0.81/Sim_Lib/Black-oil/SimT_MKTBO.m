@@ -1,5 +1,6 @@
 function [Pj,Pbj,Swj,Soj,Tj,MCpj,p,Q,Pw,PpW,CSwj,NDT,Uf,dt1,dV0,ka,dtz,DSwj,kj1]=SimT_MKTBO(PR,C,A2C,GData,BB,A2B,DData,dVC,dVB,DATA,WData,GYData,fll,CR_GRUP)
 tic
+profile on;
 
 KX=DATA.gKX;
 KY=DATA.gKY;
@@ -221,7 +222,7 @@ while t_flag==1
     CMP.Bg(:,1) = CMP.Bg(:,2);
     CMP.Mp(:,1) = CMP.Mp(:,2);
     
-    [KWOG.w,KWOG.o,KWOG.g]=Sat_calBO(Sw,So,1,as,aw); %water
+   [KWOG.w,KWOG.o,KWOG.g]=Sat_calBO(Sw,So,1,as,aw); %water
   
    [W1,~,~,~,~,QQ.QQm,QQ.QQmwog]=Well_MKTBO0(Pi(VEC.va),Pwt(WELL.Won(:,3),t),WELL.Won,WELL.Uf(WELL.Won(:,3)),Cp(VEC.va),PR,WELL.CpW(WELL.Won(:,3)),CMP,KWOG,VEC.va,na);% W1 - проводимость по всей жидкости, W6 - только для воды, W7 - полимер 
    [W1C,~,~,~,~,QQ.QQc,QQ.QQcwog]=Well_MKTBO0(Pi(VEC.vc),Pwt(WELL.WonC(:,3),t),WELL.WonC,WELL.Uf(WELL.WonC(:,3)),Cp(VEC.vc),PR,WELL.CpW(WELL.WonC(:,3)),CMP,KWOG,VEC.vc,nc);
@@ -231,7 +232,7 @@ while t_flag==1
    [WBND,QQBND,QQwoBND,KWOG_GY]=GY_bildBO0(GYData,Pi([VEC.va,VEC.vd],1),Sw([VEC.va,VEC.vd],1),So([VEC.va,VEC.vd],1),Cp([VEC.va,VEC.vd],1),RC,TRM.Txyz_GY_A,TRM.Txyz_GY_D,PR,CMP,BXYZ,VEC);
   
    dt=vibor_t2(dtt,Pi,RC,dVCG,TL,W1,WELL,Pwt(:,t),na,PR,st,Ta,Sw,Sw0,dt,Nl,va,vd,DL,W1D,nd,dV1,dV2);   
-
+ 
    [Pi,Pb,Sw,So,Pw(:,ft),TL,DL,Phi,CMP,sQm2,sQc2,sQg2,sQd2,VSAT,QQ,QQBND,QQwoBND,kj]=PressureCalcBO(Pi,Sw,So,Phi,Sw0,So0,Pb,Pwt(:,t),Cp,TRM,KWOG,KWOG_GY,CMP,RC,WELL,fp,VEC,GEOM,DATA,NCELL,M2FR,ft,PR,BXYZ,dt,Qf,VSAT,GYData,BB,QQ,QQBND,QQwoBND);
  
  %   if isempty(RC.Cr)==0 || isempty(RC.Gr)==0
@@ -321,4 +322,6 @@ dtz = 1;
 %  Bnd_xy(p)=DATA.BndXY;
 %  GY_Pxy(Bnd_xy==1)'
 toc
+profile on;
+profile viewer;
 

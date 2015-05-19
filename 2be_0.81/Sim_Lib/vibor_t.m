@@ -22,20 +22,20 @@ if  fl==0
     MdS=abs(Sw2-Sw1);
     nf=(isnan(MdS)==0);
     dS=max(MdS(nf==1));
-    new_dt=dS/0.02;
+    new_dt=max(dS/0.02,1/3);
     ndt=ceil(ndt*new_dt);    
   else
     dvc=dVc(RC.Cc2).*(v1==0)+dVc(RC.Cr2).*v1;
     dvg=dVg(RC.Gc2).*(v2==0)+dVg(RC.Gr2).*v2;
     
-    dt1=1./max(abs([CL.*dPc./dvc;GL.*dPg./dvg]));
+    dt1=max(3,1./max(abs([CL.*dPc./dvc;GL.*dPg./dvg])));
     ndt1=dt/dt1;    
     
     if isempty(WoC(:,1))~=1 || isempty(WoG(:,1))~=1 
      WdS=abs(Sw2(WoC(:,1))-Sw1(WoC(:,1)));
      QC=W1C.*dPwc./dVc(WoC(:,1));
      QC=QC(WdS~=0);
-     dt2=1./max(abs([QC;W1G.*dPwg./dVg(WoG(:,1))]));
+     dt2=max(3,1./max(abs([QC;W1G.*dPwg./dVg(WoG(:,1))])));
      ndt2=dt/dt2;
     else 
      ndt2=0;   
@@ -44,11 +44,12 @@ if  fl==0
 %     ndt2
 %     sdf
     ndt=ceil(max([ndt1;ndt2])*Fc);
+    
   end;
 else
    ndt=1;
 end;
-
+%ndt = floor(ndt/2);
 j_old=j_ndt;
 j_ndt=j_ndt+1/ndt;
 

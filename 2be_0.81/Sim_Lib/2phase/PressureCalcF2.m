@@ -154,6 +154,7 @@ function [Pi,Sw,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,QQ,QQBND,QQoBND]=PressureCalcF2
     Fwater = AMW*Phi(1:Nsum,1) - dItimeW + [QQ.QQmwo(:,1);QQ.QQcwo(:,1);QQ.QQgwo(:,1);QQ.QQdwo(:,1);zeros(nb,1)] + [QQoBND.Qmw;zeros(nc,1);zeros(ng,1);QQoBND.Qdw;zeros(nb,1)];
    
     Sw = Sw + (Fwater - SGM.Cwp.*dPt(1:Nsum))./SGM.Cwsw;
+   % Sw=Sw.*(Sw>=0).*(Sw<=1)+(Sw>1);
     flag_gim=sum(abs(dPt(1:na+nc+ng+nd)./Pi(1:na+nc+ng+nd))>=1e-6)~=0; 
   end;
   Qm2 = QBild(QQ.QQm(WELL.Won(:,1)),QQ.QQmwo(WELL.Won(:,1),:),WELL.Uf(WELL.Won(:,3),ft),WELL.Won(:,1),dt,WELL.Won(:,3),nw,W1);

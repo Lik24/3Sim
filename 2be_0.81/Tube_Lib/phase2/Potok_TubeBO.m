@@ -1,5 +1,5 @@
 function [CW,CO,CG,CORS,CP]=Potok_TubeBO(C,P,KWOG,Cp,PR,fp,kms,L,r,c,n,CMP,v)
-
+if isempty(C)==0
 Kwc=KWOG.w(v(c));
 Kwl=KWOG.w(v(r));
 
@@ -54,4 +54,11 @@ CW = TW - sparse(1:n,1:n,sum(TW,2),n,n);
 CO = TO - sparse(1:n,1:n,sum(TO,2),n,n);
 CORS = TORS - sparse(1:n,1:n,sum(TORS,2),n,n);
 CG = TG - sparse(1:n,1:n,sum(TG,2),n,n);
+else
+  CW=[];
+  CO=[];
+  CG=[];
+  CORS=[];
+  CP=[];
+end;
 

@@ -15,7 +15,7 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND,kj]
   Qd2=zeros(nw,5);
   kj = 0;
   flag_gim = 1;
-  while flag_gim==1 && kj<20
+  while flag_gim==1 && kj<50
    kj=kj+1;
    Pbl = Pb;
    Sol = So;
@@ -130,12 +130,7 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND,kj]
     b1wc=b1wc.*(sum(W2C(Qf==0,:),1)~=0)';
     b1wg=b1wg.*(sum(W2G(Qf==0,:),1)~=0)';
     b1wd=b1wd.*(sum(W2D(Qf==0,:),1)~=0)';
-   
-    QQ.QQm = QQ.QQm + sparse(WELL.Won(:,1),ones(1,nw),W1.*(dPw(WELL.Won(:,3))-dPt(VEC.va(WELL.Won(:,1)))),na,1);
-    QQ.QQc = QQ.QQc + sparse(WELL.WonC(:,1),ones(1,size(W1C,1)),W1C.*(dPw(WELL.WonC(:,3))-dPt(VEC.vc(WELL.WonC(:,1)))),nc,1);
-    QQ.QQg = QQ.QQg + sparse(WELL.WonG(:,1),ones(1,size(W1G,1)),W1G.*(dPw(WELL.WonG(:,3))-dPt(VEC.vg(WELL.WonG(:,1)))),ng,1);
-    QQ.QQd = QQ.QQd + sparse(WELL.WonD(:,1),ones(1,size(W1D,1)),W1D.*(dPw(WELL.WonD(:,3))-dPt(VEC.vd(WELL.WonD(:,1)))),nd,1);
-   
+       
     b1wm = b1wm - QQ.QQm;
     b1wc = b1wc - QQ.QQc;
     b1wg = b1wg - QQ.QQg;
@@ -169,10 +164,10 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND,kj]
    
     [QQwoBND] = QIterGYBO(dPt,QQwoBND,WBND,BXYZ);
     
-    [QQ.QQmwog] = QIterBO(QQ.QQmwog,W6,Wo,dPt(VEC.va),WELL.Won(:,1),dPw(WELL.Won(:,3)),na); 
-    [QQ.QQcwog] = QIterBO(QQ.QQcwog,W6C,WoC,dPt(VEC.vc),WELL.WonC(:,1),dPw(WELL.WonC(:,3)),nc); 
-    [QQ.QQgwog] = QIterBO(QQ.QQgwog,W6G,WoG,dPt(VEC.vg),WELL.WonG(:,1),dPw(WELL.WonG(:,3)),ng); 
-    [QQ.QQdwog] = QIterBO(QQ.QQdwog,W6D,WoD,dPt(VEC.vd),WELL.WonD(:,1),dPw(WELL.WonD(:,3)),nd); 
+    [QQ.QQmwog] = QIterBO(QQ.QQmwog,W6,Wo,Wg,dPt(VEC.va),WELL.Won(:,1),dPw(WELL.Won(:,3)),na); 
+    [QQ.QQcwog] = QIterBO(QQ.QQcwog,W6C,WoC,WgC,dPt(VEC.vc),WELL.WonC(:,1),dPw(WELL.WonC(:,3)),nc); 
+    [QQ.QQgwog] = QIterBO(QQ.QQgwog,W6G,WoG,WgG,dPt(VEC.vg),WELL.WonG(:,1),dPw(WELL.WonG(:,3)),ng); 
+    [QQ.QQdwog] = QIterBO(QQ.QQdwog,W6D,WoD,WgD,dPt(VEC.vd),WELL.WonD(:,1),dPw(WELL.WonD(:,3)),nd); 
    
  %  if isempty(RC.Cr)~=0 || isempty(RC.Gr)~=0
  %    flag_gim = 0;
@@ -206,24 +201,33 @@ function [Pi,Pb,Sw,So,Pw,TL,DL,Phi,CMP,Qm2,Qc2,Qg2,Qd2,VSAT,QQ,QQBND,QQwoBND,kj]
     Pb(VEC.v(vg1)) = Pi(VEC.v(vg1));
     So(VEC.v(vp1)) = 1 - Sw(VEC.v(vp1));
     
-  %  dBoP = - CMP.Bo(VEC.v(vg1),2)*PR.zc(2)./(1 + PR.zc(2)*(Pi(VEC.v(vg1)) - Pb(VEC.v(vg1))));
-  %  dBgP = - CMP.Bg(VEC.v(vg1),2)*PR.zc(3)./(1 + PR.zc(3)*(Pi(VEC.v(vg1)) - Pb(VEC.v(vg1))));
-  %  Bg = CMP.Bg(VEC.v(vg1),2) + dBgP.*dPt(VEC.v(vg1));
+   %dBoP = - CMP.Bo(VEC.v(vg1),2)*PR.zc(2)./(1 + PR.zc(2)*(Pi(VEC.v(vg1)) - Pb(VEC.v(vg1))));
+   % dBgP = - CMP.Bg(VEC.v(vg1),2)*PR.zc(3)./(1 + PR.zc(3)*(Pi(VEC.v(vg1)) - Pb(VEC.v(vg1))));
+   % Bg = CMP.Bg(VEC.v(vg1),2) + dBgP.*dPt(VEC.v(vg1));
   %  Bo = CMP.Bo(VEC.v(vg1),2) + dBoP.*dPt(VEC.v(vg1));
   %  Rs = PR.rs.*Pi(VEC.v(vg1));
         
   %  So(VEC.v(vg1)) = (CMP.Rs(VEC.v(vg1),2)./CMP.Bo(VEC.v(vg1),2).*Sol(VEC.v(vg1)) + (Sw(VEC.v(vg1))- 1)./Bg)./(Rs./Bo - 1./Bg);
     %So(VEC.v(vg1)) = Sol(VEC.v(vg1)).*ds;
     
-    So(VEC.v(vg1)) = Sol(VEC.v(vg1)) - 0.0001;
-    Pb(VEC.v(vp1)) = Pbl(VEC.v(vp1)) - 0.0001;  
+    So(VEC.v(vg1)) = Sol(VEC.v(vg1)) - 0.00001;
+    Pb(VEC.v(vp1)) = Pbl(VEC.v(vp1)) - 0.00001;  
   
+  %  QQ.QQm = CMP.Cw(VEC.va).*QQ.QQmwog(:,1)+(CMP.Co(VEC.va)+CMP.Rs(VEC.va,2).*CMP.Cor(VEC.va)).*QQ.QQmwog(:,2)+CMP.Cg(VEC.va).*QQ.QQmwog(:,3);
+  %  QQ.QQc = CMP.Cw(VEC.vc).*QQ.QQcwog(:,1)+(CMP.Co(VEC.vc)+CMP.Rs(VEC.vc,2).*CMP.Cor(VEC.vc)).*QQ.QQcwog(:,2)+CMP.Cg(VEC.vc).*QQ.QQcwog(:,3);
+  %  QQ.QQg = CMP.Cw(VEC.vg).*QQ.QQgwog(:,1)+(CMP.Co(VEC.vg)+CMP.Rs(VEC.vg,2).*CMP.Cor(VEC.vg)).*QQ.QQgwog(:,2)+CMP.Cg(VEC.vg).*QQ.QQgwog(:,3);
+  % QQ.QQd = CMP.Cw(VEC.vd).*QQ.QQdwog(:,1)+(CMP.Co(VEC.vd)+CMP.Rs(VEC.vd,2).*CMP.Cor(VEC.vd)).*QQ.QQdwog(:,2)+CMP.Cg(VEC.vd).*QQ.QQdwog(:,3);
+    
+    QQ.QQm = QQ.QQm + sparse(WELL.Won(:,1),ones(1,nw),W1.*(dPw(WELL.Won(:,3))-dPt(VEC.va(WELL.Won(:,1)))),na,1);
+    QQ.QQc = QQ.QQc + sparse(WELL.WonC(:,1),ones(1,size(W1C,1)),W1C.*(dPw(WELL.WonC(:,3))-dPt(VEC.vc(WELL.WonC(:,1)))),nc,1);
+    QQ.QQg = QQ.QQg + sparse(WELL.WonG(:,1),ones(1,size(W1G,1)),W1G.*(dPw(WELL.WonG(:,3))-dPt(VEC.vg(WELL.WonG(:,1)))),ng,1);
+    QQ.QQd = QQ.QQd + sparse(WELL.WonD(:,1),ones(1,size(W1D,1)),W1D.*(dPw(WELL.WonD(:,3))-dPt(VEC.vd(WELL.WonD(:,1)))),nd,1);
+    
     Qm2 = QBild(QQ.QQm(WELL.Won(:,1)),QQ.QQmwog(WELL.Won(:,1),:),WELL.Uf(WELL.Won(:,3),ft),WELL.Won(:,1),dt,WELL.Won(:,3),nw,W1);
     Qc2 = QBild(QQ.QQc(WELL.WonC(:,1)),QQ.QQcwog(WELL.WonC(:,1),:),WELL.Uf(WELL.WonC(:,3),ft),WELL.WonC(:,1),dt,WELL.WonC(:,3),nw,W1C);
     Qg2 = QBild(QQ.QQg(WELL.WonG(:,1)),QQ.QQgwog(WELL.WonG(:,1),:),WELL.Uf(WELL.WonG(:,3),ft),WELL.WonG(:,1),dt,WELL.WonG(:,3),nw,W1G);       
     Qd2 = QBild(QQ.QQd(WELL.WonD(:,1)),QQ.QQgwog(WELL.WonD(:,1),:),WELL.Uf(WELL.WonD(:,3),ft),WELL.WonD(:,1),dt,WELL.WonD(:,3),nw,W1D);    
-    flag_gim=sum(abs(dPt(1:na+nc+ng+nd)./Pi(1:na+nc+ng+nd))>=1e-6)~=0;
-    
+    flag_gim=sum(abs(dPt(1:na+nc+ng+nd)./Pi(1:na+nc+ng+nd))>=1e-6)~=0;    
   % end;
   end; 
   TL = sparse(1:na,1:na,CMP.Cw(VEC.va),na,na)*TW + sparse(1:na,1:na,CMP.Co(VEC.va),na,na)*TO + sparse(1:na,1:na,CMP.Cor(VEC.va),na,na)*TORS + sparse(1:na,1:na,CMP.Cg(VEC.va),na,na)*TGG;        

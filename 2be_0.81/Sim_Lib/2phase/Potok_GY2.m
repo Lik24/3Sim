@@ -1,4 +1,4 @@
-function [bAl,ql,qw]=Potok_GY2(T,Pgy,Pin,dPin,rc2,kfw,kfo,v1,mu,na,c,CMP,qw,ql,v)
+function [bAl,ql,qw]=Potok_GY2(T,Pgy,Pin,dPin,rc2,kfw,kfo,mu,c,CMP,qw,ql)
 v2=Pgy>=Pin(rc2(:,2));
 
 Bw = 0.5*(CMP.Bw(rc2(:,2),2) + CMP.Bw(rc2(:,1),2));

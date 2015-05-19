@@ -1,7 +1,12 @@
-function [CW,CO,CP]=Potok_TubeF2(TC,vP1,Kfw,Kfo,Cp,PR,r,c,kms,dP,L,n,CMP,v)
+function [CW,CO,CP]=Potok_TubeF2(TC,P,Kfw,Kfo,Cp,PR,r,c,kms,L,n,CMP,v)
 
 if isempty(TC)==0
-mu=PR.mu;
+PW = P(:,1);
+PO = P(:,2);
+
+vPW = PW(r) - PW(c)>=0; 
+vPO = PO(r) - PO(c)>=0;
+
 Ro=PR.Ro;
 Kc=PR.Kc;
 
@@ -14,21 +19,16 @@ Kol=Kfo(c);
 Cpc=Cp(r);
 Cpl=Cp(c);
 
-%Swe=Swc.*vP+Swl.*(vP==0);
-%sum([Cpc,Cpl].*[vP1,vP2]);
-
-Cpe=Cpc.*vP1(:,1)+Cpl.*vP1(:,2);
-Kfw=Kwc.*vP1(:,1)+Kwl.*vP1(:,2);
-Kfo=Koc.*vP1(:,3)+Kol.*vP1(:,4);
+Cpe = Cpc.*vPW + Cpl.*(vPW==0);
+Kfw = Kwc.*vPW + Kwl.*(vPW==0);
+Kfo = Koc.*vPO + Kol.*(vPO==0); 
 
 Bw = 0.5*(CMP.Bw(v(c),2) + CMP.Bw(v(r),2));
 Bo = 0.5*(CMP.Bo(v(c),2) + CMP.Bo(v(r),2));
 
-%Kf=Sat_tube(Swe,1,1,ts,tw); %water
-
-CO=TC.*Kfo./Bo./mu(2);
-CW=TC.*Kfw./Bw.*((1-Cpe)./mu(1)+Cpe./mu(4));
-CP=TC.*Kfw.*Cpe./mu(4);
+CO=TC.*Kfo./Bo./PR.mu(2);
+CW=TC.*Kfw./Bw.*((1-Cpe)./PR.mu(1)+Cpe./PR.mu(4));
+CP=TC.*Kfw.*Cpe./PR.mu(4);
 
 if kms~=0
      dPL=abs(dP./L((r+(c-1)*n)));
@@ -36,7 +36,6 @@ if kms~=0
     [CW] = Forh(CW,kms, Ro(1), Kf, Kc, mu(1), dPL);
     [CO] = Forh(CO,kms, Ro(2), Kfo, Kc, mu(2), dPL);
 end;
-
 
 CW = sparse(r,c,CW,n,n);      CW = CW + CW';
 CO = sparse(r,c,CO,n,n);       CO = CO + CO';
